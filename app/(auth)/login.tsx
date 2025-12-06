@@ -1,6 +1,7 @@
 import Typo from '@/components/Typo';
 import useThemeColors from '@/contexts/useThemeColors';
 import { useLoginViewModel } from '@/viewmodels/useLoginViewModel';
+import { GoogleSigninButton } from '@react-native-google-signin/google-signin';
 import React from 'react';
 import {
   KeyboardAvoidingView,
@@ -27,8 +28,8 @@ const login = () => {
 
   
   const backgroundColor = colors.screenBackground
-  const textColor = colors.blue100
-  const tintColor = colors.blueGrey
+  const textColor = colors.neutral300
+  const tintColor = colors.neutral100
 
   return (
     <KeyboardAvoidingView
@@ -101,21 +102,18 @@ const login = () => {
 
           {/* Divider */}
           <View style={styles.dividerContainer}>
-            <Typo style={styles.dividerText}>Test</Typo>
-            <Typo style={styles.dividerText}>OR</Typo>
-            <Typo style={styles.dividerText}>Test</Typo>
           </View>
 
           {/* Google Sign-In Button */}
-          <TouchableOpacity
-            style={[styles.button, styles.googleButton, { borderColor: tintColor }]}
-            onPress={handleGoogleSignIn}
-            disabled={loading}
-          >
-            <Typo style={styles.googleButtonText}>
-              {loading ? 'Signing in...' : 'Sign in with Google'}
-            </Typo>
-          </TouchableOpacity>
+          <View style={styles.googleButtonContainer}>
+            <GoogleSigninButton
+              style={styles.googleButton}
+              size={GoogleSigninButton.Size.Wide}
+              color={GoogleSigninButton.Color.Light}
+              onPress={handleGoogleSignIn}
+              disabled={loading}
+            />
+          </View>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
@@ -181,16 +179,17 @@ const styles = StyleSheet.create({
   loginButton: {
     marginTop: 8,
   },
+  googleButtonContainer: {
+    width: '100%',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
   googleButton: {
-    borderWidth: 1,
-    backgroundColor: 'transparent',
+    width: '100%',
+    height: 50,
   },
   buttonText: {
     color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  googleButtonText: {
     fontSize: 16,
     fontWeight: '600',
   },
