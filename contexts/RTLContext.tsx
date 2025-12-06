@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { I18nManager, Platform } from 'react-native';
 import i18n from '@/i18n';
+import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import { I18nManager, Platform } from 'react-native';
 
 interface RTLContextType {
   isRTL: boolean;

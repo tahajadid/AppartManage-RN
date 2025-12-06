@@ -4,11 +4,14 @@
   "version": "1.0.0",
   "scripts": {
     "start": "expo start",
+    "start:dev": "expo start --dev-client",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo run:android",
-    "ios": "expo run:ios",
+    "ios": "EXPO_POD_INSTALL_COMMAND='arch -arm64 /usr/local/bin/pod install' expo run:ios",
+    "ios:device": "EXPO_POD_INSTALL_COMMAND='arch -arm64 /usr/local/bin/pod install' expo run:ios --device",
     "web": "expo start --web",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "pod:install": "cd ios && /usr/local/Homebrew/Cellar/cocoapods/1.15.2/bin/pod install --repo-update"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",

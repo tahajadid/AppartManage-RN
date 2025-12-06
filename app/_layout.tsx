@@ -12,7 +12,8 @@ const StackLayout= () =>{
         <Stack.Screen name="(auth)" />
         <Stack.Screen name="(home)" />
       </Stack>
-    )
+ 
+)
 }
 
 // This is the root layout file
