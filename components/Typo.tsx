@@ -15,11 +15,14 @@ const Typo = ({
     const textStyle: TextStyle = {
         fontSize: size? verticalScale(size): verticalScale(18),
         color,
-        fontWeight
+        fontWeight,
     };
 
+    // Flatten and merge styles - style prop should override textStyle
+    const flattenedStyle = StyleSheet.flatten([textStyle, style]);
+
     return (
-        <Text style={[textStyle,style]} {...textProps}>
+        <Text style={flattenedStyle} {...textProps}>
             {children}
         </Text>
     );

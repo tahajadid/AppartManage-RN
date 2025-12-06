@@ -1,4 +1,5 @@
 import { AuthProvider } from '@/contexts/authContext';
+import { RTLProvider } from '@/contexts/RTLContext';
 import { Stack } from 'expo-router';
 import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -18,9 +19,11 @@ const StackLayout= () =>{
 export default function RootLayout() {
   return (
     <SafeAreaProvider>
-      <AuthProvider>
-        <StackLayout />
-      </AuthProvider>
+      <RTLProvider>
+        <AuthProvider>
+          <StackLayout />
+        </AuthProvider>
+      </RTLProvider>
     </SafeAreaProvider>
 
   );

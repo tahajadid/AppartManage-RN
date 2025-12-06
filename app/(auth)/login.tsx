@@ -1,15 +1,21 @@
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 import Typo from '@/components/Typo';
+import { useRTL } from '@/contexts/RTLContext';
 import useThemeColors from '@/contexts/useThemeColors';
+import { createRTLStyles } from '@/utils/rtlStyles';
 import { useLoginViewModel } from '@/viewmodels/useLoginViewModel';
 import { GoogleSigninButton } from '@react-native-google-signin/google-signin';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
   StyleSheet,
+  Text,
   TextInput,
-  TouchableOpacity, View
+  TouchableOpacity,
+  View
 } from 'react-native';
 
 const login = () => {
@@ -24,36 +30,61 @@ const login = () => {
     handleGoogleSignIn,
   } = useLoginViewModel();
 
+  const { t } = useTranslation();
   const colors = useThemeColors();
+  const { isRTL } = useRTL();
+  const rtlStyles = createRTLStyles(isRTL);
 
-  
-  const backgroundColor = colors.screenBackground
-  const textColor = colors.neutral300
-  const tintColor = colors.neutral100
+  const backgroundColor = colors.screenBackground;
+  const textColor = colors.neutral300;
+  const tintColor = colors.neutral100;
 
   return (
     <KeyboardAvoidingView
-      style={[styles.container, { backgroundColor }]}
+      style={[styles.container, { backgroundColor, direction: isRTL ? 'rtl' : 'ltr' }]}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <ScrollView
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={[styles.scrollContent, { direction: isRTL ? 'rtl' : 'ltr' }]}
         keyboardShouldPersistTaps="handled"
       >
-        <View style={styles.content}>
-          <Typo  style={styles.title}>
-            Welcome
-          </Typo>
-          <Typo style={styles.subtitle}>
-            Sign in to continue
-          </Typo>
+        <View 
+          style={[styles.content, { direction: isRTL ? 'rtl' : 'ltr' }]}
+        >
+          {/* Language Switcher */}
+          <LanguageSwitcher />
+
+          <Text style={[styles.title, { 
+            textAlign: 'left',
+            color: textColor,
+            width: '100%'
+          }]}>
+            {t('welcome')}
+          </Text>
+          <Text style={[styles.subtitle, { 
+            textAlign: 'left',
+            color: textColor,
+            width: '100%'
+          }]}>
+            {t('signInToContinue')}
+          </Text>
 
           {/* Email Input */}
           <View style={styles.inputContainer}>
-            <Typo style={styles.label}>Email</Typo>
+            <Text style={[styles.label, { 
+              textAlign: 'left',
+              color: textColor,
+              width: '100%'
+            }]}>
+              {t('email')}
+            </Text>
             <TextInput
-              style={[styles.input, { color: textColor, borderColor: tintColor }]}
-              placeholder="Enter your email"
+              style={[
+                styles.input,
+                rtlStyles.input(),
+                { color: textColor, borderColor: tintColor }
+              ]}
+              placeholder={t('enterEmail')}
               placeholderTextColor={textColor + '80'}
               value={email}
               onChangeText={setEmail}
@@ -66,10 +97,20 @@ const login = () => {
 
           {/* Password Input */}
           <View style={styles.inputContainer}>
-            <Typo style={styles.label}>Password</Typo>
+            <Text style={[styles.label, { 
+              textAlign: 'left',
+              color: textColor,
+              width: '100%'
+            }]}>
+              {t('password')}
+            </Text>
             <TextInput
-              style={[styles.input, { color: textColor, borderColor: tintColor }]}
-              placeholder="Enter your password"
+              style={[
+                styles.input,
+                rtlStyles.input(),
+                { color: textColor, borderColor: tintColor }
+              ]}
+              placeholder={t('enterPassword')}
               placeholderTextColor={textColor + '80'}
               value={password}
               onChangeText={setPassword}
@@ -96,7 +137,7 @@ const login = () => {
             disabled={loading}
           >
             <Typo style={styles.buttonText}>
-              {loading ? 'Signing in...' : 'Sign In'}
+              {loading ? t('signingIn') : t('signIn')}
             </Typo>
           </TouchableOpacity>
 
@@ -139,11 +180,9 @@ const styles = StyleSheet.create({
   },
   title: {
     marginBottom: 8,
-    textAlign: 'center',
   },
   subtitle: {
     marginBottom: 32,
-    textAlign: 'center',
     opacity: 0.7,
   },
   inputContainer: {
