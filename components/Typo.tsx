@@ -1,4 +1,5 @@
 import { TypoProps } from '@/constants/types';
+import { useFontFamily } from '@/hooks/fonts';
 import { verticalScale } from '@/utils/styling';
 import React from 'react';
 import { StyleSheet, Text, TextStyle } from 'react-native';
@@ -11,11 +12,13 @@ const Typo = ({
     style,
     textProps = {}
 }: TypoProps) => {
+    const fontFamily = useFontFamily();
 
     const textStyle: TextStyle = {
         fontSize: size? verticalScale(size): verticalScale(18),
         color,
         fontWeight,
+        fontFamily,
     };
 
     // Flatten and merge styles - style prop should override textStyle

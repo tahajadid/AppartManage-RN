@@ -1,5 +1,6 @@
 import { useRTL } from '@/contexts/RTLContext';
 import useThemeColors from '@/contexts/useThemeColors';
+import { useFontFamily } from '@/hooks/fonts';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -8,6 +9,7 @@ const LanguageSwitcher: React.FC = () => {
   const { t } = useTranslation();
   const colors = useThemeColors();
   const { isRTL, currentLanguage, changeLanguage, refreshKey } = useRTL();
+  const fontFamily = useFontFamily();
 
   const textColor = colors.neutral300;
   const tintColor = colors.neutral100;
@@ -48,7 +50,7 @@ const LanguageSwitcher: React.FC = () => {
               ]}
               onPress={() => handleLanguageChange('ar')}
             >
-              <Text style={[styles.buttonText, { color: textColor }]}>العربية</Text>
+              <Text style={[styles.buttonText, { color: textColor, fontFamily }]}>العربية</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[
@@ -58,7 +60,7 @@ const LanguageSwitcher: React.FC = () => {
               ]}
               onPress={() => handleLanguageChange('en')}
             >
-              <Text style={[styles.buttonText, { color: textColor }]}>English</Text>
+              <Text style={[styles.buttonText, { color: textColor, fontFamily }]}>English</Text>
             </TouchableOpacity>
           </View>
         </>
@@ -78,7 +80,7 @@ const LanguageSwitcher: React.FC = () => {
               ]}
               onPress={() => handleLanguageChange('en')}
             >
-              <Text style={[styles.buttonText, { color: textColor }]}>English</Text>
+              <Text style={[styles.buttonText, { color: textColor, fontFamily }]}>English</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[
@@ -88,7 +90,7 @@ const LanguageSwitcher: React.FC = () => {
               ]}
               onPress={() => handleLanguageChange('ar')}
             >
-              <Text style={[styles.buttonText, { color: textColor }]}>العربية</Text>
+              <Text style={[styles.buttonText, { color: textColor, fontFamily }]}>العربية</Text>
             </TouchableOpacity>
           </View>
         </>

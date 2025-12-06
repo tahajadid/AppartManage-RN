@@ -2,6 +2,7 @@ import LanguageSwitcher from '@/components/LanguageSwitcher';
 import Typo from '@/components/Typo';
 import { useRTL } from '@/contexts/RTLContext';
 import useThemeColors from '@/contexts/useThemeColors';
+import { useFontFamily } from '@/hooks/fonts';
 import { createRTLStyles } from '@/utils/rtlStyles';
 import { useLoginViewModel } from '@/viewmodels/useLoginViewModel';
 import { GoogleSigninButton } from '@react-native-google-signin/google-signin';
@@ -34,6 +35,7 @@ const login = () => {
   const colors = useThemeColors();
   const { isRTL } = useRTL();
   const rtlStyles = createRTLStyles(isRTL);
+  const fontFamily = useFontFamily();
 
   const backgroundColor = colors.screenBackground;
   const textColor = colors.neutral300;
@@ -57,14 +59,16 @@ const login = () => {
           <Text style={[styles.title, { 
             textAlign: 'left',
             color: textColor,
-            width: '100%'
+            width: '100%',
+            fontFamily
           }]}>
             {t('welcome')}
           </Text>
           <Text style={[styles.subtitle, { 
             textAlign: 'left',
             color: textColor,
-            width: '100%'
+            width: '100%',
+            fontFamily
           }]}>
             {t('signInToContinue')}
           </Text>
@@ -74,7 +78,8 @@ const login = () => {
             <Text style={[styles.label, { 
               textAlign: 'left',
               color: textColor,
-              width: '100%'
+              width: '100%',
+              fontFamily
             }]}>
               {t('email')}
             </Text>
@@ -82,7 +87,7 @@ const login = () => {
               style={[
                 styles.input,
                 rtlStyles.input(),
-                { color: textColor, borderColor: tintColor }
+                { color: textColor, borderColor: tintColor, fontFamily }
               ]}
               placeholder={t('enterEmail')}
               placeholderTextColor={textColor + '80'}
@@ -100,7 +105,8 @@ const login = () => {
             <Text style={[styles.label, { 
               textAlign: 'left',
               color: textColor,
-              width: '100%'
+              width: '100%',
+              fontFamily
             }]}>
               {t('password')}
             </Text>
@@ -108,7 +114,7 @@ const login = () => {
               style={[
                 styles.input,
                 rtlStyles.input(),
-                { color: textColor, borderColor: tintColor }
+                { color: textColor, borderColor: tintColor, fontFamily }
               ]}
               placeholder={t('enterPassword')}
               placeholderTextColor={textColor + '80'}
