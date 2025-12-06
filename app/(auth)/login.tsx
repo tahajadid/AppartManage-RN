@@ -1,14 +1,22 @@
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 import Typo from '@/components/Typo';
+import { useRTL } from '@/contexts/RTLContext';
 import useThemeColors from '@/contexts/useThemeColors';
+import { useFontFamily } from '@/hooks/fonts';
+import { createRTLStyles } from '@/utils/rtlStyles';
 import { useLoginViewModel } from '@/viewmodels/useLoginViewModel';
+import { GoogleSigninButton } from '@react-native-google-signin/google-signin';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
   StyleSheet,
+  Text,
   TextInput,
-  TouchableOpacity, View
+  TouchableOpacity,
+  View
 } from 'react-native';
 
 const login = () => {
@@ -23,36 +31,65 @@ const login = () => {
     handleGoogleSignIn,
   } = useLoginViewModel();
 
+  const { t } = useTranslation();
   const colors = useThemeColors();
+  const { isRTL } = useRTL();
+  const rtlStyles = createRTLStyles(isRTL);
+  const fontFamily = useFontFamily();
 
-  
-  const backgroundColor = colors.screenBackground
-  const textColor = colors.blue100
-  const tintColor = colors.blueGrey
+  const backgroundColor = colors.screenBackground;
+  const textColor = colors.neutral300;
+  const tintColor = colors.neutral100;
 
   return (
     <KeyboardAvoidingView
-      style={[styles.container, { backgroundColor }]}
+      style={[styles.container, { backgroundColor, direction: isRTL ? 'rtl' : 'ltr' }]}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <ScrollView
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={[styles.scrollContent, { direction: isRTL ? 'rtl' : 'ltr' }]}
         keyboardShouldPersistTaps="handled"
       >
-        <View style={styles.content}>
-          <Typo  style={styles.title}>
-            Welcome
-          </Typo>
-          <Typo style={styles.subtitle}>
-            Sign in to continue
-          </Typo>
+        <View 
+          style={[styles.content, { direction: isRTL ? 'rtl' : 'ltr' }]}
+        >
+          {/* Language Switcher */}
+          <LanguageSwitcher />
+
+          <Text style={[styles.title, { 
+            textAlign: 'left',
+            color: textColor,
+            width: '100%',
+            fontFamily
+          }]}>
+            {t('welcome')}
+          </Text>
+          <Text style={[styles.subtitle, { 
+            textAlign: 'left',
+            color: textColor,
+            width: '100%',
+            fontFamily
+          }]}>
+            {t('signInToContinue')}
+          </Text>
 
           {/* Email Input */}
           <View style={styles.inputContainer}>
-            <Typo style={styles.label}>Email</Typo>
+            <Text style={[styles.label, { 
+              textAlign: 'left',
+              color: textColor,
+              width: '100%',
+              fontFamily
+            }]}>
+              {t('email')}
+            </Text>
             <TextInput
-              style={[styles.input, { color: textColor, borderColor: tintColor }]}
-              placeholder="Enter your email"
+              style={[
+                styles.input,
+                rtlStyles.input(),
+                { color: textColor, borderColor: tintColor, fontFamily }
+              ]}
+              placeholder={t('enterEmail')}
               placeholderTextColor={textColor + '80'}
               value={email}
               onChangeText={setEmail}
@@ -65,10 +102,21 @@ const login = () => {
 
           {/* Password Input */}
           <View style={styles.inputContainer}>
-            <Typo style={styles.label}>Password</Typo>
+            <Text style={[styles.label, { 
+              textAlign: 'left',
+              color: textColor,
+              width: '100%',
+              fontFamily
+            }]}>
+              {t('password')}
+            </Text>
             <TextInput
-              style={[styles.input, { color: textColor, borderColor: tintColor }]}
-              placeholder="Enter your password"
+              style={[
+                styles.input,
+                rtlStyles.input(),
+                { color: textColor, borderColor: tintColor, fontFamily }
+              ]}
+              placeholder={t('enterPassword')}
               placeholderTextColor={textColor + '80'}
               value={password}
               onChangeText={setPassword}
@@ -95,27 +143,24 @@ const login = () => {
             disabled={loading}
           >
             <Typo style={styles.buttonText}>
-              {loading ? 'Signing in...' : 'Sign In'}
+              {loading ? t('signingIn') : t('signIn')}
             </Typo>
           </TouchableOpacity>
 
           {/* Divider */}
           <View style={styles.dividerContainer}>
-            <Typo style={styles.dividerText}>Test</Typo>
-            <Typo style={styles.dividerText}>OR</Typo>
-            <Typo style={styles.dividerText}>Test</Typo>
           </View>
 
           {/* Google Sign-In Button */}
-          <TouchableOpacity
-            style={[styles.button, styles.googleButton, { borderColor: tintColor }]}
-            onPress={handleGoogleSignIn}
-            disabled={loading}
-          >
-            <Typo style={styles.googleButtonText}>
-              {loading ? 'Signing in...' : 'Sign in with Google'}
-            </Typo>
-          </TouchableOpacity>
+          <View style={styles.googleButtonContainer}>
+            <GoogleSigninButton
+              style={styles.googleButton}
+              size={GoogleSigninButton.Size.Wide}
+              color={GoogleSigninButton.Color.Light}
+              onPress={handleGoogleSignIn}
+              disabled={loading}
+            />
+          </View>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
@@ -141,11 +186,9 @@ const styles = StyleSheet.create({
   },
   title: {
     marginBottom: 8,
-    textAlign: 'center',
   },
   subtitle: {
     marginBottom: 32,
-    textAlign: 'center',
     opacity: 0.7,
   },
   inputContainer: {
@@ -181,16 +224,17 @@ const styles = StyleSheet.create({
   loginButton: {
     marginTop: 8,
   },
+  googleButtonContainer: {
+    width: '100%',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
   googleButton: {
-    borderWidth: 1,
-    backgroundColor: 'transparent',
+    width: '100%',
+    height: 50,
   },
   buttonText: {
     color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  googleButtonText: {
     fontSize: 16,
     fontWeight: '600',
   },

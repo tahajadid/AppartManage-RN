@@ -10,7 +10,10 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.tahadeta.appartmanage"
+      "bundleIdentifier": "com.tahadeta.appartmanage",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -45,6 +48,15 @@
         "@react-native-google-signin/google-signin",
         {
           "iosUrlScheme": "com.googleusercontent.apps.923121999711-ta3ofan1ifo4graf06g979podkd5kagq"
+        }
+      ],
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./assets/font/SpaceMono-Regular.ttf",
+            "./assets/font/Droid-Arabic-Kufi.ttf"
+          ]
         }
       ]
     ],
