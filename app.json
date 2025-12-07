@@ -49,15 +49,6 @@
         {
           "iosUrlScheme": "com.googleusercontent.apps.923121999711-ta3ofan1ifo4graf06g979podkd5kagq"
         }
-      ],
-      [
-        "expo-font",
-        {
-          "fonts": [
-            "./assets/font/SpaceMono-Regular.ttf",
-            "./assets/font/Droid-Arabic-Kufi.ttf"
-          ]
-        }
       ]
     ],
     "experiments": {

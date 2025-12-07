@@ -138,15 +138,21 @@ export const lightTheme = {
 
 
 export const spacingX = {
+    _1: scale(1),
     _3: scale (3),
     _5: scale(5), 
     _7: scale(7), 
+    _8: scale(8), 
+    _9: scale(9), 
     _10: scale(10),
     _12: scale(12),
     _15: scale(15),
+    _16: scale(16),
     _20: scale(20),
+    _24: scale(24),
     _25: scale(25),
     _30: scale (30),
+    _32: scale (32),
     _35: scale (35),
     _40: scale (40),
     _50: scale (50),
@@ -155,15 +161,20 @@ export const spacingX = {
 
 
 export const spacingY = {
+    _1: verticalScale(1),
     _5: verticalScale(5),
     _7: verticalScale(7), 
+    _8: verticalScale(8), 
     _10: verticalScale(10), 
     _12: verticalScale(12),
     _15: verticalScale(15),
+    _16: verticalScale(16),
     _17: verticalScale(17), 
     _20: verticalScale (20), 
+    _24: verticalScale(24),
     _25: verticalScale(25),
     _30: verticalScale (30), 
+    _32: verticalScale (32), 
     _35: verticalScale (35),
     _40: verticalScale (40),
     _50: verticalScale (50),
@@ -171,11 +182,16 @@ export const spacingY = {
 };
 
 export const radius = {
+    _1: verticalScale(1),
     _3: verticalScale(3),
+    _4: verticalScale(4),
+    _5: verticalScale(5),
     _6: verticalScale(6),
+    _8: verticalScale(8),
     _10: verticalScale(10), 
     _12: verticalScale(12),
     _15: verticalScale(15),
+    _16: verticalScale(16),
     _17: verticalScale(17), 
     _20: verticalScale (20), 
     _30: verticalScale (30), 

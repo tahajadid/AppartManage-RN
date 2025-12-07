@@ -1,12 +1,35 @@
 import { useRTL } from '@/contexts/RTLContext';
+import { useFonts } from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
+import { useEffect } from 'react';
 
 /**
  * Font family names as registered in expo-font
  */
 export const Fonts = {
   ENGLISH: 'Rubik',
-  ARABIC: 'NotoKufiArabic',
+  ARABIC: 'Nawar',
 } as const;
+
+/**
+ * Hook to load fonts and handle splash screen
+ * @returns true if fonts are loaded, false otherwise
+ */
+export const useLoadFonts = (): boolean => {
+  const [fontsLoaded, fontError] = useFonts({
+    'Rubik': require('../assets/font/Rubik.ttf'),
+    'Nawar': require('../assets/font/Nawar.otf'),
+  });
+
+  useEffect(() => {
+    if (fontsLoaded || fontError) {
+      // Hide splash screen once fonts are loaded or if there's an error
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, fontError]);
+
+  return fontsLoaded || !!fontError;
+};
 
 /**
  * Hook to get the appropriate font family based on current language
