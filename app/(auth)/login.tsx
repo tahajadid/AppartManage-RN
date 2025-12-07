@@ -1,22 +1,20 @@
+import Input from '@/components/Input';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import ScreenWrapper from '@/components/ScreenWrapper';
 import Typo from '@/components/Typo';
 import { radius, spacingX, spacingY } from '@/constants/theme';
 import { useRTL } from '@/contexts/RTLContext';
 import useThemeColors from '@/contexts/useThemeColors';
-import { useFontFamily } from '@/hooks/fonts';
 import { createRTLStyles } from '@/utils/rtlStyles';
 import { useLoginViewModel } from '@/viewmodels/useLoginViewModel';
 import { GoogleSigninButton } from '@react-native-google-signin/google-signin';
+import { router } from 'expo-router';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   KeyboardAvoidingView,
-  Platform,
-  ScrollView,
+  Platform, Pressable, ScrollView,
   StyleSheet,
-  Text,
-  TextInput,
   TouchableOpacity,
   View
 } from 'react-native';
@@ -37,7 +35,6 @@ const login = () => {
   const colors = useThemeColors();
   const { isRTL } = useRTL();
   const rtlStyles = createRTLStyles(isRTL);
-  const fontFamily = useFontFamily();
 
   const textColor = colors.neutral300;
   const tintColor = colors.neutral100;
@@ -58,41 +55,35 @@ const login = () => {
               {/* Language Switcher */}
               <LanguageSwitcher />
 
-              <Text style={[styles.title, { 
-                textAlign: 'left',
-                color: textColor,
-                width: '100%',
-                fontFamily
-              }]}>
+              <Typo 
+                size={24}
+                color={textColor}
+                style={styles.title}
+              >
                 {t('welcome')}
-              </Text>
-              <Text style={[styles.subtitle, { 
-                textAlign: 'left',
-                color: textColor,
-                width: '100%',
-                fontFamily
-              }]}>
+              </Typo>
+              <Typo 
+                size={16}
+                color={textColor}
+                style={styles.subtitle}
+              >
                 {t('signInToContinue')}
-              </Text>
+              </Typo>
 
               {/* Email Input */}
               <View style={styles.inputContainer}>
-                <Text style={[styles.label, { 
-                  textAlign: 'left',
-                  color: textColor,
-                  width: '100%',
-                  fontFamily
-                }]}>
+                <Typo 
+                  size={14}
+                  color={textColor}
+                  fontWeight="600"
+                  style={styles.label}
+                >
                   {t('email')}
-                </Text>
-                <TextInput
-                  style={[
-                    styles.input,
-                    rtlStyles.input(),
-                    { color: textColor, borderColor: tintColor, fontFamily }
-                  ]}
+                </Typo>
+                <Input
+                  containerStyle={{ borderColor: tintColor }}
+                  inputStyle={rtlStyles.input()}
                   placeholder={t('enterEmail')}
-                  placeholderTextColor={textColor + '80'}
                   value={email}
                   onChangeText={setEmail}
                   autoCapitalize="none"
@@ -104,22 +95,18 @@ const login = () => {
 
               {/* Password Input */}
               <View style={styles.inputContainer}>
-                <Text style={[styles.label, { 
-                  textAlign: 'left',
-                  color: textColor,
-                  width: '100%',
-                  fontFamily
-                }]}>
+                <Typo 
+                  size={14}
+                  color={textColor}
+                  fontWeight="600"
+                  style={styles.label}
+                >
                   {t('password')}
-                </Text>
-                <TextInput
-                  style={[
-                    styles.input,
-                    rtlStyles.input(),
-                    { color: textColor, borderColor: tintColor, fontFamily }
-                  ]}
+                </Typo>
+                <Input
+                  containerStyle={{ borderColor: tintColor }}
+                  inputStyle={rtlStyles.input()}
                   placeholder={t('enterPassword')}
-                  placeholderTextColor={textColor + '80'}
                   value={password}
                   onChangeText={setPassword}
                   secureTextEntry
@@ -132,7 +119,11 @@ const login = () => {
               {/* Error Message */}
               {error && (
                 <View style={styles.errorContainer}>
-                  <Typo style={styles.errorText}>
+                  <Typo 
+                    size={14}
+                    color={colors.redClose}
+                    style={styles.errorText}
+                  >
                     {error}
                   </Typo>
                 </View>
@@ -144,13 +135,38 @@ const login = () => {
                 onPress={handleEmailLogin}
                 disabled={loading}
               >
-                <Typo style={styles.buttonText}>
+                <Typo 
+                  size={16}
+                  color="#fff"
+                  fontWeight="600"
+                  style={styles.buttonText}
+                >
                   {loading ? t('signingIn') : t('signIn')}
                 </Typo>
               </TouchableOpacity>
 
+
+            <View style={styles.footer}>
+                <Typo 
+                  size={16}
+                  color={colors.text}
+                  style={styles.footerText}
+                >
+                    {t('signingIn')}
+                </Typo>
+                <Pressable onPress={() => router.push("/(auth)/register")}>
+                    <Typo 
+                      size={16}
+                      color={colors.primary}
+                      style={styles.underlinedText}
+                    >
+                        {t("signingIn")}
+                    </Typo>
+                </Pressable>
+            </View>
+
               {/* Divider */}
-              <View style={styles.dividerContainer}>
+              <View style={[styles.dividerContainer, { backgroundColor: colors.neutral600 }]}>
               </View>
 
               {/* Google Sign-In Button */}
@@ -190,25 +206,19 @@ const styles = StyleSheet.create({
   },
   title: {
     marginBottom: spacingY._10,
+    textAlign: 'left',
   },
   subtitle: {
     marginBottom: spacingY._32,
     opacity: 0.7,
+    textAlign: 'left',
   },
   inputContainer: {
     marginBottom: spacingY._16,
   },
   label: {
     marginBottom: spacingY._10,
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  input: {
-    height: 50,
-    borderWidth: spacingX._1,
-    borderRadius: radius._8,
-    paddingHorizontal: spacingX._16,
-    fontSize: 16,
+    textAlign: 'left',
   },
   errorContainer: {
     marginTop: spacingY._8,
@@ -235,16 +245,15 @@ const styles = StyleSheet.create({
   },
   googleButton: {
     width: '100%',
-    height: 50,
+    height: 80,
   },
   buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
+    // Typo component handles color, fontSize, and fontWeight
   },
   dividerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    height: spacingX._1,
     marginVertical: spacingY._24,
   },
   divider: {
@@ -255,6 +264,18 @@ const styles = StyleSheet.create({
     marginHorizontal: spacingX._16,
     fontSize: 14,
     opacity: 0.6,
+  },
+  footer: { 
+    flexDirection: "row",
+    justifyContent: "center",
+    gap: 5,
+    alignItems: "center",
+    },
+  footerText: {
+      textAlign:"center",
+  },
+  underlinedText: {
+    textDecorationLine: "underline",
   },
 });
 
