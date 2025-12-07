@@ -1,6 +1,7 @@
+import { radius, spacingX, spacingY } from '@/constants/theme';
 import { useRTL } from '@/contexts/RTLContext';
 import useThemeColors from '@/contexts/useThemeColors';
-import { useFontFamily } from '@/hooks/fonts';
+import { Fonts } from '@/hooks/fonts';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -9,7 +10,6 @@ const LanguageSwitcher: React.FC = () => {
   const { t } = useTranslation();
   const colors = useThemeColors();
   const { isRTL, currentLanguage, changeLanguage, refreshKey } = useRTL();
-  const fontFamily = useFontFamily();
 
   const textColor = colors.neutral300;
   const tintColor = colors.neutral100;
@@ -29,8 +29,7 @@ const LanguageSwitcher: React.FC = () => {
       style={[
         styles.container,
         {
-          flexDirection: 'row',
-          backgroundColor: 'rgba(255, 255, 255, 0.1)',
+          backgroundColor: colors.neutral800,
         },
       ]}
     >
@@ -45,22 +44,20 @@ const LanguageSwitcher: React.FC = () => {
             <TouchableOpacity
               style={[
                 styles.button,
-                currentLanguage === 'ar' && styles.buttonActive,
-                { borderColor: tintColor },
+                currentLanguage === 'ar' && {backgroundColor: colors.neutral700},
               ]}
               onPress={() => handleLanguageChange('ar')}
             >
-              <Text style={[styles.buttonText, { color: textColor, fontFamily }]}>العربية</Text>
+              <Text style={[styles.buttonText, { color: textColor, fontFamily: Fonts.ARABIC  }]}>العربية</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[
                 styles.button,
-                currentLanguage === 'en' && styles.buttonActive,
-                { borderColor: tintColor },
+                currentLanguage === 'en' && {backgroundColor: colors.neutral700},
               ]}
               onPress={() => handleLanguageChange('en')}
             >
-              <Text style={[styles.buttonText, { color: textColor, fontFamily }]}>English</Text>
+              <Text style={[styles.buttonText, {color: textColor, fontFamily: Fonts.ENGLISH }]}>English</Text>
             </TouchableOpacity>
           </View>
         </>
@@ -75,22 +72,20 @@ const LanguageSwitcher: React.FC = () => {
             <TouchableOpacity
               style={[
                 styles.button,
-                currentLanguage === 'en' && styles.buttonActive,
-                { borderColor: tintColor },
+                currentLanguage === 'en' && {backgroundColor: colors.neutral700},
               ]}
               onPress={() => handleLanguageChange('en')}
             >
-              <Text style={[styles.buttonText, { color: textColor, fontFamily }]}>English</Text>
+              <Text style={[styles.buttonText, { color: textColor, fontFamily: Fonts.ENGLISH }]}>English</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[
                 styles.button,
-                currentLanguage === 'ar' && styles.buttonActive,
-                { borderColor: tintColor },
+                currentLanguage === 'ar' && {backgroundColor: colors.neutral700},
               ]}
               onPress={() => handleLanguageChange('ar')}
             >
-              <Text style={[styles.buttonText, { color: textColor, fontFamily }]}>العربية</Text>
+              <Text style={[styles.buttonText, { color: textColor, fontFamily: Fonts.ARABIC  }]}>العربية</Text>
             </TouchableOpacity>
           </View>
         </>
@@ -103,11 +98,11 @@ export default LanguageSwitcher;
 
 const styles = StyleSheet.create({
   container: {
+    alignSelf: 'flex-start',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 24,
-    padding: 12,
-    borderRadius: 8,
+    marginBottom: spacingY._24,
+    padding: spacingX._5,
+    borderRadius: radius._8,
   },
   label: {
     fontSize: 14,
@@ -120,14 +115,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 6,
-    borderWidth: 1,
-    backgroundColor: 'transparent',
-  },
-  buttonActive: {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
   },
   buttonText: {
     fontSize: 14,
+    alignContent:"center",
+    justifyContent:"center",
+    alignItems:"center",
+    textAlign:"center",
+    textAlignVertical:"auto",
   },
 });
 
