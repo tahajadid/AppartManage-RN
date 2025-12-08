@@ -28,10 +28,15 @@ export const colors = {
 
 export const lightTheme = {
     // primary colors
-    screenBackground: "#e7e7e7",
-    primary: "#1982A1",
-    primaryLight: "#1982A1",
-    primaryDark: "#36BEDA",
+    screenBackground: "#EDEDED",
+    primary: "#427DBD",
+    primaryLight: "#6DA6E3",
+    primaryDark: "#3269A6",
+
+    primaryButton : "#F2720A",
+    primaryButtonLight : "#FA973E",
+    primaryButtonDark : "#F2720A",
+
     text: "#000",
     descriptionText: "#525252",
     textLight: "#e5e5e5",
@@ -40,7 +45,8 @@ export const lightTheme = {
     primarySelection: "#7cb5c2",
 
     // common colors
-    neutral900: "#fafafa",
+    neutral900: "#F9F9F9",
+    neutral850: "#f0f0f0",
     neutral800: "#f5f5f5",
     neutral700: "#e5e5e5",
     neutral600: "#d4d4d4",
@@ -49,8 +55,9 @@ export const lightTheme = {
     neutral350: "#737373",
     neutral300: "#525252",
     neutral200: "#404040",
-    neutral100: "#262626",
-    neutral50: "#ffffff",
+    neutral150: "#2E2E2E",
+    neutral100: "#1F1E1E",
+    neutral50: "#121010",
 
     // general colors
     rose: "#ef4444",
@@ -60,6 +67,7 @@ export const lightTheme = {
     black: "#000",
     brightOrange: "#FFAC1C",
     gold: "#fdbf00",
+    loginBackground:"#D3E2F0",
 
     // blue color
     blue100 :"#B6E8F2", 
@@ -83,30 +91,37 @@ export const lightTheme = {
   
   export const darkTheme = {
     // primary colors
-    screenBackground: "#171717",
-    primary: "#30AEC7",
-    primaryLight: "#30AEC7",
-    primaryDark: "#1982A1",
+    screenBackground: "#0F0F0F",
+    primary: "#3269A6",
+    primaryLight: "#427DBD",
+    primaryDark: "#3269A6",
+
+    primaryButton : "#FA973E",
+    primaryButtonLight : "#FA973E",
+    primaryButtonDark : "#F2720A",
+    
     text: "#fff",
     descriptionText: "#d4d4d4",
     textLight: "#e5e5e5",
     textLighter: "#d4d4d4",
     blueText: "#36BEDA",
     primarySelection: "#8fccd9",
+    loginBackground:"#AFCDED",
 
     // common colors
-    neutral50: "#fafafa",
-    neutral100: "#f5f5f5",
-    neutral200: "#e5e5e5",
-    neutral300: "#d4d4d4",
-    neutral350: "#CCCCCC",
-    neutral400: "#a3a3a3",
-    neutral500: "#737373",
-    neutral600: "#525252",
+    neutral900: "#121010",
+    neutral850: "#1F1E1E",
+    neutral800: "#2E2E2E",
     neutral700: "#404040",
-    neutral800: "#262626",
-    neutral900: "#171717",
-
+    neutral600: "#525252",
+    neutral500: "#737373",
+    neutral400: "#a3a3a3",
+    neutral350: "#CCCCCC",
+    neutral300: "#d4d4d4",
+    neutral200: "#e5e5e5",
+    neutral150: "#f5f5f5",
+    neutral100: "#f0f0f0",
+    neutral50: "#F9F9F9",
 
     // general colors
     rose: "#ef4444",

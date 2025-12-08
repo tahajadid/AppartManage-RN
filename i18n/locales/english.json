@@ -7,7 +7,10 @@
   "enterPassword": "Enter your password",
   "signIn": "Sign In",
   "signingIn": "Signing in...",
-  "language": "Language"
+  "language": "Language",
+  "haveAnAccount": "Don't have an account?",
+  "go_register": "Register",
+  "loginWithGooglrAccount": "Login with Google Account"
 }
 
 

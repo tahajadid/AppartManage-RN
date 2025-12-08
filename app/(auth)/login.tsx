@@ -1,5 +1,6 @@
 import Input from '@/components/Input';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
+import PrimaryButton from '@/components/PrimaryButton';
 import ScreenWrapper from '@/components/ScreenWrapper';
 import Typo from '@/components/Typo';
 import { radius, spacingX, spacingY } from '@/constants/theme';
@@ -15,7 +16,6 @@ import {
   KeyboardAvoidingView,
   Platform, Pressable, ScrollView,
   StyleSheet,
-  TouchableOpacity,
   View
 } from 'react-native';
 
@@ -36,8 +36,6 @@ const login = () => {
   const { isRTL } = useRTL();
   const rtlStyles = createRTLStyles(isRTL);
 
-  const textColor = colors.neutral300;
-  const tintColor = colors.neutral100;
 
   return (
     <ScreenWrapper style={{ direction: isRTL ? 'rtl' : 'ltr' }}>
@@ -56,33 +54,36 @@ const login = () => {
               <LanguageSwitcher />
 
               <Typo 
-                size={24}
-                color={textColor}
+                size={26}
+                color={colors.text}
                 style={styles.title}
               >
                 {t('welcome')}
               </Typo>
               <Typo 
                 size={16}
-                color={textColor}
+                color={colors.text}
                 style={styles.subtitle}
               >
                 {t('signInToContinue')}
               </Typo>
 
+            <View style={[styles.formContainer, {backgroundColor: colors.loginBackground}]}>
+            
               {/* Email Input */}
               <View style={styles.inputContainer}>
                 <Typo 
                   size={14}
-                  color={textColor}
+                  color={colors.text}
                   fontWeight="600"
                   style={styles.label}
                 >
                   {t('email')}
                 </Typo>
                 <Input
-                  containerStyle={{ borderColor: tintColor }}
+                  containerStyle={{ borderColor: colors.neutral200 }}
                   inputStyle={rtlStyles.input()}
+                  placeholderTextColor={colors.neutral400}
                   placeholder={t('enterEmail')}
                   value={email}
                   onChangeText={setEmail}
@@ -97,17 +98,17 @@ const login = () => {
               <View style={styles.inputContainer}>
                 <Typo 
                   size={14}
-                  color={textColor}
-                  fontWeight="600"
+                  color={colors.text}
                   style={styles.label}
                 >
                   {t('password')}
                 </Typo>
                 <Input
-                  containerStyle={{ borderColor: tintColor }}
+                  containerStyle={{ borderColor: colors.neutral200 }}
                   inputStyle={rtlStyles.input()}
                   placeholder={t('enterPassword')}
                   value={password}
+                  placeholderTextColor={colors.neutral400}
                   onChangeText={setPassword}
                   secureTextEntry
                   autoCapitalize="none"
@@ -129,48 +130,55 @@ const login = () => {
                 </View>
               )}
 
-              {/* Login Button */}
-              <TouchableOpacity
-                style={[styles.button, styles.loginButton, { backgroundColor: tintColor }]}
-                onPress={handleEmailLogin}
-                disabled={loading}
-              >
-                <Typo 
+            {/* Login Button */}
+            <PrimaryButton 
+              style={styles.loginButton}
+              backgroundColor={colors.primary}
+              onPress={handleEmailLogin} disabled={loading}>
+              <Typo 
                   size={16}
-                  color="#fff"
-                  fontWeight="600"
-                  style={styles.buttonText}
-                >
+                  color={colors.screenBackground}
+                  fontWeight="600">
                   {loading ? t('signingIn') : t('signIn')}
-                </Typo>
-              </TouchableOpacity>
+              </Typo>
+            </PrimaryButton>
 
-
+            {/* go to register button  */}
             <View style={styles.footer}>
                 <Typo 
-                  size={16}
+                  size={14}
                   color={colors.text}
                   style={styles.footerText}
                 >
-                    {t('signingIn')}
+                    {t('haveAnAccount')}
                 </Typo>
                 <Pressable onPress={() => router.push("/(auth)/register")}>
                     <Typo 
-                      size={16}
+                      size={14}
                       color={colors.primary}
                       style={styles.underlinedText}
                     >
-                        {t("signingIn")}
+                        {t("go_register")}
                     </Typo>
                 </Pressable>
             </View>
 
-              {/* Divider */}
-              <View style={[styles.dividerContainer, { backgroundColor: colors.neutral600 }]}>
-              </View>
+          </View>
 
-              {/* Google Sign-In Button */}
-              <View style={styles.googleButtonContainer}>
+            {/* Divider */}
+            <View style={[styles.dividerContainer, { backgroundColor: colors.neutral600 }]}>
+            </View>
+
+            <Typo 
+                  size={14}
+                  color={colors.text}
+                  style={styles.registerWithGoogle}
+                >
+                    {t('loginWithGooglrAccount')}
+                </Typo>
+
+            {/* Google Sign-In Button */}
+            <View style={styles.googleButtonContainer}>
                 <GoogleSigninButton
                   style={styles.googleButton}
                   size={GoogleSigninButton.Size.Wide}
@@ -178,11 +186,11 @@ const login = () => {
                   onPress={handleGoogleSignIn}
                   disabled={loading}
                 />
-              </View>
             </View>
-          </ScrollView>
-        </KeyboardAvoidingView>
-      </View>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </View>
 
     </ScreenWrapper>
   );
@@ -198,6 +206,11 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: 'center',
     padding: spacingX._20,
+  },
+  formContainer:{
+    padding: spacingX._20,
+    elevation: 1,
+    borderRadius: radius._10,
   },
   content: {
     width: '100%',
@@ -221,12 +234,11 @@ const styles = StyleSheet.create({
     textAlign: 'left',
   },
   errorContainer: {
-    marginTop: spacingY._8,
-    marginBottom: spacingY._16,
+    marginBottom: spacingY._8,
   },
   errorText: {
     fontSize: 14,
-    textAlign: 'center',
+    textAlign: 'left',
   },
   button: {
     height: 50,
@@ -270,9 +282,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 5,
     alignItems: "center",
+    marginTop: spacingY._16,
     },
   footerText: {
       textAlign:"center",
+  },
+  registerWithGoogle: {
+    marginBottom: spacingY._16,
+    textAlign:"left",
   },
   underlinedText: {
     textDecorationLine: "underline",

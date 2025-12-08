@@ -7,7 +7,10 @@
   "enterPassword": "أدخل كلمة المرور",
   "signIn": "تسجيل الدخول",
   "signingIn": "جاري تسجيل الدخول...",
-  "language": "اللغة"
+  "language": "اللغة",
+  "haveAnAccount": "ليس لديك حساب؟",
+  "go_register": "التسجيل",
+  "loginWithGooglrAccount": "تسجيل الدخول بحساب Google"
 }
 
 
