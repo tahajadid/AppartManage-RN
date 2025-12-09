@@ -48,7 +48,16 @@
   "syndicResident": "Syndic Resident",
   "syndicResidentDescription": "I manage an apartment building and live in an apartment",
   "syndicResidentPlaceholder": "Enter your full name and phone number",
-  "continue": "Continue"
+  "continue": "Continue",
+  "addResidents": "Add Residents",
+  "addResidentsDescription": "Enter information for each resident",
+  "residentName": "Resident Name",
+  "residentNamePlaceholder": "Enter resident name",
+  "residentNameRequired": "Resident name is required",
+  "monthlyFee": "Monthly Fee",
+  "monthlyFeePlaceholder": "Enter monthly fee",
+  "validMonthlyFeeRequired": "Please enter a valid monthly fee",
+  "you": "You"
 }
 
 

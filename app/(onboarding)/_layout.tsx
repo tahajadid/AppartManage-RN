@@ -9,7 +9,7 @@ export default function OnboardingLayout() {
   return (
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="choose-role" />
-      <Stack.Screen name="syndic-setup" />
+      <Stack.Screen name="syndic" />
       <Stack.Screen name="resident-setup" />
     </Stack>
   );

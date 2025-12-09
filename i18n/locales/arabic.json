@@ -47,7 +47,16 @@
   "errorOccurred": "حدث خطأ، يرجى المحاولة مرة أخرى",
   "continue": "متابعة",
   "syndicResident": "المدير والساكن",
-  "syndicResidentDescription": "أدير مبنى سكني وأسكن في شقة"
+  "syndicResidentDescription": "أدير مبنى سكني وأسكن في شقة",
+  "addResidents": "إضافة السكان",
+  "addResidentsDescription": "أدخل معلومات كل ساكن",
+  "residentName": "اسم الساكن",
+  "residentNamePlaceholder": "أدخل اسم الساكن",
+  "residentNameRequired": "اسم الساكن مطلوب",
+  "monthlyFee": "الرسوم الشهرية",
+  "monthlyFeePlaceholder": "أدخل الرسوم الشهرية",
+  "validMonthlyFeeRequired": "يرجى إدخال رسوم شهرية صحيحة",
+  "you": "أنت"
 }
 
 

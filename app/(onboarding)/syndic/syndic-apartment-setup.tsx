@@ -4,35 +4,32 @@ import PrimaryButton from '@/components/PrimaryButton';
 import ScreenWrapper from '@/components/ScreenWrapper';
 import Typo from '@/components/Typo';
 import { radius, spacingX, spacingY } from '@/constants/theme';
-import { useOnboarding } from '@/contexts/onboardingContext';
 import { useRTL } from '@/contexts/RTLContext';
 import useThemeColors from '@/contexts/useThemeColors';
-import { completeOnboarding } from '@/services/onboardingService';
 import { createRTLStyles } from '@/utils/rtlStyles';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-export default function SyndicSetupScreen() {
+export default function SyndicApartmentSetup() {
   const { t } = useTranslation();
   const colors = useThemeColors();
   const { isRTL } = useRTL();
-  const { refreshOnboardingStatus } = useOnboarding();
   const insets = useSafeAreaInsets();
   const rtlStyles = createRTLStyles(isRTL);
+  const params = useLocalSearchParams<{ role?: string }>();
 
   const [apartmentName, setApartmentName] = useState('');
   const [numberOfResidents, setNumberOfResidents] = useState('');
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const handleBack = () => {
     router.push('/(onboarding)/choose-role');
   };
 
-  const handleComplete = async () => {
+  const handleContinue = () => {
     // Validation
     if (!apartmentName.trim()) {
       setError(t('apartmentNameRequired'));
@@ -45,29 +42,18 @@ export default function SyndicSetupScreen() {
       return;
     }
 
-    setLoading(true);
-    setError(null);
+    // Get the selected role from route params or default to 'syndic'
+    const role = params.role || 'syndic';
 
-    try {
-      const result = await completeOnboarding({
-        role: 'syndic',
+    // Navigate to resident list setup with apartment info
+    router.push({
+      pathname: '/(onboarding)/syndic/syndic-list-resident-setup',
+      params: {
         apartmentName: apartmentName.trim(),
-        numberOfResidents: residentsCount,
-      });
-
-      if (result.error) {
-        setError(result.error);
-      } else {
-        // Refresh onboarding status and navigate to home
-        await refreshOnboardingStatus();
-        router.replace('/(home)');
-      }
-    } catch (err: any) {
-      console.log('Onboarding completion error:', err);
-      setError(t('errorOccurred'));
-    } finally {
-      setLoading(false);
-    }
+        numberOfResidents: residentsCount.toString(),
+        role: role,
+      },
+    });
   };
 
   return (
@@ -115,7 +101,7 @@ export default function SyndicSetupScreen() {
                   value={apartmentName}
                   onChangeText={setApartmentName}
                   autoCapitalize="words"
-                  editable={!loading}
+                  editable={true}
                 />
               </View>
 
@@ -137,7 +123,7 @@ export default function SyndicSetupScreen() {
                   value={numberOfResidents}
                   onChangeText={setNumberOfResidents}
                   keyboardType="number-pad"
-                  editable={!loading}
+                  editable={true}
                 />
               </View>
 
@@ -162,16 +148,14 @@ export default function SyndicSetupScreen() {
           <PrimaryButton
             style={styles.completeButton}
             backgroundColor={colors.primary}
-            onPress={handleComplete}
-            loading={loading}
-            disabled={loading}
+            onPress={handleContinue}
           >
             <Typo 
               size={16}
               color={colors.screenBackground}
               fontWeight="600"
             >
-              {loading ? t('continuing') : t('continue')}
+              {t('continue')}
             </Typo>
           </PrimaryButton>
         </View>

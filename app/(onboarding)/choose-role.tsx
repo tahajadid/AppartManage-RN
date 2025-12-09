@@ -27,7 +27,12 @@ export default function ChooseRoleScreen() {
     if (!selectedRole) return;
 
     if (selectedRole === 'syndic' || selectedRole === 'syndic_resident') {
-      router.push('/(onboarding)/syndic-setup');
+      router.push({
+        pathname: '/(onboarding)/syndic/syndic-apartment-setup',
+        params: {
+          role: selectedRole,
+        },
+      });
     } else {
       router.push('/(onboarding)/resident-setup');
     }

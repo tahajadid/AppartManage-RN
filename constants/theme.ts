@@ -41,6 +41,11 @@ export const lightTheme = {
     titleText: "#141414",
     subtitleText: "#202021",
 
+    primaryUnselectedBackground : "#cbdff5",
+
+    goldColorBackground: "#f5c127",
+    goldColorBorder: "#bf9b2e",
+
     text: "#000",
     descriptionText: "#525252",
     textLight: "#e5e5e5",
@@ -101,6 +106,8 @@ export const lightTheme = {
     primaryDark: "#3269A6",
     unselectedPrimary : "#91b8e6",
 
+    primaryUnselectedBackground : "#cbdff5",
+
     titleText: "#f5f5f7",
     subtitleText: "#e8e8ed",
 
@@ -109,6 +116,10 @@ export const lightTheme = {
     primaryButtonLight : "#FA973E",
     primaryButtonDark : "#F2720A",
     
+    goldColorBackground: "#d9be27",
+    goldColorBorder: "#FFD700",
+
+
     text: "#fff",
     descriptionText: "#d4d4d4",
     textLight: "#e5e5e5",

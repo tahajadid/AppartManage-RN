@@ -1,12 +1,19 @@
 import { auth, firestore } from '@/config/firebase';
 import { collection, doc, getDoc, getDocs, query, setDoc, updateDoc, where } from 'firebase/firestore';
 
-export type UserRole = 'syndic' | 'resident';
+export type UserRole = 'syndic' | 'syndic_resident' | 'resident';
+
+export interface ResidentInfo {
+  name: string;
+  monthlyFee: number;
+  isSyndic?: boolean;
+}
 
 export interface SyndicOnboardingData {
-  role: 'syndic';
+  role: 'syndic' | 'syndic_resident';
   apartmentName: string;
   numberOfResidents: number;
+  residents?: ResidentInfo[];
 }
 
 export interface ResidentOnboardingData {
@@ -50,7 +57,7 @@ export async function completeOnboarding(data: OnboardingData): Promise<Onboardi
 
     const userDocRef = doc(firestore, 'users', user.uid);
     
-    if (data.role === 'syndic') {
+    if (data.role === 'syndic' || data.role === 'syndic_resident') {
       // Generate a unique join code for the apartment
       const joinCode = generateJoinCode();
       
@@ -58,20 +65,52 @@ export async function completeOnboarding(data: OnboardingData): Promise<Onboardi
       const apartmentId = `apartment_${Date.now()}`;
       const apartmentDocRef = doc(firestore, 'apartments', apartmentId);
       
+      // Prepare residents data
+      const residentsList = data.residents || [];
+      const residentIds = [user.uid]; // Syndic is always a resident
+      
+      // Create resident documents if provided
+      if (residentsList.length > 0) {
+        for (const resident of residentsList) {
+          // For syndic-resident, the first resident is the syndic themselves
+          if (resident.isSyndic) {
+            // Update user document with resident info
+            await updateDoc(userDocRef, {
+              name: resident.name,
+              monthlyFee: resident.monthlyFee,
+            });
+          } else {
+            // Create resident document for other residents
+            const residentId = `resident_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+            const residentDocRef = doc(firestore, 'residents', residentId);
+            await setDoc(residentDocRef, {
+              id: residentId,
+              apartmentId: apartmentId,
+              name: resident.name,
+              monthlyFee: resident.monthlyFee,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            });
+            residentIds.push(residentId);
+          }
+        }
+      }
+      
       await setDoc(apartmentDocRef, {
         id: apartmentId,
         name: data.apartmentName,
         numberOfResidents: data.numberOfResidents,
         joinCode: joinCode,
         syndicId: user.uid,
-        residents: [user.uid], // Syndic is also a resident
+        residents: residentIds,
+        residentsData: residentsList,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       });
 
       // Update user document with role and apartment info
       await updateDoc(userDocRef, {
-        role: 'syndic',
+        role: data.role,
         apartmentId: apartmentId,
         onboardingCompleted: true,
         updatedAt: new Date().toISOString(),
