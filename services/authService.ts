@@ -6,7 +6,8 @@ import {
     signInWithEmailAndPassword,
     User
 } from 'firebase/auth';
-import { auth } from '../config/firebase';
+import { doc, setDoc } from 'firebase/firestore';
+import { auth, firestore } from '../config/firebase';
 
 // Check if we're running in Expo Go (where native modules don't work)
 const isExpoGo = Constants.executionEnvironment === 'storeClient';
@@ -96,15 +97,56 @@ export async function signInWithEmail(email: string, password: string): Promise<
       error: null,
     };
   } catch (error: any) {
+    console.log('Sign in error:', error);
     return {
       user: null,
-      error: error.message || 'Failed to sign in',
+      error: 'An error occurred, please try again',
+    };
+  }
+}
+
+export interface RegisterData {
+  fullName: string;
+  email: string;
+  password: string;
+  phoneNumber?: string;
+}
+
+/**
+ * Register a new user with email and password, and create their Firestore document
+ */
+export async function registerWithEmail(data: RegisterData): Promise<AuthResult> {
+  try {
+    // Create user in Firebase Auth
+    const userCredential = await createUserWithEmailAndPassword(auth, data.email, data.password);
+    const user = userCredential.user;
+
+    // Create user document in Firestore
+    const userDocRef = doc(firestore, 'users', user.uid);
+    await setDoc(userDocRef, {
+      uid: user.uid,
+      fullName: data.fullName,
+      email: data.email,
+      phoneNumber: data.phoneNumber || null,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    });
+
+    return {
+      user: user,
+      error: null,
+    };
+  } catch (error: any) {
+    console.log('Registration error:', error);
+    return {
+      user: null,
+      error: 'An error occurred, please try again',
     };
   }
 }
 
 /**
- * Sign up with email and password
+ * Sign up with email and password (legacy function, use registerWithEmail instead)
  */
 export async function signUpWithEmail(email: string, password: string): Promise<AuthResult> {
   try {
@@ -114,9 +156,10 @@ export async function signUpWithEmail(email: string, password: string): Promise<
       error: null,
     };
   } catch (error: any) {
+    console.log('Sign up error:', error);
     return {
       user: null,
-      error: error.message || 'Failed to sign up',
+      error: 'An error occurred, please try again',
     };
   }
 }
@@ -185,32 +228,15 @@ export async function signInWithGoogle(): Promise<AuthResult> {
     };
   } catch (error: any) {
     // Log full error for debugging
-    console.error('Google Sign-In Error:', {
+    console.log('Google Sign-In Error:', {
       code: error.code,
       message: error.message,
       error: error,
     });
     
-    let errorMessage = 'Failed to sign in with Google';
-    
-    // Handle specific error codes
-    if (error.code === 'sign_in_cancelled') {
-      errorMessage = 'Sign in was cancelled';
-    } else if (error.code === 'in_progress') {
-      errorMessage = 'Sign in is already in progress';
-    } else if (error.code === 'play_services_not_available') {
-      errorMessage = 'Google Play Services not available';
-    } else if (error.code === 'DEVELOPER_ERROR' || error.code === '10' || error.message?.includes('DEVELOPER_ERROR')) {
-      errorMessage = 'DEVELOPER_ERROR: Check OAuth client configuration in Google Cloud Console. Ensure the Android package name and SHA fingerprints are correctly configured.';
-    } else if (error.message?.includes('TurboModuleRegistry') || error.message?.includes('RNGoogleSignin')) {
-      errorMessage = 'Google Sign-In native module not found. Please rebuild the app with: npx expo prebuild && npx expo run:android';
-    } else if (error.message) {
-      errorMessage = error.message;
-    }
-    
     return {
       user: null,
-      error: errorMessage,
+      error: 'An error occurred, please try again',
     };
   }
 }
@@ -226,7 +252,7 @@ export async function signOut(): Promise<void> {
     }
     await auth.signOut();
   } catch (error) {
-    console.error('Error signing out:', error);
+    console.log('Error signing out:', error);
     throw error;
   }
 }

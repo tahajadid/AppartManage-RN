@@ -84,7 +84,7 @@ const login = () => {
                   containerStyle={{ borderColor: colors.neutral200 }}
                   inputStyle={rtlStyles.input()}
                   placeholderTextColor={colors.neutral400}
-                  placeholder={t('enterEmail')}
+                  placeholder={t('enterEmail')} 
                   value={email}
                   onChangeText={setEmail}
                   autoCapitalize="none"
@@ -134,7 +134,10 @@ const login = () => {
             <PrimaryButton 
               style={styles.loginButton}
               backgroundColor={colors.primary}
-              onPress={handleEmailLogin} disabled={loading}>
+              onPress={handleEmailLogin}
+              loading={loading}
+              disabled={loading}
+            >
               <Typo 
                   size={16}
                   color={colors.screenBackground}

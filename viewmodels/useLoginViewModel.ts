@@ -1,7 +1,9 @@
 import { onAuthStateChanged, User } from 'firebase/auth';
+import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { auth } from '../config/firebase';
 import { signInWithEmail, signInWithGoogle } from '../services/authService';
+import { checkOnboardingStatus } from '../services/onboardingService';
 
 export function useLoginViewModel() {
   const [email, setEmail] = useState<string>('');
@@ -44,12 +46,19 @@ export function useLoginViewModel() {
       if (result.error) {
         setError(result.error);
       } else if (result.user) {
-        // Navigation will happen automatically via onAuthStateChanged
         setEmail('');
         setPassword('');
+        // Check onboarding status and navigate accordingly
+        const onboardingStatus = await checkOnboardingStatus();
+        if (onboardingStatus.completed) {
+          router.replace('/(home)');
+        } else {
+          router.replace('/(onboarding)/choose-role');
+        }
       }
     } catch (err: any) {
-      setError(err.message || 'An error occurred during login');
+      console.log('Login error:', err);
+      setError('An error occurred, please try again');
     } finally {
       setLoading(false);
     }
@@ -68,24 +77,17 @@ export function useLoginViewModel() {
       if (result.error) {
         setError(result.error);
       } else if (result.user) {
-        // Navigation will happen automatically via onAuthStateChanged
+        // Check onboarding status and navigate accordingly
+        const onboardingStatus = await checkOnboardingStatus();
+        if (onboardingStatus.completed) {
+          router.replace('/(home)');
+        } else {
+          router.replace('/(onboarding)/choose-role');
+        }
       }
     } catch (err: any) {
-      // Catch any errors, including native module loading errors
-      let errorMessage = 'An error occurred during Google sign in';
-      
-      if (err?.message) {
-        errorMessage = err.message;
-      } else if (typeof err === 'string') {
-        errorMessage = err;
-      }
-      
-      // Check if it's a native module error
-      if (err?.message?.includes('TurboModuleRegistry') || err?.message?.includes('RNGoogleSignin')) {
-        errorMessage = 'Google Sign-In is not available. Please rebuild the app with native modules: npx expo prebuild && npx expo run:ios';
-      }
-      
-      setError(errorMessage);
+      console.log('Google sign in error:', err);
+      setError('An error occurred, please try again');
     } finally {
       setLoading(false);
     }

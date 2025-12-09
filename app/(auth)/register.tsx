@@ -6,8 +6,7 @@ import { radius, spacingX, spacingY } from '@/constants/theme';
 import { useRTL } from '@/contexts/RTLContext';
 import useThemeColors from '@/contexts/useThemeColors';
 import { createRTLStyles } from '@/utils/rtlStyles';
-import { useLoginViewModel } from '@/viewmodels/useLoginViewModel';
-import { GoogleSigninButton } from '@react-native-google-signin/google-signin';
+import { useRegisterViewModel } from '@/viewmodels/useRegisterViewModel';
 import { router } from 'expo-router';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -20,15 +19,21 @@ import {
 
 const register = () => {
   const {
+    fullName,
+    setFullName,
     email,
     setEmail,
     password,
     setPassword,
+    confirmPassword,
+    setConfirmPassword,
+    phoneNumber,
+    setPhoneNumber,
     loading,
     error,
-    handleEmailLogin,
+    handleRegister,
     handleGoogleSignIn,
-  } = useLoginViewModel();
+  } = useRegisterViewModel();
 
   const { t } = useTranslation();
   const colors = useThemeColors();
@@ -60,7 +65,28 @@ const register = () => {
                 {t('enterInformation')}
               </Typo>
 
-            
+              {/* Full Name Input */}
+              <View style={styles.inputContainer}>
+                <Typo 
+                  size={14}
+                  color={colors.primary}
+                  fontWeight="600"
+                  style={styles.label}
+                >
+                  {t('fullName')}
+                </Typo>
+                <Input
+                  containerStyle={{ borderColor: colors.neutral300 }}
+                  inputStyle={rtlStyles.input()}
+                  placeholderTextColor={colors.neutral500}
+                  placeholder={t('fullNamePlaceholder')}
+                  value={fullName}
+                  onChangeText={setFullName}
+                  autoCapitalize="words"
+                  editable={!loading}
+                />
+              </View>
+
               {/* Email Input */}
               <View style={styles.inputContainer}>
                 <Typo 
@@ -90,12 +116,13 @@ const register = () => {
                 <Typo 
                   size={14}
                   color={colors.primary}
+                  fontWeight="600"
                   style={styles.label}
                 >
                   {t('password')}
                 </Typo>
                 <Input
-                  containerStyle={{ borderColor: colors.primary }}
+                  containerStyle={{ borderColor: colors.neutral300 }}
                   inputStyle={rtlStyles.input()}
                   placeholder={t('enterPassword')}
                   value={password}
@@ -108,25 +135,48 @@ const register = () => {
                 />
               </View>
 
-              {/* Password Input */}
-                <View style={styles.inputContainer}>
+              {/* Re-enter Password Input */}
+              <View style={styles.inputContainer}>
+                <Typo 
+                  size={14}
+                  color={colors.primary}
+                  fontWeight="600"
+                  style={styles.label}
+                >
+                  {t('confirmPassword')}
+                </Typo>
+                <Input
+                  containerStyle={{ borderColor: colors.neutral300 }}
+                  inputStyle={rtlStyles.input()}
+                  placeholder={t('confirmPasswordPlaceholder')}
+                  value={confirmPassword}
+                  placeholderTextColor={colors.neutral500}
+                  onChangeText={setConfirmPassword}
+                  secureTextEntry
+                  autoCapitalize="none"
+                  autoComplete="password"
+                  editable={!loading}
+                />
+              </View>
+
+              {/* Phone Number (Optional) */}
+              <View style={styles.inputContainer}>
                 <Typo 
                   size={14}
                   color={colors.primary}
                   style={styles.label}
                 >
-                  {t('password')}
+                  {t('phoneNumber')} {t('optional')}
                 </Typo>
                 <Input
-                  containerStyle={{ borderColor: colors.primary }}
+                  containerStyle={{ borderColor: colors.neutral300 }}
                   inputStyle={rtlStyles.input()}
-                  placeholder={t('enterPassword')}
-                  value={password}
+                  placeholder={t('phoneNumberPlaceholder')}
+                  value={phoneNumber}
                   placeholderTextColor={colors.neutral500}
-                  onChangeText={setPassword}
-                  secureTextEntry
-                  autoCapitalize="none"
-                  autoComplete="password"
+                  onChangeText={setPhoneNumber}
+                  keyboardType="phone-pad"
+                  autoComplete="tel"
                   editable={!loading}
                 />
               </View>
@@ -144,20 +194,24 @@ const register = () => {
                 </View>
               )}
 
-            {/* Login Button */}
+            {/* Register Button */}
             <PrimaryButton 
               style={styles.loginButton}
               backgroundColor={colors.primary}
-              onPress={handleEmailLogin} disabled={loading}>
+              onPress={handleRegister}
+              loading={loading}
+              disabled={loading}
+            >
               <Typo 
-                  size={16}
-                  color={colors.screenBackground}
-                  fontWeight="600">
-                  {loading ? t('signingIn') : t('signIn')}
+                size={16}
+                color={colors.screenBackground}
+                fontWeight="600"
+              >
+                {loading ? t('registering') : t('register')}
               </Typo>
             </PrimaryButton>
 
-            {/* register button  */}
+            {/* Login link */}
             <View style={styles.footer}>
                 <Typo 
                   size={14}
@@ -166,39 +220,15 @@ const register = () => {
                 >
                     {t('haveAnAccount')}
                 </Typo>
-                <Pressable onPress={() => router.push("/(auth)/register")}>
+                <Pressable onPress={() => router.push("/(auth)/login")}>
                     <Typo 
                       size={14}
                       color={colors.primary}
                       style={styles.underlinedText}
                     >
-                        {t("go_register")}
+                        {t("signIn")}
                     </Typo>
                 </Pressable>
-            </View>
-
-
-            {/* Divider */}
-            <View style={[styles.dividerContainer, { backgroundColor: colors.neutral600 }]}>
-            </View>
-
-            <Typo 
-                  size={14}
-                  color={colors.text}
-                  style={styles.registerWithGoogle}
-                >
-                    {t('loginWithGooglrAccount')}
-                </Typo>
-
-            {/* Google Sign-In Button */}
-            <View style={styles.googleButtonContainer}>
-                <GoogleSigninButton
-                  style={styles.googleButton}
-                  size={GoogleSigninButton.Size.Wide}
-                  color={GoogleSigninButton.Color.Light}
-                  onPress={handleGoogleSignIn}
-                  disabled={loading}
-                />
             </View>
           </View>
         </ScrollView>
