@@ -1,6 +1,5 @@
 import { auth } from "@/config/firebase";
 import { AuthContextType, UserType } from "@/constants/types";
-import { router } from "expo-router";
 import { onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
 import React, { createContext, useContext, useEffect, useState } from "react";
 
@@ -22,10 +21,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
                     email: firebaseUser?.email,
                     name: firebaseUser?.displayName
                 });
-                //router.replace("/(home)")
+                // Navigation is handled by index.tsx based on onboarding status
             }else{
                 setUser(null);
-                router.replace("/(auth)/login");
+                // Navigation to login is handled by index.tsx
             }
         });
 

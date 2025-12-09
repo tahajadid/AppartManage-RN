@@ -1,7 +1,9 @@
 import { onAuthStateChanged, User } from 'firebase/auth';
+import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { auth } from '../config/firebase';
 import { signInWithEmail, signInWithGoogle } from '../services/authService';
+import { checkOnboardingStatus } from '../services/onboardingService';
 
 export function useLoginViewModel() {
   const [email, setEmail] = useState<string>('');
@@ -44,9 +46,15 @@ export function useLoginViewModel() {
       if (result.error) {
         setError(result.error);
       } else if (result.user) {
-        // Navigation will happen automatically via onAuthStateChanged
         setEmail('');
         setPassword('');
+        // Check onboarding status and navigate accordingly
+        const onboardingStatus = await checkOnboardingStatus();
+        if (onboardingStatus.completed) {
+          router.replace('/(home)');
+        } else {
+          router.replace('/(onboarding)/choose-role');
+        }
       }
     } catch (err: any) {
       console.log('Login error:', err);
@@ -69,7 +77,13 @@ export function useLoginViewModel() {
       if (result.error) {
         setError(result.error);
       } else if (result.user) {
-        // Navigation will happen automatically via onAuthStateChanged
+        // Check onboarding status and navigate accordingly
+        const onboardingStatus = await checkOnboardingStatus();
+        if (onboardingStatus.completed) {
+          router.replace('/(home)');
+        } else {
+          router.replace('/(onboarding)/choose-role');
+        }
       }
     } catch (err: any) {
       console.log('Google sign in error:', err);

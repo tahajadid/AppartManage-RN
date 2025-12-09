@@ -198,7 +198,8 @@ const register = () => {
             <PrimaryButton 
               style={styles.loginButton}
               backgroundColor={colors.primary}
-              onPress={handleRegister} 
+              onPress={handleRegister}
+              loading={loading}
               disabled={loading}
             >
               <Typo 

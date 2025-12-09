@@ -1,4 +1,5 @@
 import { AuthProvider } from '@/contexts/authContext';
+import { OnboardingProvider } from '@/contexts/onboardingContext';
 import { RTLProvider } from '@/contexts/RTLContext';
 import { useLoadFonts } from '@/hooks/fonts';
 import { Stack } from 'expo-router';
@@ -14,6 +15,7 @@ const StackLayout = () => {
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="index" />
       <Stack.Screen name="(auth)" />
+      <Stack.Screen name="(onboarding)" />
       <Stack.Screen name="(home)" />
     </Stack>
   );
@@ -31,7 +33,9 @@ export default function RootLayout() {
     <SafeAreaProvider>
       <RTLProvider>
         <AuthProvider>
-          <StackLayout />
+          <OnboardingProvider>
+            <StackLayout />
+          </OnboardingProvider>
         </AuthProvider>
       </RTLProvider>
     </SafeAreaProvider>

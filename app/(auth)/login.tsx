@@ -134,7 +134,10 @@ const login = () => {
             <PrimaryButton 
               style={styles.loginButton}
               backgroundColor={colors.primary}
-              onPress={handleEmailLogin} disabled={loading}>
+              onPress={handleEmailLogin}
+              loading={loading}
+              disabled={loading}
+            >
               <Typo 
                   size={16}
                   color={colors.screenBackground}

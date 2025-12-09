@@ -73,8 +73,8 @@ export function useRegisterViewModel() {
         setPassword('');
         setConfirmPassword('');
         setPhoneNumber('');
-        // Navigate to home screen after successful registration
-        router.replace('/(home)');
+        // Navigate to onboarding after successful registration
+        router.replace('/(onboarding)/choose-role');
       }
     } catch (err: any) {
       console.log('Registration error:', err);
@@ -97,8 +97,9 @@ export function useRegisterViewModel() {
       if (result.error) {
         setError(result.error);
       } else if (result.user) {
-        // Navigate to home screen after successful Google sign in
-        router.replace('/(home)');
+        // Navigate to onboarding after successful Google sign in (if needed)
+        // For now, check if onboarding is needed
+        router.replace('/(onboarding)/choose-role');
       }
     } catch (err: any) {
       console.log('Google sign in error:', err);

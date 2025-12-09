@@ -1,19 +1,17 @@
 import ScreenWrapper from '@/components/ScreenWrapper';
 import Typo from '@/components/Typo';
-import { useOnboarding } from '@/contexts/onboardingContext';
 import useThemeColors from '@/contexts/useThemeColors';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
-export default function HomeScreen() {
+export default function SettingsScreen() {
   const colors = useThemeColors();
-  const { role } = useOnboarding();
 
   return (
     <ScreenWrapper>
       <View style={[styles.container, { backgroundColor: colors.screenBackground }]}>
         <Typo size={24} color={colors.text}>
-          {role === 'syndic' ? 'Syndic Dashboard' : 'Resident Home'}
+          Settings
         </Typo>
       </View>
     </ScreenWrapper>

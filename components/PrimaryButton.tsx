@@ -3,30 +3,44 @@ import { CustomButtonProps } from '@/constants/types'
 import useThemeColors from '@/contexts/useThemeColors'
 import { verticalScale } from '@/utils/styling'
 import React from 'react'
-import { StyleSheet, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, TouchableOpacity } from 'react-native'
 import Loading from './Loading'
 
 const PrimaryButton = ({
     style,
     onPress,
     backgroundColor,
-    loading=false,
+    loading = false,
+    disabled = false,
     children
 }: CustomButtonProps) => {
 
     // colors hook
     const colors = useThemeColors();
+    const isDisabled = loading || disabled;
 
-    if(loading){
-        return(
-            <View style={[styles.button, style, {backgroundColor: backgroundColor}]}>
-                <Loading colorLoader={colors.black}/>
-            </View>
-        )
-    }
     return (
-        <TouchableOpacity onPress={onPress} style={[styles.button, style, {backgroundColor: backgroundColor}]}>
-            {children}
+        <TouchableOpacity 
+            onPress={onPress} 
+            disabled={isDisabled}
+            style={[
+                styles.button, 
+                style, 
+                { 
+                    backgroundColor: backgroundColor,
+                    opacity: isDisabled ? 0.6 : 1,
+                }
+            ]}
+            activeOpacity={0.8}
+        >
+            {loading ? (
+                <Loading 
+                    sizeLoading="small" 
+                    colorLoader={colors.screenBackground || colors.white} 
+                />
+            ) : (
+                children
+            )}
         </TouchableOpacity>
     )
 }
