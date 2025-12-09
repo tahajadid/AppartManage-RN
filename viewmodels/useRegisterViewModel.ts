@@ -1,11 +1,15 @@
+import { router } from 'expo-router';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { useEffect, useState } from 'react';
 import { auth } from '../config/firebase';
-import { signInWithEmail, signInWithGoogle } from '../services/authService';
+import { registerWithEmail, signInWithGoogle } from '../services/authService';
 
-export function useLoginViewModel() {
+export function useRegisterViewModel() {
+  const [fullName, setFullName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [confirmPassword, setConfirmPassword] = useState<string>('');
+  const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
@@ -14,24 +18,38 @@ export function useLoginViewModel() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
-      if (currentUser) {
-        // User is signed in, navigate to tabs
-        //router.replace('/(home)');
-      } else {
-        // User is signed out, navigate to login
-        //router.replace('/(auth)/login');
-      }
     });
 
     return () => unsubscribe();
   }, []);
 
   /**
-   * Handle email/password login
+   * Handle registration
    */
-  const handleEmailLogin = async () => {
-    if (!email.trim() || !password.trim()) {
-      setError('Please enter both email and password');
+  const handleRegister = async () => {
+    // Validation
+    if (!fullName.trim()) {
+      setError('Please enter your full name');
+      return;
+    }
+
+    if (!email.trim()) {
+      setError('Please enter your email');
+      return;
+    }
+
+    if (!password.trim()) {
+      setError('Please enter a password');
+      return;
+    }
+
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError('Passwords do not match');
       return;
     }
 
@@ -39,17 +57,27 @@ export function useLoginViewModel() {
     setError(null);
 
     try {
-      const result = await signInWithEmail(email, password);
+      const result = await registerWithEmail({
+        fullName: fullName.trim(),
+        email: email.trim(),
+        password: password,
+        phoneNumber: phoneNumber.trim() || undefined,
+      });
       
       if (result.error) {
         setError(result.error);
       } else if (result.user) {
-        // Navigation will happen automatically via onAuthStateChanged
+        // Clear form
+        setFullName('');
         setEmail('');
         setPassword('');
+        setConfirmPassword('');
+        setPhoneNumber('');
+        // Navigate to home screen after successful registration
+        router.replace('/(home)');
       }
     } catch (err: any) {
-      console.log('Login error:', err);
+      console.log('Registration error:', err);
       setError('An error occurred, please try again');
     } finally {
       setLoading(false);
@@ -69,7 +97,8 @@ export function useLoginViewModel() {
       if (result.error) {
         setError(result.error);
       } else if (result.user) {
-        // Navigation will happen automatically via onAuthStateChanged
+        // Navigate to home screen after successful Google sign in
+        router.replace('/(home)');
       }
     } catch (err: any) {
       console.log('Google sign in error:', err);
@@ -80,14 +109,20 @@ export function useLoginViewModel() {
   };
 
   return {
+    fullName,
+    setFullName,
     email,
     setEmail,
     password,
     setPassword,
+    confirmPassword,
+    setConfirmPassword,
+    phoneNumber,
+    setPhoneNumber,
     loading,
     error,
     user,
-    handleEmailLogin,
+    handleRegister,
     handleGoogleSignIn,
   };
 }

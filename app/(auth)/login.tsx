@@ -84,7 +84,7 @@ const login = () => {
                   containerStyle={{ borderColor: colors.neutral200 }}
                   inputStyle={rtlStyles.input()}
                   placeholderTextColor={colors.neutral400}
-                  placeholder={t('enterEmail')}
+                  placeholder={t('enterEmail')} 
                   value={email}
                   onChangeText={setEmail}
                   autoCapitalize="none"

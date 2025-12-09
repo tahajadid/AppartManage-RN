@@ -37,15 +37,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
             await signInWithEmailAndPassword(auth, email, password);
             return { success: true };
         } catch(error: any) {
-            let msg = error.message;
-            console.log("error message : ", msg);
-            // check for a code error
-            if(msg.includes("(auth/invalid-credential)")){
-                msg =  "Wrong email or password";
-            } else if(msg.includes("(auth/invalid-email)")){
-                msg =  "This email have not an account";
-            }
-            return { success: false, msg };
+            console.log("Login error:", error);
+            return { success: false, msg: "An error occurred, please try again" };
         }
     };
 

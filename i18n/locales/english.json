@@ -10,7 +10,17 @@
   "language": "Language",
   "haveAnAccount": "Don't have an account?",
   "go_register": "Register",
-  "loginWithGooglrAccount": "Login with Google Account"
+  "loginWithGooglrAccount": "Login with Google Account",
+  "enterInformation": "Enter Your Information",
+  "fullName": "Full Name",
+  "fullNamePlaceholder": "Enter your full name",
+  "confirmPassword": "Confirm Password",
+  "confirmPasswordPlaceholder": "Re-enter your password",
+  "phoneNumber": "Phone Number",
+  "phoneNumberPlaceholder": "Enter your phone number",
+  "optional": "(Optional)",
+  "register": "Register",
+  "registering": "Registering..."
 }
 
 

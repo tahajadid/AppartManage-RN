@@ -10,7 +10,17 @@
   "language": "اللغة",
   "haveAnAccount": "ليس لديك حساب؟",
   "go_register": "التسجيل",
-  "loginWithGooglrAccount": "تسجيل الدخول بحساب Google"
+  "loginWithGooglrAccount": "تسجيل الدخول بحساب Google",
+  "enterInformation": "أدخل معلوماتك",
+  "fullName": "الاسم الكامل",
+  "fullNamePlaceholder": "أدخل اسمك الكامل",
+  "confirmPassword": "تأكيد كلمة المرور",
+  "confirmPasswordPlaceholder": "أعد إدخال كلمة المرور",
+  "phoneNumber": "رقم الهاتف",
+  "phoneNumberPlaceholder": "أدخل رقم هاتفك",
+  "optional": "(اختياري)",
+  "register": "التسجيل",
+  "registering": "جاري التسجيل..."
 }
 
 
