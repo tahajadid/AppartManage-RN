@@ -7,6 +7,7 @@ import { radius, spacingX, spacingY } from '@/constants/theme';
 import { useOnboarding } from '@/contexts/onboardingContext';
 import { useRTL } from '@/contexts/RTLContext';
 import useThemeColors from '@/contexts/useThemeColors';
+import { ResidentData } from '@/data/types';
 import { completeOnboarding } from '@/services/onboardingService';
 import { createRTLStyles } from '@/utils/rtlStyles';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -14,11 +15,6 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
-interface ResidentData {
-  name: string;
-  monthlyFee: string;
-}
 
 export default function SyndicListResidentSetup() {
   const { t } = useTranslation();
@@ -43,6 +39,7 @@ export default function SyndicListResidentSetup() {
     return Array.from({ length: numberOfResidents }, () => ({
       name: '',
       monthlyFee: '',
+      remainingAmount: '0', // Default to 0, not mandatory
     }));
   });
 
@@ -74,6 +71,7 @@ export default function SyndicListResidentSetup() {
         setError(`${t('validMonthlyFeeRequired')} ${i + 1}`);
         return;
       }
+      // Remaining amount is optional, default to 0 if empty or invalid
     }
 
     setLoading(true);
@@ -81,11 +79,22 @@ export default function SyndicListResidentSetup() {
 
     try {
       // Prepare residents data for onboarding service
-      const residentsData = residents.map((resident, index) => ({
-        name: resident.name.trim(),
-        monthlyFee: parseFloat(resident.monthlyFee),
-        isSyndic: isSyndicResident && index === 0,
-      }));
+      const residentsData = residents.map((resident, index) => {
+        // Remaining amount is optional, default to 0 if empty or invalid
+        const remainingAmountValue = resident.remainingAmount.trim() 
+          ? parseFloat(resident.remainingAmount) 
+          : 0;
+        const remainingAmount = isNaN(remainingAmountValue) || remainingAmountValue < 0 
+          ? 0 
+          : remainingAmountValue;
+        
+        return {
+          name: resident.name.trim(),
+          monthlyFee: parseFloat(resident.monthlyFee),
+          remainingAmount: remainingAmount,
+          isSyndic: isSyndicResident && index === 0,
+        };
+      });
 
       const result = await completeOnboarding({
         role: role,
@@ -97,9 +106,15 @@ export default function SyndicListResidentSetup() {
       if (result.error) {
         setError(result.error);
       } else {
-        // Refresh onboarding status and navigate to home
+        // Refresh onboarding status and navigate to success screen
         await refreshOnboardingStatus();
-        router.replace('/(home)');
+        router.push({
+          pathname: '/(onboarding)/syndic/syndic-success-setup',
+          params: {
+            joinCode: result.joinCode || '',
+            apartmentName: apartmentName,
+          },
+        });
       }
     } catch (err: any) {
       console.log('Onboarding completion error:', err);
@@ -211,6 +226,28 @@ export default function SyndicListResidentSetup() {
                         placeholder={t('monthlyFeePlaceholder')}
                         value={resident.monthlyFee}
                         onChangeText={(value) => updateResident(index, 'monthlyFee', value)}
+                        keyboardType="decimal-pad"
+                        editable={!loading}
+                      />
+                    </View>
+
+                    {/* Remaining Amount Input */}
+                    <View style={styles.inputContainer}>
+                      <Typo 
+                        size={14}
+                        color={colors.text}
+                        fontWeight="600"
+                        style={styles.label}
+                      >
+                        {t('remainingAmount')}
+                      </Typo>
+                      <Input
+                        containerStyle={{ borderColor: colors.neutral300 }}
+                        inputStyle={rtlStyles.input()}
+                        placeholderTextColor={colors.text}
+                        placeholder={t('remainingAmountPlaceholder')}
+                        value={resident.remainingAmount}
+                        onChangeText={(value) => updateResident(index, 'remainingAmount', value)}
                         keyboardType="decimal-pad"
                         editable={!loading}
                       />

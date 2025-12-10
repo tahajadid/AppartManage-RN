@@ -57,7 +57,16 @@
   "monthlyFee": "Monthly Fee",
   "monthlyFeePlaceholder": "Enter monthly fee",
   "validMonthlyFeeRequired": "Please enter a valid monthly fee",
-  "you": "You"
+  "remainingAmount": "Remaining Amount",
+  "remainingAmountPlaceholder": "Enter remaining amount",
+  "validRemainingAmountRequired": "Please enter a valid remaining amount",
+  "you": "You",
+  "apartmentCreated": "Apartment Created",
+  "apartmentCreatedSuccess": "Success!",
+  "apartmentCreatedMessage": "Your apartment {{apartmentName}} has been created successfully.",
+  "yourJoinCode": "Your Join Code",
+  "shareCodeWithResidents": "Share this code with residents so they can join your apartment",
+  "goToHome": "Go to Home"
 }
 
 

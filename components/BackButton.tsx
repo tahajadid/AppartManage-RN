@@ -1,6 +1,6 @@
 import { radius } from '@/constants/theme';
-import { BackButtonProps } from '@/constants/types';
 import useThemeColors from '@/contexts/useThemeColors';
+import { BackButtonProps } from '@/data/types';
 import { verticalScale } from '@/utils/styling';
 import { useRouter } from 'expo-router';
 import { CaretLeft } from 'phosphor-react-native';

@@ -1,6 +1,6 @@
 import { radius, spacingX } from '@/constants/theme';
-import { InputProps } from '@/constants/types';
 import useThemeColors from '@/contexts/useThemeColors';
+import { InputProps } from '@/data/types';
 import { useFontFamily } from '@/hooks/fonts';
 import { verticalScale } from '@/utils/styling';
 import React from 'react';

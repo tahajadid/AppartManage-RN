@@ -1,4 +1,4 @@
-import { TypoProps } from '@/constants/types';
+import { TypoProps } from '@/data/types';
 import { useFontFamily } from '@/hooks/fonts';
 import { verticalScale } from '@/utils/styling';
 import React from 'react';

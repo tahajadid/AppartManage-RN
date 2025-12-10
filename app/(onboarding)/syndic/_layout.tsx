@@ -9,8 +9,7 @@ export default function SyndicLayout() {
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="syndic-apartment-setup" />
       <Stack.Screen name="syndic-list-resident-setup" />
-      <Stack.Screen name="syndic-list-resident-setup-success" />
+      <Stack.Screen name="syndic-success-setup" />
     </Stack>
   );
 }
-

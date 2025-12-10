@@ -56,7 +56,16 @@
   "monthlyFee": "الرسوم الشهرية",
   "monthlyFeePlaceholder": "أدخل الرسوم الشهرية",
   "validMonthlyFeeRequired": "يرجى إدخال رسوم شهرية صحيحة",
-  "you": "أنت"
+  "remainingAmount": "المبلغ المتبقي",
+  "remainingAmountPlaceholder": "أدخل المبلغ المتبقي",
+  "validRemainingAmountRequired": "يرجى إدخال مبلغ متبقي صحيح",
+  "you": "أنت",
+  "apartmentCreated": "تم إنشاء الشقة",
+  "apartmentCreatedSuccess": "نجح!",
+  "apartmentCreatedMessage": "تم إنشاء شقتك {{apartmentName}} بنجاح.",
+  "yourJoinCode": "رمز الانضمام الخاص بك",
+  "shareCodeWithResidents": "شارك هذا الرمز مع السكان حتى يتمكنوا من الانضمام إلى شقتك",
+  "goToHome": "الذهاب إلى الصفحة الرئيسية"
 }
 
 

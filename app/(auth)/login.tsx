@@ -260,7 +260,7 @@ const styles = StyleSheet.create({
   },
   googleButton: {
     width: '100%',
-    height: 80,
+    height: 60,
   },
   buttonText: {
     // Typo component handles color, fontSize, and fontWeight
