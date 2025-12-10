@@ -70,7 +70,15 @@
   "yourJoinCode": "Your Join Code",
   "shareCodeWithResidents": "Share this code with residents so they can join your apartment",
   "copied": "Copied!",
-  "goToHome": "Go to Home"
+  "goToHome": "Go to Home",
+  "selectYourIdentity": "Select Your Identity",
+  "selectResidentDescription": "Select which resident you are in this apartment",
+  "residents": "Residents",
+  "alreadyLinked": "Already linked",
+  "selectResidentRequired": "Please select a resident",
+  "linking": "Linking...",
+  "residentLinkedSuccess": "Success!",
+  "residentLinkedMessage": "You have been successfully linked to {{apartmentName}}."
 }
 
 

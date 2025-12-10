@@ -34,7 +34,12 @@ export default function ChooseRoleScreen() {
         },
       });
     } else {
-      router.push('/(onboarding)/resident-setup');
+      router.push({
+        pathname: '/(onboarding)/resident/resident-apartment-setup',
+        params: {
+          role: selectedRole,
+        },
+      });
     }
   };
 
