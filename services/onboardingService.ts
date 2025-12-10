@@ -74,7 +74,8 @@ export async function completeOnboarding(data: OnboardingData): Promise<Onboardi
       // Create resident documents if provided
       if (residentsList.length > 0) {
         for (const resident of residentsList) {
-          // For syndic-resident, the first resident is the syndic themselves
+          // For syndic-resident role: the first resident (index 0) is the syndic themselves
+          // This resident is automatically linked to the syndic user account
           if (resident.isSyndic) {
             // Create resident document for the syndic (they are also a resident)
             const syndicResidentId = user.uid; // Use user.uid as the resident ID for syndic
@@ -87,6 +88,8 @@ export async function completeOnboarding(data: OnboardingData): Promise<Onboardi
               remainingAmount: resident.remainingAmount,
               isSyndic: true,
               userId: user.uid, // Link to the user account
+              isLinkedWithUser: true, // AUTO-LINKED: Syndic-resident is automatically linked to their user account
+              linkedUserId: user.uid, // AUTO-LINKED: Link to the syndic user (same as userId)
               createdAt: new Date().toISOString(),
               updatedAt: new Date().toISOString(),
             });
@@ -108,6 +111,8 @@ export async function completeOnboarding(data: OnboardingData): Promise<Onboardi
               monthlyFee: resident.monthlyFee,
               remainingAmount: resident.remainingAmount,
               isSyndic: false,
+              isLinkedWithUser: false, // Not linked yet
+              linkedUserId: null, // No user linked yet
               createdAt: new Date().toISOString(),
               updatedAt: new Date().toISOString(),
             });
@@ -146,58 +151,183 @@ export async function completeOnboarding(data: OnboardingData): Promise<Onboardi
         joinCode: joinCode,
       };
     } else {
-      // Resident: Find apartment by join code
-      // Validate join code format (8 alphanumeric characters)
-      const joinCodeRegex = /^[A-Z0-9]{8}$/;
-      if (!joinCodeRegex.test(data.joinCode.toUpperCase())) {
-        return {
-          success: false,
-          error: 'Invalid join code format',
-        };
-      }
-
-      // Query Firestore to find apartment with this join code
-      const apartmentsRef = collection(firestore, 'apartments');
-      const q = query(apartmentsRef, where('joinCode', '==', data.joinCode.toUpperCase()));
-      const querySnapshot = await getDocs(q);
-
-      if (querySnapshot.empty) {
-        return {
-          success: false,
-          error: 'Invalid join code. Please check and try again',
-        };
-      }
-
-      // Get the first matching apartment
-      const apartmentDoc = querySnapshot.docs[0];
-      const apartmentData = apartmentDoc.data();
-      const apartmentId = apartmentDoc.id;
-
-      // Add user to residents array if not already present
-      const residents = apartmentData.residents || [];
-      if (!residents.includes(user.uid)) {
-        residents.push(user.uid);
-        await updateDoc(doc(firestore, 'apartments', apartmentId), {
-          residents: residents,
-          updatedAt: new Date().toISOString(),
-        });
-      }
-
-      // Update user document with role and apartment info
-      await updateDoc(userDocRef, {
-        role: 'resident',
-        apartmentId: apartmentId,
-        onboardingCompleted: true,
-        updatedAt: new Date().toISOString(),
-      });
-
+      // Resident: This function should not be called directly for residents
+      // Residents should use linkResidentToUser instead after selecting their identity
       return {
-        success: true,
-        error: null,
+        success: false,
+        error: 'Please select your identity from the residents list',
       };
     }
   } catch (error: any) {
     console.log('Onboarding completion error:', error);
+    return {
+      success: false,
+      error: 'An error occurred, please try again',
+    };
+  }
+}
+
+/**
+ * Fetch apartment by join code with residents list
+ */
+export async function getApartmentByJoinCode(joinCode: string): Promise<{
+  success: boolean;
+  error: string | null;
+  apartment?: {
+    id: string;
+    name: string;
+    joinCode: string;
+    numberOfResidents: number;
+    residents: Array<{
+      id: string;
+      name: string;
+      monthlyFee: number;
+      remainingAmount: number;
+      isLinkedWithUser: boolean;
+      linkedUserId: string | null;
+      isSyndic?: boolean;
+    }>;
+  };
+}> {
+  try {
+    // Validate join code format (8 alphanumeric characters)
+    const joinCodeRegex = /^[A-Z0-9]{8}$/;
+    if (!joinCodeRegex.test(joinCode.toUpperCase())) {
+      return {
+        success: false,
+        error: 'Invalid join code format',
+        apartment: undefined,
+      };
+    }
+
+    // Query Firestore to find apartment with this join code
+    const apartmentsRef = collection(firestore, 'apartments');
+    const q = query(apartmentsRef, where('joinCode', '==', joinCode.toUpperCase()));
+    const querySnapshot = await getDocs(q);
+
+    if (querySnapshot.empty) {
+      return {
+        success: false,
+        error: 'Invalid join code. Please check and try again',
+        apartment: undefined,
+      };
+    }
+
+    // Get the first matching apartment
+    const apartmentDoc = querySnapshot.docs[0];
+    const apartmentData = apartmentDoc.data();
+    const apartmentId = apartmentDoc.id;
+
+    // Fetch all residents for this apartment
+    const residentIds = apartmentData.residents || [];
+    const residentsList = [];
+
+    for (const residentId of residentIds) {
+      const residentDocRef = doc(firestore, 'residents', residentId);
+      const residentDoc = await getDoc(residentDocRef);
+      
+      if (residentDoc.exists()) {
+        const residentData = residentDoc.data();
+        residentsList.push({
+          id: residentId,
+          name: residentData.name || '',
+          monthlyFee: residentData.monthlyFee || 0,
+          remainingAmount: residentData.remainingAmount || 0,
+          isLinkedWithUser: residentData.isLinkedWithUser || false,
+          linkedUserId: residentData.linkedUserId || null,
+          isSyndic: residentData.isSyndic || false,
+        });
+      }
+    }
+
+    return {
+      success: true,
+      error: null,
+      apartment: {
+        id: apartmentId,
+        name: apartmentData.name || '',
+        joinCode: apartmentData.joinCode || '',
+        numberOfResidents: apartmentData.numberOfResidents || 0,
+        residents: residentsList,
+      },
+    };
+  } catch (error: any) {
+    console.log('Error fetching apartment:', error);
+    return {
+      success: false,
+      error: 'An error occurred, please try again',
+      apartment: undefined,
+    };
+  }
+}
+
+/**
+ * Link a resident to the current user
+ */
+export async function linkResidentToUser(residentId: string, apartmentId: string): Promise<OnboardingResult> {
+  try {
+    const user = auth.currentUser;
+    if (!user) {
+      return {
+        success: false,
+        error: 'User not authenticated',
+      };
+    }
+
+    // Get resident document
+    const residentDocRef = doc(firestore, 'residents', residentId);
+    const residentDoc = await getDoc(residentDocRef);
+
+    if (!residentDoc.exists()) {
+      return {
+        success: false,
+        error: 'Resident not found',
+      };
+    }
+
+    const residentData = residentDoc.data();
+
+    // Check if resident is already linked
+    if (residentData.isLinkedWithUser === true) {
+      return {
+        success: false,
+        error: 'This resident is already linked to another user',
+      };
+    }
+
+    // Check if resident belongs to the apartment
+    if (residentData.apartmentId !== apartmentId) {
+      return {
+        success: false,
+        error: 'Resident does not belong to this apartment',
+      };
+    }
+
+    // Link resident to user
+    await updateDoc(residentDocRef, {
+      isLinkedWithUser: true,
+      linkedUserId: user.uid,
+      userId: user.uid,
+      updatedAt: new Date().toISOString(),
+    });
+
+    // Update user document with role and apartment info
+    const userDocRef = doc(firestore, 'users', user.uid);
+    await updateDoc(userDocRef, {
+      role: 'resident',
+      apartmentId: apartmentId,
+      name: residentData.name,
+      monthlyFee: residentData.monthlyFee,
+      onboardingCompleted: true,
+      updatedAt: new Date().toISOString(),
+    });
+
+    return {
+      success: true,
+      error: null,
+    };
+  } catch (error: any) {
+    console.log('Error linking resident to user:', error);
     return {
       success: false,
       error: 'An error occurred, please try again',

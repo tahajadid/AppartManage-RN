@@ -7,7 +7,7 @@ import { radius, spacingX, spacingY } from '@/constants/theme';
 import { useOnboarding } from '@/contexts/onboardingContext';
 import { useRTL } from '@/contexts/RTLContext';
 import useThemeColors from '@/contexts/useThemeColors';
-import { completeOnboarding } from '@/services/onboardingService';
+import { getApartmentByJoinCode } from '@/services/onboardingService';
 import { createRTLStyles } from '@/utils/rtlStyles';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
@@ -15,7 +15,7 @@ import { useTranslation } from 'react-i18next';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-export default function ResidentSetupScreen() {
+export default function ResidentApartmentSetup() {
   const { t } = useTranslation();
   const colors = useThemeColors();
   const { isRTL } = useRTL();
@@ -42,20 +42,24 @@ export default function ResidentSetupScreen() {
     setError(null);
 
     try {
-      const result = await completeOnboarding({
-        role: 'resident',
-        joinCode: joinCode.trim(),
-      });
+      const result = await getApartmentByJoinCode(joinCode.trim().toUpperCase());
 
-      if (result.error) {
-        setError(result.error);
+      if (result.error || !result.apartment) {
+        setError(result.error || t('errorOccurred'));
       } else {
-        // Refresh onboarding status and navigate to home
-        await refreshOnboardingStatus();
-        router.replace('/(home)');
+        // Navigate to resident selection screen with apartment data
+        router.push({
+          pathname: '/(onboarding)/resident/resident-link-user-setup' as any,
+          params: {
+            apartmentId: result.apartment.id,
+            apartmentName: result.apartment.name,
+            joinCode: result.apartment.joinCode,
+            residents: JSON.stringify(result.apartment.residents),
+          },
+        });
       }
     } catch (err: any) {
-      console.log('Onboarding completion error:', err);
+      console.log('Error fetching apartment:', err);
       setError(t('errorOccurred'));
     } finally {
       setLoading(false);

@@ -69,7 +69,15 @@
   "yourJoinCode": "رمز الانضمام الخاص بك",
   "shareCodeWithResidents": "شارك هذا الرمز مع السكان حتى يتمكنوا من الانضمام إلى شقتك",
   "copied": "تم النسخ!",
-  "goToHome": "الذهاب إلى الصفحة الرئيسية"
+  "goToHome": "الذهاب إلى الصفحة الرئيسية",
+  "selectYourIdentity": "اختر هويتك",
+  "selectResidentDescription": "اختر أي ساكن أنت في هذه الشقة",
+  "residents": "السكان",
+  "alreadyLinked": "مربوط بالفعل",
+  "selectResidentRequired": "يرجى اختيار ساكن",
+  "linking": "جاري الربط...",
+  "residentLinkedSuccess": "نجح!",
+  "residentLinkedMessage": "تم ربطك بنجاح بـ {{apartmentName}}."
 }
 
 
