@@ -1,13 +1,13 @@
 import Constants from 'expo-constants';
 import {
-    createUserWithEmailAndPassword,
-    GoogleAuthProvider,
-    signInWithCredential,
-    signInWithEmailAndPassword,
-    User
+  createUserWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithCredential,
+  signInWithEmailAndPassword
 } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { auth, firestore } from '../config/firebase';
+import { AuthResult, RegisterRequest } from '../data/types';
 
 // Check if we're running in Expo Go (where native modules don't work)
 const isExpoGo = Constants.executionEnvironment === 'storeClient';
@@ -81,11 +81,6 @@ const getGoogleSignin = async () => {
 // Export a function to check if Google Sign-In is available
 export const isGoogleSignInAvailable = () => !isExpoGo;
 
-export interface AuthResult {
-  user: User | null;
-  error: string | null;
-}
-
 /**
  * Sign in with email and password
  */
@@ -105,17 +100,10 @@ export async function signInWithEmail(email: string, password: string): Promise<
   }
 }
 
-export interface RegisterData {
-  fullName: string;
-  email: string;
-  password: string;
-  phoneNumber?: string;
-}
-
 /**
  * Register a new user with email and password, and create their Firestore document
  */
-export async function registerWithEmail(data: RegisterData): Promise<AuthResult> {
+export async function registerWithEmail(data: RegisterRequest): Promise<AuthResult> {
   try {
     // Create user in Firebase Auth
     const userCredential = await createUserWithEmailAndPassword(auth, data.email, data.password);

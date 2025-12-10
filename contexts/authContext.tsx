@@ -1,5 +1,5 @@
 import { auth } from "@/config/firebase";
-import { AuthContextType, UserType } from "@/constants/types";
+import { AuthContextType, UserType } from "@/data/types";
 import { onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
 import React, { createContext, useContext, useEffect, useState } from "react";
 

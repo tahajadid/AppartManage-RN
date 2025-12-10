@@ -6,6 +6,7 @@ export type UserRole = 'syndic' | 'syndic_resident' | 'resident';
 export interface ResidentInfo {
   name: string;
   monthlyFee: number;
+  remainingAmount: number;
   isSyndic?: boolean;
 }
 
@@ -26,17 +27,18 @@ export type OnboardingData = SyndicOnboardingData | ResidentOnboardingData;
 export interface OnboardingResult {
   success: boolean;
   error: string | null;
+  joinCode?: string;
 }
 
 /**
- * Generate a unique join code for an apartment
+ * Generate a unique join code for an apartment (8 alphanumeric characters)
  */
 function generateJoinCode(): string {
-  // Generate a 6-character alphanumeric code
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  // Generate an 8-character alphanumeric code (mixed letters and numbers)
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   let code = '';
-  for (let i = 0; i < 6; i++) {
-    code += chars.charAt(Math.floor(Math.random() * chars.length));
+  for (let i = 0; i < 8; i++) {
+    code += characters.charAt(Math.floor(Math.random() * characters.length));
   }
   return code;
 }
@@ -67,14 +69,30 @@ export async function completeOnboarding(data: OnboardingData): Promise<Onboardi
       
       // Prepare residents data
       const residentsList = data.residents || [];
-      const residentIds = [user.uid]; // Syndic is always a resident
+      const residentIds: string[] = [];
       
       // Create resident documents if provided
       if (residentsList.length > 0) {
         for (const resident of residentsList) {
           // For syndic-resident, the first resident is the syndic themselves
           if (resident.isSyndic) {
-            // Update user document with resident info
+            // Create resident document for the syndic (they are also a resident)
+            const syndicResidentId = user.uid; // Use user.uid as the resident ID for syndic
+            const syndicResidentDocRef = doc(firestore, 'residents', syndicResidentId);
+            await setDoc(syndicResidentDocRef, {
+              id: syndicResidentId,
+              apartmentId: apartmentId,
+              name: resident.name,
+              monthlyFee: resident.monthlyFee,
+              remainingAmount: resident.remainingAmount,
+              isSyndic: true,
+              userId: user.uid, // Link to the user account
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            });
+            residentIds.push(syndicResidentId);
+            
+            // Also update user document with resident info
             await updateDoc(userDocRef, {
               name: resident.name,
               monthlyFee: resident.monthlyFee,
@@ -88,12 +106,18 @@ export async function completeOnboarding(data: OnboardingData): Promise<Onboardi
               apartmentId: apartmentId,
               name: resident.name,
               monthlyFee: resident.monthlyFee,
+              remainingAmount: resident.remainingAmount,
+              isSyndic: false,
               createdAt: new Date().toISOString(),
               updatedAt: new Date().toISOString(),
             });
             residentIds.push(residentId);
           }
         }
+      } else {
+        // If no residents list provided, still add syndic as a resident
+        // This handles the case when role is just 'syndic' (not 'syndic_resident')
+        residentIds.push(user.uid);
       }
       
       await setDoc(apartmentDocRef, {
@@ -119,12 +143,13 @@ export async function completeOnboarding(data: OnboardingData): Promise<Onboardi
       return {
         success: true,
         error: null,
+        joinCode: joinCode,
       };
     } else {
       // Resident: Find apartment by join code
-      // Validate join code format (6 alphanumeric characters)
-      const joinCodeRegex = /^[A-Z0-9]{6}$/;
-      if (!joinCodeRegex.test(data.joinCode)) {
+      // Validate join code format (8 alphanumeric characters)
+      const joinCodeRegex = /^[A-Z0-9]{8}$/;
+      if (!joinCodeRegex.test(data.joinCode.toUpperCase())) {
         return {
           success: false,
           error: 'Invalid join code format',

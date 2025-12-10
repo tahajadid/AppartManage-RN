@@ -1,3 +1,4 @@
+import { User } from 'firebase/auth';
 import React, { ReactNode } from "react";
 import {
     TextInput,
@@ -118,3 +119,27 @@ export type ToggleSwitchProps = {
     onValueChange: (value: boolean) => void;
     disabled?: boolean;
 };
+
+export interface ResidentData {
+    name: string;
+    monthlyFee: string;
+    remainingAmount: string;
+}
+
+// Authentication Types
+export interface SignInRequest {
+    email: string;
+    password: string;
+}
+
+export interface RegisterRequest {
+    fullName: string;
+    email: string;
+    password: string;
+    phoneNumber?: string;
+}
+
+export interface AuthResult {
+    user: User | null;
+    error: string | null;
+}

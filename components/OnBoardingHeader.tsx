@@ -9,9 +9,10 @@ import { Pressable, StyleSheet, View } from 'react-native';
 interface OnBoardingHeaderProps {
   title: string;
   onBack?: () => void;
+  headerLeft?: boolean;
 }
 
-const OnBoardingHeader: React.FC<OnBoardingHeaderProps> = ({ title, onBack }) => {
+const OnBoardingHeader: React.FC<OnBoardingHeaderProps> = ({ title, headerLeft = true, onBack }) => {
   const colors = useThemeColors();
 
   const handleBack = () => {
@@ -24,11 +25,14 @@ const OnBoardingHeader: React.FC<OnBoardingHeaderProps> = ({ title, onBack }) =>
 
   return (
     <View style={styles.header}>
+        { headerLeft && (
+
       <View style={styles.backButtonContainer}>
         <Pressable onPress={handleBack} style={styles.backButton}>
           <ArrowLeft size={24} color={colors.text} weight="bold" />
         </Pressable>
       </View>
+        )}
       <View style={styles.titleContainer}>
         <Typo 
           size={28}

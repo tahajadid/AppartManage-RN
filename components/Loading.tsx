@@ -1,4 +1,4 @@
-import { LoadingProps } from '@/constants/types';
+import { LoadingProps } from '@/data/types';
 import React from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 

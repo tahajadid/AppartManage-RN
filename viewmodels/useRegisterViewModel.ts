@@ -3,6 +3,7 @@ import { onAuthStateChanged, User } from 'firebase/auth';
 import { useEffect, useState } from 'react';
 import { auth } from '../config/firebase';
 import { registerWithEmail, signInWithGoogle } from '../services/authService';
+import { RegisterRequest } from '../data/types';
 
 export function useRegisterViewModel() {
   const [fullName, setFullName] = useState<string>('');

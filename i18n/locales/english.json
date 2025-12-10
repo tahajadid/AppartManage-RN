@@ -8,7 +8,10 @@
   "signIn": "Sign In",
   "signingIn": "Signing in...",
   "language": "Language",
+  "enterInformationDescription": "Enter your information to create your account",
+  "CreateAccount": "Create Account",
   "haveAnAccount": "Don't have an account?",
+  "alreadyHaveAccount": "Already have an account?",
   "go_register": "Register",
   "loginWithGooglrAccount": "Login with Google Account",
   "enterInformation": "Enter Your Information",
@@ -57,7 +60,17 @@
   "monthlyFee": "Monthly Fee",
   "monthlyFeePlaceholder": "Enter monthly fee",
   "validMonthlyFeeRequired": "Please enter a valid monthly fee",
-  "you": "You"
+  "remainingAmount": "Remaining Amount",
+  "remainingAmountPlaceholder": "Enter remaining amount",
+  "validRemainingAmountRequired": "Please enter a valid remaining amount",
+  "you": "You",
+  "apartmentCreated": "Apartment Created",
+  "apartmentCreatedSuccess": "Success!",
+  "apartmentCreatedMessage": "Your apartment {{apartmentName}} has been created successfully.",
+  "yourJoinCode": "Your Join Code",
+  "shareCodeWithResidents": "Share this code with residents so they can join your apartment",
+  "copied": "Copied!",
+  "goToHome": "Go to Home"
 }
 
 

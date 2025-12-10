@@ -1,6 +1,6 @@
 import { colors, darkTheme, lightTheme } from '@/constants/theme';
-import { ScreenWrapperProps } from '@/constants/types';
 import { useTheme } from '@/contexts/themeContext';
+import { ScreenWrapperProps } from '@/data/types';
 import React from 'react';
 import { Dimensions, Platform, StatusBar, StyleSheet, View } from 'react-native';
 

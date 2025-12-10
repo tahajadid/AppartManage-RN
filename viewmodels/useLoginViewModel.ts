@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { auth } from '../config/firebase';
 import { signInWithEmail, signInWithGoogle } from '../services/authService';
 import { checkOnboardingStatus } from '../services/onboardingService';
+import { SignInRequest } from '../data/types';
 
 export function useLoginViewModel() {
   const [email, setEmail] = useState<string>('');

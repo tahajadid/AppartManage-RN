@@ -1,6 +1,6 @@
 import { radius } from '@/constants/theme'
-import { CustomButtonProps } from '@/constants/types'
 import useThemeColors from '@/contexts/useThemeColors'
+import { CustomButtonProps } from '@/data/types'
 import { verticalScale } from '@/utils/styling'
 import React from 'react'
 import { StyleSheet, TouchableOpacity } from 'react-native'
