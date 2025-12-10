@@ -31,13 +31,14 @@ export interface OnboardingResult {
 }
 
 /**
- * Generate a unique join code for an apartment (8 digits)
+ * Generate a unique join code for an apartment (8 alphanumeric characters)
  */
 function generateJoinCode(): string {
-  // Generate an 8-digit numeric code
+  // Generate an 8-character alphanumeric code (mixed letters and numbers)
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   let code = '';
   for (let i = 0; i < 8; i++) {
-    code += Math.floor(Math.random() * 10).toString();
+    code += characters.charAt(Math.floor(Math.random() * characters.length));
   }
   return code;
 }
@@ -146,9 +147,9 @@ export async function completeOnboarding(data: OnboardingData): Promise<Onboardi
       };
     } else {
       // Resident: Find apartment by join code
-      // Validate join code format (6 alphanumeric characters)
-      const joinCodeRegex = /^[0-9]{8}$/;
-      if (!joinCodeRegex.test(data.joinCode)) {
+      // Validate join code format (8 alphanumeric characters)
+      const joinCodeRegex = /^[A-Z0-9]{8}$/;
+      if (!joinCodeRegex.test(data.joinCode.toUpperCase())) {
         return {
           success: false,
           error: 'Invalid join code format',

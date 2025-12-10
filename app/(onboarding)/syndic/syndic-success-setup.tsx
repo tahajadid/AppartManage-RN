@@ -5,11 +5,12 @@ import Typo from '@/components/Typo';
 import { radius, spacingX, spacingY } from '@/constants/theme';
 import { useRTL } from '@/contexts/RTLContext';
 import useThemeColors from '@/contexts/useThemeColors';
+import * as Clipboard from 'expo-clipboard';
 import { router, useLocalSearchParams } from 'expo-router';
-import { CheckCircle } from 'phosphor-react-native';
-import React from 'react';
+import { CheckCircle, Copy } from 'phosphor-react-native';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function SyndicSuccessSetup() {
@@ -17,6 +18,7 @@ export default function SyndicSuccessSetup() {
   const colors = useThemeColors();
   const { isRTL } = useRTL();
   const insets = useSafeAreaInsets();
+  const [copied, setCopied] = useState(false);
   const params = useLocalSearchParams<{
     joinCode: string;
     apartmentName: string;
@@ -24,6 +26,18 @@ export default function SyndicSuccessSetup() {
 
   const joinCode = params.joinCode || '';
   const apartmentName = params.apartmentName || '';
+
+  const handleCopyCode = async () => {
+    try {
+      await Clipboard.setStringAsync(joinCode);
+      setCopied(true);
+      setTimeout(() => {
+        setCopied(false);
+      }, 2000);
+    } catch (error) {
+      console.log('Error copying to clipboard:', error);
+    }
+  };
 
   const handleGoToHome = () => {
     router.replace('/(home)');
@@ -86,6 +100,17 @@ export default function SyndicSuccessSetup() {
                 >
                   {joinCode}
                 </Typo>
+                <TouchableOpacity
+                  onPress={handleCopyCode}
+                  style={[styles.copyButton, { backgroundColor: colors.primary }]}
+                  activeOpacity={0.7}
+                >
+                  <Copy 
+                    size={20} 
+                    color={colors.screenBackground} 
+                    weight={copied ? "fill" : "regular"}
+                  />
+                </TouchableOpacity>
               </View>
               <Typo 
                 size={12}
@@ -93,7 +118,7 @@ export default function SyndicSuccessSetup() {
                 fontWeight="400"
                 style={styles.codeHint}
               >
-                {t('shareCodeWithResidents')}
+                {copied ? t('copied') : t('shareCodeWithResidents')}
               </Typo>
             </View>
           </View>
@@ -160,6 +185,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacingX._20,
     borderRadius: radius._12,
     borderWidth: 2,
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: spacingY._12,
@@ -167,6 +193,15 @@ const styles = StyleSheet.create({
   codeText: {
     letterSpacing: 4,
     textAlign: 'center',
+    flex: 1,
+  },
+  copyButton: {
+    width: 40,
+    height: 40,
+    borderRadius: radius._8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: spacingX._12,
   },
   codeHint: {
     textAlign: 'center',

@@ -62,7 +62,15 @@ const register = () => {
                 color={colors.text}
                 style={styles.title}
               >
-                {t('enterInformation')}
+                {t('CreateAccount')}
+              </Typo>
+
+              <Typo 
+                size={18}
+                color={colors.subtitleText}
+                fontWeight="300"
+                style={styles.subtitle}>
+                {t('enterInformationDescription')}
               </Typo>
 
               {/* Full Name Input */}
@@ -76,7 +84,7 @@ const register = () => {
                   {t('fullName')}
                 </Typo>
                 <Input
-                  containerStyle={{ borderColor: colors.neutral300 }}
+                  containerStyle={{ borderColor: colors.primary }}
                   inputStyle={rtlStyles.input()}
                   placeholderTextColor={colors.neutral500}
                   placeholder={t('fullNamePlaceholder')}
@@ -98,7 +106,7 @@ const register = () => {
                   {t('email')}
                 </Typo>
                 <Input
-                  containerStyle={{ borderColor: colors.neutral300 }}
+                  containerStyle={{ borderColor: colors.primary }}
                   inputStyle={rtlStyles.input()}
                   placeholderTextColor={colors.neutral500}
                   placeholder={t('enterEmail')}
@@ -122,7 +130,7 @@ const register = () => {
                   {t('password')}
                 </Typo>
                 <Input
-                  containerStyle={{ borderColor: colors.neutral300 }}
+                  containerStyle={{ borderColor: colors.primary }}
                   inputStyle={rtlStyles.input()}
                   placeholder={t('enterPassword')}
                   value={password}
@@ -146,7 +154,7 @@ const register = () => {
                   {t('confirmPassword')}
                 </Typo>
                 <Input
-                  containerStyle={{ borderColor: colors.neutral300 }}
+                  containerStyle={{ borderColor: colors.primary }}
                   inputStyle={rtlStyles.input()}
                   placeholder={t('confirmPasswordPlaceholder')}
                   value={confirmPassword}
@@ -169,7 +177,7 @@ const register = () => {
                   {t('phoneNumber')} {t('optional')}
                 </Typo>
                 <Input
-                  containerStyle={{ borderColor: colors.neutral300 }}
+                  containerStyle={{ borderColor: colors.primary }}
                   inputStyle={rtlStyles.input()}
                   placeholder={t('phoneNumberPlaceholder')}
                   value={phoneNumber}
@@ -218,7 +226,7 @@ const register = () => {
                   color={colors.text}
                   style={styles.footerText}
                 >
-                    {t('haveAnAccount')}
+                    {t('alreadyHaveAccount')}
                 </Typo>
                 <Pressable onPress={() => router.push("/(auth)/login")}>
                     <Typo 

@@ -9,6 +9,9 @@
   "signingIn": "جاري تسجيل الدخول...",
   "language": "اللغة",
   "haveAnAccount": "ليس لديك حساب؟",
+  "alreadyHaveAccount": "لديك حساب؟",
+  "CreateAccount": "إنشاء حساب",
+  "enterInformationDescription": "أدخل معلوماتك لإنشاء حسابك",
   "go_register": "التسجيل",
   "loginWithGooglrAccount": "تسجيل الدخول بحساب Google",
   "enterInformation": "أدخل معلوماتك",
@@ -65,6 +68,7 @@
   "apartmentCreatedMessage": "تم إنشاء شقتك {{apartmentName}} بنجاح.",
   "yourJoinCode": "رمز الانضمام الخاص بك",
   "shareCodeWithResidents": "شارك هذا الرمز مع السكان حتى يتمكنوا من الانضمام إلى شقتك",
+  "copied": "تم النسخ!",
   "goToHome": "الذهاب إلى الصفحة الرئيسية"
 }
 

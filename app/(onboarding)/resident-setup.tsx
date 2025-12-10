@@ -105,8 +105,9 @@ export default function ResidentSetupScreen() {
                 placeholderTextColor={colors.neutral400}
                 placeholder={t('joinCodePlaceholder')}
                 value={joinCode}
-                onChangeText={setJoinCode}
+                onChangeText={(text) => setJoinCode(text.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 8))}
                 autoCapitalize="characters"
+                maxLength={8}
                 editable={!loading}
               />
             </View>

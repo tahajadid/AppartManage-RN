@@ -8,7 +8,10 @@
   "signIn": "Sign In",
   "signingIn": "Signing in...",
   "language": "Language",
+  "enterInformationDescription": "Enter your information to create your account",
+  "CreateAccount": "Create Account",
   "haveAnAccount": "Don't have an account?",
+  "alreadyHaveAccount": "Already have an account?",
   "go_register": "Register",
   "loginWithGooglrAccount": "Login with Google Account",
   "enterInformation": "Enter Your Information",
@@ -66,6 +69,7 @@
   "apartmentCreatedMessage": "Your apartment {{apartmentName}} has been created successfully.",
   "yourJoinCode": "Your Join Code",
   "shareCodeWithResidents": "Share this code with residents so they can join your apartment",
+  "copied": "Copied!",
   "goToHome": "Go to Home"
 }
 

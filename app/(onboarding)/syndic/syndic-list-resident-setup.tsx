@@ -167,7 +167,7 @@ export default function SyndicListResidentSetup() {
                     ]}
                   >
                     {isFirstAndSyndicResident && (
-                      <View style={[styles.syndicBadge, {backgroundColor: colors.screenBackground}]}>
+                      <View style={[styles.syndicBadge, {backgroundColor: colors.screenBackground, borderColor: colors.neutral200}]}>
                         <Typo 
                           size={12}
                           color={colors.primary}
