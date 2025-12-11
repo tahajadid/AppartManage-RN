@@ -4,14 +4,14 @@ import useThemeColors from '@/contexts/useThemeColors';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
-export default function ApartmentsScreen() {
+export default function ApartmentScreen() {
   const colors = useThemeColors();
 
   return (
     <ScreenWrapper>
       <View style={[styles.container, { backgroundColor: colors.screenBackground }]}>
         <Typo size={24} color={colors.text}>
-          Apartments
+          Apartment
         </Typo>
       </View>
     </ScreenWrapper>

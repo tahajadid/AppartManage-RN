@@ -1,3 +1,4 @@
+import CustomTabBar from '@/components/CustomTabBar';
 import { useOnboarding } from '@/contexts/onboardingContext';
 import { Tabs, router } from 'expo-router';
 import React, { useEffect } from 'react';
@@ -18,70 +19,49 @@ export default function HomeLayout() {
   }
 
   return (
-    <Tabs screenOptions={{ headerShown: false }}>
-      {role === 'syndic' ? (
-        <>
-          <Tabs.Screen 
-            name="index" 
-            options={{
-              title: 'Dashboard',
-              tabBarLabel: 'Dashboard',
-            }}
-          />
-          <Tabs.Screen 
-            name="residents" 
-            options={{
-              title: 'Residents',
-              tabBarLabel: 'Residents',
-            }}
-          />
-          <Tabs.Screen 
-            name="apartments" 
-            options={{
-              title: 'Apartments',
-              tabBarLabel: 'Apartments',
-            }}
-          />
-          <Tabs.Screen 
-            name="settings" 
-            options={{
-              title: 'Settings',
-              tabBarLabel: 'Settings',
-            }}
-          />
-        </>
-      ) : (
-        <>
-          <Tabs.Screen 
-            name="index" 
-            options={{
-              title: 'Home',
-              tabBarLabel: 'Home',
-            }}
-          />
-          <Tabs.Screen 
-            name="payments" 
-            options={{
-              title: 'Payments',
-              tabBarLabel: 'Payments',
-            }}
-          />
-          <Tabs.Screen 
-            name="notifications" 
-            options={{
-              title: 'Notifications',
-              tabBarLabel: 'Notifications',
-            }}
-          />
-          <Tabs.Screen 
-            name="profile" 
-            options={{
-              title: 'Profile',
-              tabBarLabel: 'Profile',
-            }}
-          />
-        </>
-      )}
+    <Tabs 
+      screenOptions={{ 
+        headerShown: false,
+        tabBarStyle: { display: 'none' }, // Hide default tab bar
+      }}
+      tabBar={(props) => <CustomTabBar {...props} />}
+    >
+      <Tabs.Screen 
+        name="index" 
+        options={{
+          title: 'Home',
+          tabBarLabel: 'Home',
+        }}
+      />
+      <Tabs.Screen 
+        name="payments" 
+        options={{
+          title: 'Payments',
+          tabBarLabel: 'Payments',
+        }}
+      />
+      <Tabs.Screen 
+        name="add-action" 
+        options={{
+          title: 'Add',
+          tabBarLabel: '',
+          tabBarButton: () => null, // Hide from default tab bar
+        }}
+      />
+      <Tabs.Screen 
+        name="apartments" 
+        options={{
+          title: 'Apartment',
+          tabBarLabel: 'Apartment',
+        }}
+      />
+      <Tabs.Screen 
+        name="settings" 
+        options={{
+          title: 'Settings',
+          tabBarLabel: 'Settings',
+        }}
+      />
     </Tabs>
   );
 }
