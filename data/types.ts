@@ -148,4 +148,13 @@ export interface AppHeaderProps {
     title: string;
     onBack?: () => void;
     showBackButton?: boolean;
-  }
+}
+
+export  interface ActionOption {
+    id: string;
+    icon: React.ComponentType<any>;
+    title: string;
+    subtitle: string;
+    route: string;
+    iconColor: string;
+}

@@ -1,73 +1,27 @@
 import AppHeader from '@/components/AppHeader';
 import ScreenWrapper from '@/components/ScreenWrapper';
 import Typo from '@/components/Typo';
+import { getResidentActionOptions } from '@/constants/addActionListHelper';
 import { radius, spacingX, spacingY } from '@/constants/theme';
 import { useRTL } from '@/contexts/RTLContext';
 import useThemeColors from '@/contexts/useThemeColors';
-import {
-    Calendar,
-    CreditCard,
-    Plus,
-    Receipt,
-    UserPlus
-} from 'phosphor-react-native';
+import { Plus } from 'phosphor-react-native';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-    ScrollView,
-    StyleSheet,
-    TouchableOpacity,
-    View
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View
 } from 'react-native';
 
-interface ActionOption {
-  id: string;
-  icon: React.ComponentType<any>;
-  title: string;
-  subtitle: string;
-  route: string;
-  iconColor: string;
-}
 
-export default function AddActionSyndicScreen() {
+export default function AddActionResidentScreen() {
   const { t } = useTranslation();
   const colors = useThemeColors();
   const { isRTL } = useRTL();
 
-  const actionOptions: ActionOption[] = [
-    {
-      id: 'add-payment',
-      icon: CreditCard,
-      title: t('addPaymentForResident') || 'Add Payment for Resident',
-      subtitle: t('addPaymentForResidentDescription') || 'Record a payment made by a resident',
-      route: '/(home)/payments/add-payment',
-      iconColor: colors.green,
-    },
-    {
-      id: 'add-expense',
-      icon: Receipt,
-      title: t('addExpense') || 'Add Expense',
-      subtitle: t('addExpenseDescription') || 'Record a new apartment expense',
-      route: '/(home)/expenses/add-expense',
-      iconColor: colors.rose,
-    },
-    {
-      id: 'add-resident',
-      icon: UserPlus,
-      title: t('addNewResident') || 'Add New Resident',
-      subtitle: t('addNewResidentDescription') || 'Add a new resident to the apartment',
-      route: '/(home)/residents/add-resident',
-      iconColor: colors.primary,
-    },
-    {
-      id: 'add-meeting',
-      icon: Calendar,
-      title: t('addMeeting') || 'Add Meeting',
-      subtitle: t('addMeetingDescription') || 'Schedule a meeting for all residents',
-      route: '/(home)/meetings/add-meeting',
-      iconColor: colors.brightOrange,
-    },
-  ];
+  const actionOptions = getResidentActionOptions(t, colors);
 
   const handleActionPress = (route: string) => {
     // Navigate to the corresponding screen (placeholder for now)
@@ -82,8 +36,7 @@ export default function AddActionSyndicScreen() {
         <AppHeader title={t('addAction') || 'Add Action'} />
 
         {/* Content */}
-        <ScrollView
-          contentContainerStyle={[styles.scrollContent, { direction: isRTL ? 'rtl' : 'ltr' }]}>
+        <ScrollView contentContainerStyle={[styles.scrollContent, { direction: isRTL ? 'rtl' : 'ltr' }]}>
           <Typo 
             size={18} 
             color={colors.subtitleText} 

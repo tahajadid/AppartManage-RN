@@ -1,55 +1,26 @@
 import AppHeader from '@/components/AppHeader';
 import ScreenWrapper from '@/components/ScreenWrapper';
 import Typo from '@/components/Typo';
+import { getSyndicActionOptions } from '@/constants/addActionListHelper';
 import { radius, spacingX, spacingY } from '@/constants/theme';
 import { useRTL } from '@/contexts/RTLContext';
 import useThemeColors from '@/contexts/useThemeColors';
-import {
-    CreditCard,
-    Plus,
-    WarningCircle
-} from 'phosphor-react-native';
+import { Plus } from 'phosphor-react-native';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-    ScrollView,
-    StyleSheet,
-    TouchableOpacity,
-    View
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View
 } from 'react-native';
 
-interface ActionOption {
-  id: string;
-  icon: React.ComponentType<any>;
-  title: string;
-  subtitle: string;
-  route: string;
-  iconColor: string;
-}
-
-export default function AddActionResidentScreen() {
+export default function AddActionSyndicScreen() {
   const { t } = useTranslation();
   const colors = useThemeColors();
   const { isRTL } = useRTL();
 
-  const actionOptions: ActionOption[] = [
-    {
-      id: 'add-payment',
-      icon: CreditCard,
-      title: t('addPayment') || 'Add Payment',
-      subtitle: t('addPaymentDescription') || 'Record a payment you made',
-      route: '/(home)/payments/add-payment',
-      iconColor: colors.green,
-    },
-    {
-      id: 'add-issue',
-      icon: WarningCircle,
-      title: t('addIssue') || 'Report Issue',
-      subtitle: t('addIssueDescription') || 'Report an apartment issue or problem',
-      route: '/(home)/issues/add-issue',
-      iconColor: colors.rose,
-    },
-  ];
+  const actionOptions = getSyndicActionOptions(t, colors);
 
   const handleActionPress = (route: string) => {
     // Navigate to the corresponding screen (placeholder for now)
@@ -64,7 +35,8 @@ export default function AddActionResidentScreen() {
         <AppHeader title={t('addAction') || 'Add Action'} />
 
         {/* Content */}
-        <ScrollView contentContainerStyle={[styles.scrollContent, { direction: isRTL ? 'rtl' : 'ltr' }]}>
+        <ScrollView
+          contentContainerStyle={[styles.scrollContent, { direction: isRTL ? 'rtl' : 'ltr' }]}>
           <Typo 
             size={18} 
             color={colors.subtitleText} 
