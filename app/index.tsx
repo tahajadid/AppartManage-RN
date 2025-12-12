@@ -12,12 +12,23 @@ export default function IndexScreen() {
   const { onboardingCompleted, isLoading } = useOnboarding();
 
   useEffect(() => {
-    if (isLoading) return; // Wait for onboarding status to load
-
+    // Always prioritize auth state - if user is not authenticated, navigate to login immediately
+    // This check must happen first, before any onboarding checks
     if (!user) {
-      // Not authenticated - go to login
+      // Not authenticated - go to login immediately
+      // Don't wait for onboarding status, just navigate to login
       router.replace('/(auth)/login');
-    } else if (!onboardingCompleted) {
+      return;
+    }
+
+    // Only check onboarding status if user is authenticated
+    // If still loading onboarding status, wait
+    if (isLoading) {
+      return;
+    }
+
+    // User is authenticated - check onboarding status
+    if (!onboardingCompleted) {
       // Authenticated but onboarding not completed - go to onboarding
       router.replace('/(onboarding)/choose-role');
     } else {

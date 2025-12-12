@@ -2,17 +2,14 @@ import PrimaryButton from '@/components/PrimaryButton';
 import ScreenWrapper from '@/components/ScreenWrapper';
 import Typo from '@/components/Typo';
 import { radius, spacingX, spacingY } from '@/constants/theme';
-import { useAuth } from '@/contexts/authContext';
 import useThemeColors from '@/contexts/useThemeColors';
 import { signOut } from '@/services/authService';
-import { router } from 'expo-router';
 import { SignOut } from 'phosphor-react-native';
 import React, { useState } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
 
 export default function SettingsScreen() {
   const colors = useThemeColors();
-  const { setUser } = useAuth();
   const [loading, setLoading] = useState(false);
 
   const handleLogout = async () => {
@@ -30,15 +27,16 @@ export default function SettingsScreen() {
           onPress: async () => {
             setLoading(true);
             try {
+              // Sign out from Firebase
+              // This will trigger onAuthStateChanged in both authContext and onboardingContext
+              // index.tsx will automatically handle navigation to login when user becomes null
               await signOut();
-              setUser(null);
-              router.replace('/(auth)/login');
             } catch (error: any) {
               console.log('Logout error:', error);
               Alert.alert('Error', 'Failed to logout. Please try again.');
-            } finally {
               setLoading(false);
             }
+            // Note: Don't set loading to false on success - navigation will happen via index.tsx
           },
         },
       ]

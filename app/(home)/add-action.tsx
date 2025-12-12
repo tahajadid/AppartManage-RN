@@ -1,36 +1,24 @@
-import ScreenWrapper from '@/components/ScreenWrapper';
-import Typo from '@/components/Typo';
-import useThemeColors from '@/contexts/useThemeColors';
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { useOnboarding } from '@/contexts/onboardingContext';
+import { router } from 'expo-router';
+import React, { useEffect } from 'react';
 
 export default function AddActionScreen() {
-  const colors = useThemeColors();
+  const { role, isLoading } = useOnboarding();
 
-  return (
-    <ScreenWrapper>
-      <View style={[styles.container, { backgroundColor: colors.screenBackground }]}>
-        <Typo size={24} color={colors.text}>
-          Add Action
-        </Typo>
-        <Typo size={16} color={colors.subtitleText} style={styles.subtitle}>
-          This screen will be used for creating new actions
-        </Typo>
-      </View>
-    </ScreenWrapper>
-  );
+  useEffect(() => {
+    if (!isLoading && role) {
+      // Route based on user role
+      if (role === 'syndic' || role === 'syndic_resident') {
+        router.replace('/ui/home/addAction/add-action-syndic' as any);
+      } else if (role === 'resident') {
+        router.replace('/ui/home/addAction/add-action-resident' as any);
+      } else {
+        // Fallback: go back if role is unknown
+        router.back();
+      }
+    }
+  }, [role, isLoading]);
+
+  return null;
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-  },
-  subtitle: {
-    marginTop: 12,
-    textAlign: 'center',
-  },
-});
 

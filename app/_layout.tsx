@@ -39,6 +39,7 @@ const StackLayout = () => {
       <Stack.Screen name="(auth)" />
       <Stack.Screen name="(onboarding)" />
       <Stack.Screen name="(home)" />
+      <Stack.Screen name="ui" />
     </Stack>
   );
 };
