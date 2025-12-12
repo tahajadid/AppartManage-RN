@@ -1,4 +1,5 @@
 import { spacingY } from '@/constants/theme';
+import { useRTL } from '@/contexts/RTLContext';
 import useThemeColors from '@/contexts/useThemeColors';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { router } from 'expo-router';
@@ -10,6 +11,7 @@ import {
   Plus
 } from 'phosphor-react-native';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Platform,
   StyleSheet,
@@ -22,6 +24,8 @@ import Typo from './Typo';
 export default function CustomTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   const colors = useThemeColors();
   const insets = useSafeAreaInsets();
+  const { t } = useTranslation();
+  const { isRTL } = useRTL();
 
   const tabIcons = {
     index: House,
@@ -31,12 +35,21 @@ export default function CustomTabBar({ state, descriptors, navigation }: BottomT
     settings: Gear,
   };
 
-  const tabLabels = {
-    index: 'Home',
-    payments: 'Payments',
-    'add-action': '',
-    apartments: 'Apartment',
-    settings: 'Settings',
+  const getTabLabel = (routeName: string): string => {
+    switch (routeName) {
+      case 'index':
+        return t('tabHome') || 'Home';
+      case 'payments':
+        return t('tabPayments') || 'Payments';
+      case 'apartments':
+        return t('tabApartment') || 'Apartment';
+      case 'settings':
+        return t('tabSettings') || 'Settings';
+      case 'add-action':
+        return '';
+      default:
+        return routeName;
+    }
   };
 
   const bottomInset = Math.max(insets.bottom, spacingY._10);
@@ -52,6 +65,7 @@ export default function CustomTabBar({ state, descriptors, navigation }: BottomT
           paddingBottom: bottomInset,
           height: tabBarHeight,
           borderTopColor: colors.neutral700,
+          flexDirection: isRTL ? 'row-reverse' : 'row',
         }
       ]}
     >
@@ -61,7 +75,7 @@ export default function CustomTabBar({ state, descriptors, navigation }: BottomT
         const isAddButton = route.name === 'add-action';
 
         const Icon = tabIcons[route.name as keyof typeof tabIcons] || House;
-        const label = tabLabels[route.name as keyof typeof tabLabels] || route.name;
+        const label = getTabLabel(route.name);
 
         const onPress = () => {
           const event = navigation.emit({
@@ -143,7 +157,6 @@ export default function CustomTabBar({ state, descriptors, navigation }: BottomT
 
 const styles = StyleSheet.create({
   tabBar: {
-    flexDirection: 'row',
     borderTopWidth: 1,
     alignItems: 'flex-start',
     justifyContent: 'space-around',

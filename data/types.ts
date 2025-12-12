@@ -143,3 +143,9 @@ export interface AuthResult {
     user: User | null;
     error: string | null;
 }
+
+export interface AppHeaderProps {
+    title: string;
+    onBack?: () => void;
+    showBackButton?: boolean;
+  }

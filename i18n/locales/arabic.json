@@ -77,7 +77,25 @@
   "selectResidentRequired": "يرجى اختيار ساكن",
   "linking": "جاري الربط...",
   "residentLinkedSuccess": "نجح!",
-  "residentLinkedMessage": "تم ربطك بنجاح بـ {{apartmentName}}."
+  "residentLinkedMessage": "تم ربطك بنجاح بـ {{apartmentName}}.",
+  "addAction": "إضافة إجراء",
+  "selectActionToAdd": "اختر إجراء للإضافة",
+  "addPaymentForResident": "إضافة دفعة للساكن",
+  "addPaymentForResidentDescription": "تسجيل دفعة قام بها ساكن",
+  "addExpense": "إضافة مصروف",
+  "addExpenseDescription": "تسجيل مصروف جديد للشقة",
+  "addNewResident": "إضافة ساكن جديد",
+  "addNewResidentDescription": "إضافة ساكن جديد إلى الشقة",
+  "addMeeting": "إضافة اجتماع",
+  "addMeetingDescription": "جدولة اجتماع لجميع السكان",
+  "addPayment": "إضافة دفعة",
+  "addPaymentDescription": "تسجيل دفعة قمت بها",
+  "addIssue": "الإبلاغ عن مشكلة",
+  "addIssueDescription": "الإبلاغ عن مشكلة أو عطل في الشقة",
+  "tabHome": "الرئيسية",
+  "tabPayments": "المدفوعات",
+  "tabApartment": "الشقة",
+  "tabSettings": "الإعدادات"
 }
 
 

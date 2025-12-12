@@ -78,7 +78,25 @@
   "selectResidentRequired": "Please select a resident",
   "linking": "Linking...",
   "residentLinkedSuccess": "Success!",
-  "residentLinkedMessage": "You have been successfully linked to {{apartmentName}}."
+  "residentLinkedMessage": "You have been successfully linked to {{apartmentName}}.",
+  "addAction": "Add Action",
+  "selectActionToAdd": "Select an action to add",
+  "addPaymentForResident": "Add Payment for Resident",
+  "addPaymentForResidentDescription": "Record a payment made by a resident",
+  "addExpense": "Add Expense",
+  "addExpenseDescription": "Record a new apartment expense",
+  "addNewResident": "Add New Resident",
+  "addNewResidentDescription": "Add a new resident to the apartment",
+  "addMeeting": "Add Meeting",
+  "addMeetingDescription": "Schedule a meeting for all residents",
+  "addPayment": "Add Payment",
+  "addPaymentDescription": "Record a payment you made",
+  "addIssue": "Report Issue",
+  "addIssueDescription": "Report an apartment issue or problem",
+  "tabHome": "Home",
+  "tabPayments": "Payments",
+  "tabApartment": "Apartment",
+  "tabSettings": "Settings"
 }
 
 

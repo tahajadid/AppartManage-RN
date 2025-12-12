@@ -1,20 +1,28 @@
 import CustomTabBar from '@/components/CustomTabBar';
+import { useAuth } from '@/contexts/authContext';
 import { useOnboarding } from '@/contexts/onboardingContext';
 import { Tabs, router } from 'expo-router';
 import React, { useEffect } from 'react';
 
 export default function HomeLayout() {
+  const { user } = useAuth();
   const { onboardingCompleted, role, isLoading } = useOnboarding();
 
-  // Redirect to onboarding if not completed
+  // Redirect to onboarding if not completed (only if user is authenticated)
   useEffect(() => {
-    if (!isLoading && !onboardingCompleted) {
+    // Only redirect to onboarding if user is authenticated
+    // If user is null, let index.tsx handle navigation to login
+    if (user && !isLoading && !onboardingCompleted) {
       router.replace('/(onboarding)/choose-role');
     }
-  }, [onboardingCompleted, isLoading]);
+    // If user is null, redirect to login (let index.tsx handle it, but ensure we don't stay here)
+    if (!user) {
+      router.replace('/(auth)/login');
+    }
+  }, [user, onboardingCompleted, isLoading]);
 
-  // Don't render tabs until onboarding is confirmed
-  if (isLoading || !onboardingCompleted) {
+  // Don't render tabs if user is not authenticated or onboarding is not completed
+  if (!user || isLoading || !onboardingCompleted) {
     return null;
   }
 
