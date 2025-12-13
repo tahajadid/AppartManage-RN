@@ -24,6 +24,10 @@ export const colors = {
     neutral800: "#262626",
     neutral900: "#171717",
     brightOrange: "#FFAC1C",
+    remainingPaymentBackground: '#ffffff1a',
+    summaryDividerBackground: '#E5E5E5',
+
+
 };
 
 export const lightTheme = {
@@ -94,7 +98,10 @@ export const lightTheme = {
     greenAddHover: "#8efa8e",
     tabBarBackground: "#404040",
     faceIdBackground: "#1982A133",
-    inputBorder:"#52525233"
+    inputBorder:"#52525233",
+    remainingPaymentBackground: '#ffffff1a',
+    summaryDividerBackground: '#E5E5E5',
+
 
   };
   
@@ -168,7 +175,12 @@ export const lightTheme = {
     greenAddHover: "#8efa8e",
     tabBarBackground: "#737373",
     faceIdBackground: "#30AEC733",
-    inputBorder:"#d4d4d444"
+    inputBorder:"#d4d4d444",
+
+    remainingPaymentBackground: '#0000001a',
+    summaryDividerBackground: '#E5E5E5',
+
+
   };
 
 

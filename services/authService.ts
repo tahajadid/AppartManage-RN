@@ -45,7 +45,6 @@ const getGoogleSignin = async () => {
               // Web Client ID from Google Cloud Console
               webClientId: '953671950972-j824d2grrefn764m5892u4u15qe131a5.apps.googleusercontent.com',
               // iOS Client ID (only needed for iOS, should be different from webClientId)
-              // If you don't have an iOS client, remove this line or comment it out
               // iosClientId: 'YOUR_IOS_CLIENT_ID_HERE',
             };
             console.log('Configuring Google Sign-In with:', {
@@ -93,6 +92,16 @@ export async function signInWithEmail(email: string, password: string): Promise<
     };
   } catch (error: any) {
     console.log('Sign in error:', error);
+    
+    // Check for specific error codes
+    if (error?.code === 'auth/invalid-credential') {
+      return {
+        user: null,
+        error: 'Email or password is invalid',
+      };
+    }
+    
+    // Generic error for other cases
     return {
       user: null,
       error: 'An error occurred, please try again',

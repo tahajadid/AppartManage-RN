@@ -5,8 +5,9 @@ import { I18nManager, Platform } from 'react-native';
 interface RTLContextType {
   isRTL: boolean;
   currentLanguage: string;
-  changeLanguage: (lang: 'en' | 'ar') => Promise<void>;
+  changeLanguage: (lang: 'en' | 'ar' | 'fr') => Promise<void>;
   refreshKey: number;
+  isChangingLanguage: boolean;
 }
 
 const RTLContext = createContext<RTLContextType | undefined>(undefined);
@@ -19,6 +20,7 @@ export const RTLProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   });
   const [currentLanguage, setCurrentLanguage] = useState(i18n.language);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [isChangingLanguage, setIsChangingLanguage] = useState(false);
 
   // Listen to i18n language changes
   useEffect(() => {
@@ -48,8 +50,11 @@ export const RTLProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     };
   }, []);
 
-  const changeLanguage = async (lang: 'en' | 'ar') => {
+  const changeLanguage = async (lang: 'en' | 'ar' | 'fr') => {
     const shouldBeRTL = lang === 'ar';
+    
+    // Set flag to prevent navigation during language change
+    setIsChangingLanguage(true);
     
     // Update state immediately (before i18n changes)
     setCurrentLanguage(lang);
@@ -66,10 +71,15 @@ export const RTLProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     
     // Force re-render
     setRefreshKey(prev => prev + 1);
+    
+    // Reset flag after a short delay to allow remount to complete
+    setTimeout(() => {
+      setIsChangingLanguage(false);
+    }, 100);
   };
 
   return (
-    <RTLContext.Provider value={{ isRTL, currentLanguage, changeLanguage, refreshKey }}>
+    <RTLContext.Provider value={{ isRTL, currentLanguage, changeLanguage, refreshKey, isChangingLanguage }}>
       <React.Fragment key={refreshKey}>
         {children}
       </React.Fragment>

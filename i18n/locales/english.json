@@ -96,7 +96,32 @@
   "tabHome": "Home",
   "tabPayments": "Payments",
   "tabApartment": "Apartment",
-  "tabSettings": "Settings"
+  "tabSettings": "Settings",
+  "settings": "Settings",
+  "editProfile": "Edit Profile",
+  "modifyPersonalInformation": "Modify your personal information",
+  "changePassword": "Change Password",
+  "updatePassword": "Update your password",
+  "theme": "Theme",
+  "light": "Light",
+  "dark": "Dark",
+  "system": "System",
+  "logout": "Logout",
+  "loggingOut": "Logging out...",
+  "logoutConfirmation": "Are you sure you want to logout?",
+  "cancel": "Cancel",
+  "done": "Done",
+  "selectLanguage": "Select Language",
+  "error": "Error",
+  "failedToLogout": "Failed to logout. Please try again.",
+  "saveChanges": "Save Changes",
+  "currentPassword": "Current Password",
+  "currentPasswordPlaceholder": "Enter your current password",
+  "newPassword": "New Password",
+  "newPasswordPlaceholder": "Enter your new password",
+  "confirmNewPassword": "Confirm New Password",
+  "confirmNewPasswordPlaceholder": "Re-enter your new password",
+  "updatePasswordButton": "Update Password"
 }
 
 

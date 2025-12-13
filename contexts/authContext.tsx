@@ -26,6 +26,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
                 setUser(null);
                 // Navigation to login is handled by index.tsx
             }
+            // Mark as ready after first auth state check
+            setIsReady(true);
         });
 
         return ()=> unsub();
@@ -45,6 +47,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         user,
         setUser,
         login,
+        isReady,
     };
 
     return ( 
