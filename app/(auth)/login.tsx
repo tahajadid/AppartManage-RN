@@ -1,5 +1,5 @@
+import LanguageSelectionModal from '@/components/appSettings/LanguageSelectionModal';
 import Input from '@/components/Input';
-import LanguageSwitcher from '@/components/LanguageSwitcher';
 import PrimaryButton from '@/components/PrimaryButton';
 import ScreenWrapper from '@/components/ScreenWrapper';
 import Typo from '@/components/Typo';
@@ -10,12 +10,14 @@ import { createRTLStyles } from '@/utils/rtlStyles';
 import { useLoginViewModel } from '@/viewmodels/useLoginViewModel';
 import { GoogleSigninButton } from '@react-native-google-signin/google-signin';
 import { router } from 'expo-router';
-import React from 'react';
+import { Globe } from 'phosphor-react-native';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   KeyboardAvoidingView,
   Platform, Pressable, ScrollView,
   StyleSheet,
+  TouchableOpacity,
   View
 } from 'react-native';
 
@@ -35,7 +37,13 @@ const login = () => {
   const colors = useThemeColors();
   const { isRTL } = useRTL();
   const rtlStyles = createRTLStyles(isRTL);
+  const [languageModalVisible, setLanguageModalVisible] = useState(false);
+  const { currentLanguage, changeLanguage } = useRTL();
 
+  const handleLanguageSelect = async (langCode: 'en' | 'ar' | 'fr') => {
+    await changeLanguage(langCode);
+    setLanguageModalVisible(false);
+  };
 
   return (
     <ScreenWrapper style={{ direction: isRTL ? 'rtl' : 'ltr' }}>
@@ -50,8 +58,16 @@ const login = () => {
             <View 
               style={[styles.content, { direction: isRTL ? 'rtl' : 'ltr' }]}
             >
-              {/* Language Switcher */}
-              <LanguageSwitcher />
+              
+              <TouchableOpacity
+                onPress={() => setLanguageModalVisible(true)}
+                style={[styles.languageSelector,{ direction: isRTL ? 'rtl' : 'ltr',
+                  backgroundColor: colors.neutral800}]}>
+                  <Globe size={20} color={colors.primary} weight="regular" />
+                  <Typo size={14} color={colors.primary} fontWeight="700">
+                    {t('language')}
+                  </Typo>
+              </TouchableOpacity>
 
               <Typo 
                 size={26}
@@ -195,6 +211,13 @@ const login = () => {
       </KeyboardAvoidingView>
     </View>
 
+      {/* Language Selection Modal */}
+      <LanguageSelectionModal
+        visible={languageModalVisible}
+        onClose={() => setLanguageModalVisible(false)}
+        onLanguageSelect={handleLanguageSelect}
+      />
+      
     </ScreenWrapper>
   );
 }
@@ -209,6 +232,17 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: 'center',
     padding: spacingX._20,
+  },
+  languageSelector: {
+    padding: spacingX._10,
+    flexDirection: 'row',
+    marginBottom: spacingY._24,
+    alignSelf: "flex-start",
+    alignItems: "flex-start",
+    justifyContent: "flex-start",
+    textAlign: "left",
+    borderRadius: radius._8,
+    gap: spacingX._8,
   },
   formContainer:{
     padding: spacingX._20,
