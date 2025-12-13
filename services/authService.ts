@@ -92,6 +92,16 @@ export async function signInWithEmail(email: string, password: string): Promise<
     };
   } catch (error: any) {
     console.log('Sign in error:', error);
+    
+    // Check for specific error codes
+    if (error?.code === 'auth/invalid-credential') {
+      return {
+        user: null,
+        error: 'Email or password is invalid',
+      };
+    }
+    
+    // Generic error for other cases
     return {
       user: null,
       error: 'An error occurred, please try again',

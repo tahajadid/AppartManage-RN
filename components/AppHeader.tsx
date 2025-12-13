@@ -21,7 +21,13 @@ export default function AppHeader({
     if (onBack) {
       onBack();
     } else {
-      router.push('/(home)' as any);
+      // Use router.back() to navigate back in the navigation stack
+      if (router.canGoBack()) {
+        router.back();
+      } else {
+        // Fallback to home if there's no history
+        router.push('/(home)' as any);
+      }
     }
   };
 

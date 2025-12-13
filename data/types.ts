@@ -100,6 +100,7 @@ export type AuthContextType = {
     email: string,
     password: string
     ) => Promise<{ success: boolean; msg?: string }>;
+    isReady: boolean;
 };
 
 export type ResponseType = {

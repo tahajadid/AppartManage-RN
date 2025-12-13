@@ -1,30 +1,35 @@
-import ScreenWrapper from '@/components/ScreenWrapper';
-import Typo from '@/components/Typo';
 import { useOnboarding } from '@/contexts/onboardingContext';
-import useThemeColors from '@/contexts/useThemeColors';
-import React from 'react';
+import { router } from 'expo-router';
+import React, { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
+import ResidentDashboard from '../ui/dashboard/resident-dashboard';
+import SyndicDashboard from '../ui/dashboard/syndic-dashboard';
 
 export default function HomeScreen() {
-  const colors = useThemeColors();
-  const { role } = useOnboarding();
+  const { role, isLoading } = useOnboarding();
 
-  return (
-    <ScreenWrapper>
-      <View style={[styles.container, { backgroundColor: colors.screenBackground }]}>
-        <Typo size={24} color={colors.text}>
-          {role === 'syndic' ? 'Syndic Dashboard' : 'Resident Home'}
-        </Typo>
-      </View>
-    </ScreenWrapper>
-  );
+  useEffect(() => {
+    if (!isLoading && !role) {
+      // If no role, redirect to onboarding
+      router.replace('/(onboarding)/choose-role');
+    }
+  }, [role, isLoading]);
+
+  // Render based on role
+  if (role === 'syndic' || role === 'syndic_resident') {
+    return <SyndicDashboard />;
+  }
+
+  if (role === 'resident') {
+    return <ResidentDashboard />;
+  }
+
+  // Loading or no role
+  return <View style={styles.container} />;
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 });
-

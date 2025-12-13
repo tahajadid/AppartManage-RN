@@ -1,6 +1,7 @@
 import { AuthProvider } from '@/contexts/authContext';
 import { OnboardingProvider } from '@/contexts/onboardingContext';
 import { RTLProvider } from '@/contexts/RTLContext';
+import { ThemeProvider } from '@/contexts/themeContext';
 import { useLoadFonts } from '@/hooks/fonts';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
@@ -54,13 +55,15 @@ export default function RootLayout() {
 
   return (
     <SafeAreaProvider>
-      <RTLProvider>
-        <AuthProvider>
-          <OnboardingProvider>
-            <StackLayout />
-          </OnboardingProvider>
-        </AuthProvider>
-      </RTLProvider>
+      <ThemeProvider>
+        <RTLProvider>
+          <AuthProvider>
+            <OnboardingProvider>
+              <StackLayout />
+            </OnboardingProvider>
+          </AuthProvider>
+        </RTLProvider>
+      </ThemeProvider>
     </SafeAreaProvider>
   );
 }

@@ -4,10 +4,12 @@ import { I18nManager, Platform } from "react-native";
 
 import translationAr from "./locales/arabic.json";
 import translationEn from "./locales/english.json";
+import translationFr from "./locales/french.json";
 
 const resources = {
   ar: { translation: translationAr },
   en: { translation: translationEn },
+  fr: { translation: translationFr },
 };
 
 const RTL_LANGUAGES = ["ar"]; // Arabic is RTL
