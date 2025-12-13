@@ -121,6 +121,13 @@
   "newPasswordPlaceholder": "Entrez votre nouveau mot de passe",
   "confirmNewPassword": "Confirmer le nouveau mot de passe",
   "confirmNewPasswordPlaceholder": "Ré-entrez votre nouveau mot de passe",
-  "updatePasswordButton": "Mettre à jour le mot de passe"
+  "updatePasswordButton": "Mettre à jour le mot de passe",
+  "forgetPassword": "Mot de passe oublié ?",
+  "forgetPasswordTitle": "Réinitialiser le mot de passe",
+  "forgetPasswordDescription": "Entrez votre adresse e-mail et nous vous enverrons un lien pour réinitialiser votre mot de passe",
+  "sendResetLink": "Envoyer le lien de réinitialisation",
+  "sending": "Envoi en cours...",
+  "resetLinkSent": "Lien de réinitialisation envoyé !",
+  "resetLinkSentMessage": "Veuillez vérifier votre e-mail pour les instructions de réinitialisation du mot de passe"
 }
 

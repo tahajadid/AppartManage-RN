@@ -8,12 +8,14 @@ import useThemeColors from '@/contexts/useThemeColors';
 import { createRTLStyles } from '@/utils/rtlStyles';
 import { useRegisterViewModel } from '@/viewmodels/useRegisterViewModel';
 import { router } from 'expo-router';
+import { CaretLeft, CaretRight } from 'phosphor-react-native';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   KeyboardAvoidingView,
   Platform, Pressable, ScrollView,
   StyleSheet,
+  TouchableOpacity,
   View
 } from 'react-native';
 
@@ -42,7 +44,9 @@ const register = () => {
 
   const textColor = colors.text;
   const tintColor = colors.neutral100;
-
+  // Use CaretRight for RTL (Arabic) and CaretLeft for LTR (English)
+  const BackIcon = isRTL ? CaretRight : CaretLeft;
+  
   return (
     <ScreenWrapper style={{ direction: isRTL ? 'rtl' : 'ltr' }}>
       <View style={styles.container}>
@@ -54,16 +58,26 @@ const register = () => {
             keyboardShouldPersistTaps="handled"
           >
             <View 
-              style={[styles.content, { direction: isRTL ? 'rtl' : 'ltr' }]}
-            >
+              style={[styles.content, { direction: isRTL ? 'rtl' : 'ltr' }]}>
 
-              <Typo 
-                size={26}
-                color={colors.text}
-                style={styles.title}
-              >
-                {t('CreateAccount')}
-              </Typo>
+              <TouchableOpacity 
+              onPress={() => router.back()}
+              style={{flexDirection: 'row', alignItems: 'center', gap: spacingX._16}}>
+
+                <BackIcon size={14} color={colors.white} 
+                style={{backgroundColor: colors.primary, padding: spacingY._16,
+                  borderRadius: radius._8,
+                }} />
+                
+                <Typo 
+                  size={26}
+                  color={colors.primary}
+                  style={styles.title}>
+
+                  {t('CreateAccount')}
+                </Typo>
+
+              </TouchableOpacity>
 
               <Typo 
                 size={18}
@@ -269,11 +283,13 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   title: {
+    marginTop:spacingY._8,
     marginBottom: spacingY._10,
     textAlign: 'left',
   },
   subtitle: {
-    marginBottom: spacingY._32,
+    marginTop: spacingY._8,
+    marginBottom: spacingY._16,
     opacity: 0.7,
     textAlign: 'left',
   },

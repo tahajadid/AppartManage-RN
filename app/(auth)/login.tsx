@@ -146,6 +146,17 @@ const login = () => {
                 </View>
               )}
 
+              {/* Forgot Password Button */}
+              <Pressable onPress={() => router.push("/(auth)/forget-password")}>
+                <Typo 
+                      size={14}
+                      color={colors.primary}
+                      style={styles.forgotPasswordText}
+                    >
+                        {t("forgetPassword")}
+                    </Typo>
+                </Pressable>
+
             {/* Login Button */}
             <PrimaryButton 
               style={styles.loginButton}
@@ -185,16 +196,14 @@ const login = () => {
           </View>
 
             {/* Divider */}
-            <View style={[styles.dividerContainer, { backgroundColor: colors.neutral600 }]}>
-            </View>
+            <View style={[styles.dividerContainer, { backgroundColor: colors.neutral600 }]}/>
 
             <Typo 
-                  size={14}
-                  color={colors.text}
-                  style={styles.registerWithGoogle}
-                >
-                    {t('loginWithGooglrAccount')}
-                </Typo>
+                size={16}
+                color={colors.text}
+                style={styles.registerWithGoogle}>
+              {t('loginWithGooglrAccount')}
+            </Typo>
 
             {/* Google Sign-In Button */}
             <View style={styles.googleButtonContainer}>
@@ -330,6 +339,11 @@ const styles = StyleSheet.create({
   },
   underlinedText: {
     textDecorationLine: "underline",
+  },
+  forgotPasswordText: {
+    textDecorationLine: "underline",
+    textAlign: "right",
+    marginBottom: spacingY._8,
   },
 });
 
