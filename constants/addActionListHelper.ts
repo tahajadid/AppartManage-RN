@@ -1,10 +1,9 @@
 import { ActionOption } from '@/data/types';
 import {
-    Calendar,
-    CreditCard,
-    Receipt,
-    UserPlus,
-    WarningCircle
+  Calendar,
+  CreditCard,
+  Receipt,
+  WarningCircle
 } from 'phosphor-react-native';
 
 /**
@@ -57,14 +56,6 @@ export const getSyndicActionOptions = (
       subtitle: t('addExpenseDescription') || 'Record a new apartment expense',
       route: '/(home)/expenses/add-expense',
       iconColor: colors.rose,
-    },
-    {
-      id: 'add-resident',
-      icon: UserPlus,
-      title: t('addNewResident') || 'Add New Resident',
-      subtitle: t('addNewResidentDescription') || 'Add a new resident to the apartment',
-      route: '/(home)/residents/add-resident',
-      iconColor: colors.primary,
     },
     {
       id: 'add-meeting',

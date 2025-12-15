@@ -2,7 +2,7 @@ import Typo from '@/components/Typo';
 import { radius, spacingX, spacingY } from '@/constants/theme';
 import useThemeColors from '@/contexts/useThemeColors';
 import { Resident } from '@/services/apartmentService';
-import { Pencil, User } from 'phosphor-react-native';
+import { Pencil, Trash, User } from 'phosphor-react-native';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -15,19 +15,34 @@ import {
 interface ResidentItemProps {
   resident: Resident;
   onPress?: (residentId: string) => void;
+  onDelete?: (residentId: string) => void;
   editable?: boolean;
+  showDelete?: boolean;
 }
 
-export default function ResidentItem({ resident, onPress, editable = false }: ResidentItemProps) {
+export default function ResidentItem({ 
+  resident, 
+  onPress, 
+  onDelete,
+  editable = false,
+  showDelete = false 
+}: ResidentItemProps) {
   const colors = useThemeColors();
   const { t } = useTranslation();
   
   const isSyndicResident = resident.isSyndic;
   const isClickable = editable; // Syndic can edit all residents including themselves
+  const canDelete = showDelete && !isSyndicResident; // Cannot delete syndic
 
   const handlePress = () => {
     if (isClickable && onPress) {
       onPress(resident.id);
+    }
+  };
+
+  const handleDelete = () => {
+    if (canDelete && onDelete) {
+      onDelete(resident.id);
     }
   };
 
@@ -50,10 +65,10 @@ export default function ResidentItem({ resident, onPress, editable = false }: Re
       <View style={styles.residentItemLeft}>
         <View style={[
           styles.residentAvatar,
-          { backgroundColor: isSyndicResident ? colors.loginBackground : colors.primary + '20' }
+          { backgroundColor: isSyndicResident ? colors.goldColorBackground + '82' : colors.primary + '20' }
         ]}>
-          <User 
-            size={24} 
+          <User
+            size={24}
             color={colors.primary} 
             weight="bold" 
           />
@@ -81,13 +96,27 @@ export default function ResidentItem({ resident, onPress, editable = false }: Re
           )}
         </View>
       </View>
-      {editable && (
-        <Pencil 
-          size={20} 
-          color={isSyndicResident ? colors.goldColorBorder : colors.primary} 
-          weight="bold" 
-        />
-      )}
+      <View style={styles.actionsContainer}>
+        {editable && (
+          <Pencil 
+            size={20} 
+            color={isSyndicResident ? colors.goldColorBorder : colors.primary} 
+            weight="bold" 
+          />
+        )}
+        {canDelete && (
+          <TouchableOpacity
+            onPress={handleDelete}
+            style={styles.deleteButton}
+          >
+            <Trash 
+              size={20} 
+              color={colors.redClose} 
+              weight="bold" 
+            />
+          </TouchableOpacity>
+        )}
+      </View>
     </Container>
   );
 }
@@ -140,6 +169,14 @@ const styles = StyleSheet.create({
   },
   residentDetails: {
     marginTop: spacingY._5,
+  },
+  actionsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacingX._12,
+  },
+  deleteButton: {
+    padding: spacingX._5,
   },
 });
 

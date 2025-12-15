@@ -10,16 +10,19 @@ import { useOnboarding } from '@/contexts/onboardingContext';
 import { useRTL } from '@/contexts/RTLContext';
 import useThemeColors from '@/contexts/useThemeColors';
 import { getApartmentData, Resident } from '@/services/apartmentService';
-import { router, useLocalSearchParams } from 'expo-router';
-import { doc, updateDoc } from 'firebase/firestore';
-import React, { useEffect, useState } from 'react';
+import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
+import { arrayRemove, deleteDoc, doc, updateDoc } from 'firebase/firestore';
+import { Plus } from 'phosphor-react-native';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
     ActivityIndicator,
+    Alert,
     KeyboardAvoidingView,
     Platform,
     ScrollView,
     StyleSheet,
+    TouchableOpacity,
     View
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -40,13 +43,12 @@ export default function ModifyApartmentScreen() {
   const [error, setError] = useState<string | null>(null);
   
   const [apartmentName, setApartmentName] = useState<string>('');
-  const [numberOfResidents, setNumberOfResidents] = useState<string>('');
   const [residents, setResidents] = useState<Resident[]>([]);
+  const [deleting, setDeleting] = useState<string | null>(null);
 
   // Track initial values to know when user has modified something
   const [initialValues, setInitialValues] = useState({
     apartmentName: '',
-    numberOfResidents: '',
   });
 
   useEffect(() => {
@@ -57,6 +59,15 @@ export default function ModifyApartmentScreen() {
       setLoading(false);
     }
   }, [apartmentId]);
+
+  // Reload data when screen comes into focus (e.g., after adding a resident)
+  useFocusEffect(
+    useCallback(() => {
+      if (apartmentId) {
+        loadApartmentData();
+      }
+    }, [apartmentId])
+  );
 
   const loadApartmentData = async () => {
     if (!apartmentId) return;
@@ -69,15 +80,12 @@ export default function ModifyApartmentScreen() {
       
       if (result.success && result.apartment) {
         const loadedName = result.apartment.name || '';
-        const loadedNumberOfResidents = result.apartment.numberOfResidents?.toString() || '0';
 
         setApartmentName(loadedName);
-        setNumberOfResidents(loadedNumberOfResidents);
         setResidents(result.apartment.residents);
 
         setInitialValues({
           apartmentName: loadedName,
-          numberOfResidents: loadedNumberOfResidents,
         });
       } else {
         setError(result.error || 'Failed to load apartment data');
@@ -99,11 +107,8 @@ export default function ModifyApartmentScreen() {
       return;
     }
 
-    const numberOfResidentsNum = parseInt(numberOfResidents);
-    if (isNaN(numberOfResidentsNum) || numberOfResidentsNum < 1) {
-      setError('Please enter a valid number of residents (at least 1)');
-      return;
-    }
+    // Auto-calculate number of residents from residents array
+    const numberOfResidentsNum = residents.length;
 
     setSaving(true);
     setError(null);
@@ -126,16 +131,69 @@ export default function ModifyApartmentScreen() {
     }
   };
 
-  const handleEditResident = (residentId: string) => {
+  const handleDeleteResident = (residentId: string) => {
+    const resident = residents.find(r => r.id === residentId);
+    if (!resident) return;
+
+    Alert.alert(
+      t('deleteResident') || 'Delete Resident',
+      t('deleteResidentConfirm', { name: resident.name }) || `Are you sure you want to delete ${resident.name}?`,
+      [
+        {
+          text: t('cancel') || 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: t('delete') || 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            await deleteResident(residentId);
+          },
+        },
+      ]
+    );
+  };
+
+  const deleteResident = async (residentId: string) => {
+    if (!apartmentId) return;
+
+    setDeleting(residentId);
+    setError(null);
+
+    try {
+      // Delete resident document
+      const residentDocRef = doc(firestore, 'residents', residentId);
+      await deleteDoc(residentDocRef);
+
+      // Remove resident from apartment's residents array and update numberOfResidents
+      const apartmentDocRef = doc(firestore, 'apartments', apartmentId);
+      const newNumberOfResidents = residents.length - 1;
+      await updateDoc(apartmentDocRef, {
+        residents: arrayRemove(residentId),
+        numberOfResidents: newNumberOfResidents,
+        updatedAt: new Date().toISOString(),
+      });
+
+      // Reload data from Firestore to ensure consistency
+      await loadApartmentData();
+    } catch (err: any) {
+      console.log('Error deleting resident:', err);
+      setError('An error occurred while deleting resident');
+    } finally {
+      setDeleting(null);
+    }
+  };
+
+  const handleAddResident = () => {
+    // Navigate to add resident screen or show form
+    // For now, we'll create a simple inline form or navigate
     router.push({
-      pathname: '/ui/apartment/syndic/modify-resident',
-      params: { residentId },
+      pathname: '/ui/apartment/syndic/add-resident',
+      params: { apartmentId },
     } as any);
   };
 
-  const isDirty =
-    apartmentName !== initialValues.apartmentName ||
-    numberOfResidents !== initialValues.numberOfResidents;
+  const isDirty = apartmentName !== initialValues.apartmentName;
 
   if (loading) {
     return (
@@ -191,18 +249,17 @@ export default function ModifyApartmentScreen() {
                 />
               </View>
 
-              {/* Number of Residents */}
+              {/* Number of Residents - Auto-calculated */}
               <View style={styles.inputGroup}>
                 <Typo size={16} color={colors.titleText} fontWeight="600" style={styles.label}>
                   {t('numberOfResidents')}
                 </Typo>
-                <Input
-                  placeholder={t('numberOfResidentsPlaceholder')}
-                  value={numberOfResidents}
-                  onChangeText={setNumberOfResidents}
-                  keyboardType="numeric"
-                  containerStyle={styles.input}
-                />
+                <View style={[styles.readOnlyField, 
+                    { backgroundColor: colors.neutral800, opacity: 0.5 }]}>
+                  <Typo size={16} color={colors.subtitleText}>
+                    {residents.length} {residents.length === 1 ? t('resident') : t('residents')}
+                  </Typo>
+                </View>
               </View>
             </View>
 
@@ -213,14 +270,26 @@ export default function ModifyApartmentScreen() {
               </Typo>
             </View>
 
+            {/* Add New Resident Button */}
+            <TouchableOpacity
+              style={[styles.addButton, { backgroundColor: colors.neutral800 }]}
+              onPress={handleAddResident}
+            >
+              <Plus size={20} color={colors.primary} weight="bold" />
+              <Typo size={16} color={colors.primary} fontWeight="600" style={styles.addButtonText}>
+                {t('addNewResident')}
+              </Typo>
+            </TouchableOpacity>
+
             {/* Residents List */}
             <View style={styles.residentsList}>
               {residents.map((resident) => (
                 <ResidentItem 
                   key={resident.id} 
-                  resident={resident} 
-                  onPress={handleEditResident}
-                  editable={true}
+                  resident={resident}
+                  editable={false}
+                  showDelete={true}
+                  onDelete={handleDeleteResident}
                 />
               ))}
             </View>
@@ -286,8 +355,38 @@ const styles = StyleSheet.create({
   input: {
     marginBottom: 0,
   },
+  readOnlyField: {
+    padding: spacingX._16,
+    borderRadius: radius._8,
+    minHeight: 50,
+    justifyContent: 'center',
+  },
   sectionHeader: {
     marginBottom: spacingY._16,
+  },
+  addButton: {
+    flexDirection: 'row',
+    alignSelf: 'flex-start',
+    justifyContent: 'center',
+    paddingVertical: spacingY._10,
+    paddingHorizontal: spacingX._16,
+    borderRadius: radius._30,
+    marginBottom: spacingY._12,
+    gap: spacingX._10,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
+  },
+  addButtonText: {
+    marginLeft: spacingX._5,
   },
   residentsList: {
     gap: spacingY._12,

@@ -133,7 +133,10 @@
   "appartmentInformation": "Apartment Information",
   "listOfResidents": "List of Residents",
   "editApartment": "Edit Apartment",
-  "editResident": "Edit Resident"
+  "editResident": "Edit Resident",
+  "deleteResident": "Delete Resident",
+  "deleteResidentConfirm": "Are you sure you want to delete {{name}}?",
+  "delete": "Delete"
 }
 
 

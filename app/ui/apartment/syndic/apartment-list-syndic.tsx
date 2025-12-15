@@ -7,8 +7,8 @@ import { useOnboarding } from '@/contexts/onboardingContext';
 import { useRTL } from '@/contexts/RTLContext';
 import useThemeColors from '@/contexts/useThemeColors';
 import { getApartmentData, Resident } from '@/services/apartmentService';
-import { router } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+import { router, useFocusEffect } from 'expo-router';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
     ActivityIndicator,
@@ -40,6 +40,15 @@ export default function ApartmentListSyndic() {
     }
   }, [apartmentId]);
 
+  // Reload data when screen comes into focus (e.g., after editing apartment or residents)
+  useFocusEffect(
+    useCallback(() => {
+      if (apartmentId) {
+        loadApartmentData();
+      }
+    }, [apartmentId])
+  );
+
   const loadApartmentData = async () => {
     if (!apartmentId) return;
 
@@ -69,7 +78,7 @@ export default function ApartmentListSyndic() {
 
   const handleEditResident = (residentId: string) => {
     router.push({
-      pathname: '/ui/apartment/syndic/modify-apartment',
+      pathname: '/ui/apartment/syndic/modify-resident',
       params: { residentId },
     } as any);
   };
