@@ -2,7 +2,7 @@ import Typo from '@/components/Typo';
 import { radius, spacingX, spacingY } from '@/constants/theme';
 import useThemeColors from '@/contexts/useThemeColors';
 import { Resident } from '@/services/apartmentService';
-import { Pencil, Trash, User } from 'phosphor-react-native';
+import { Detective, Pencil, Trash, User } from 'phosphor-react-native';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -56,7 +56,7 @@ export default function ResidentItem({
         isSyndicResident && {
           backgroundColor: colors.goldLightBackground,
           borderColor: colors.goldColorBorder,
-          borderWidth: 2,
+          borderWidth: 1,
         },
       ]}
       onPress={handlePress}
@@ -67,11 +67,19 @@ export default function ResidentItem({
           styles.residentAvatar,
           { backgroundColor: isSyndicResident ? colors.goldColorBackground + '82' : colors.primary + '20' }
         ]}>
-          <User
-            size={24}
-            color={colors.primary} 
-            weight="bold" 
-          />
+          {resident.isLinkedWithUser ? (
+            <User
+              size={24}
+              color={colors.primary} 
+              weight="bold" 
+            />
+          ) : (
+            <Detective
+              size={24}
+              color={colors.neutral300} 
+              weight="bold" 
+            />
+          )}
         </View>
         <View style={styles.residentInfo}>
           <View style={styles.residentNameRow}>

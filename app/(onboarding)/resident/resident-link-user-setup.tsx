@@ -110,15 +110,15 @@ export default function ResidentLinkUserSetup() {
             {/* Apartment Info */}
             <View style={styles.apartmentInfo}>
               <Typo 
-                size={18}
-                color={colors.text}
+                size={22}
+                color={colors.primary}
                 fontWeight="700"
                 style={styles.apartmentTitle}
               >
-                {apartmentName}
+                {t('apartmentName')} : {apartmentName}
               </Typo>
               <Typo 
-                size={14}
+                size={16}
                 color={colors.subtitleText}
                 fontWeight="400"
                 style={styles.apartmentSubtitle}
@@ -130,7 +130,7 @@ export default function ResidentLinkUserSetup() {
             {/* Residents List */}
             <View style={styles.residentsContainer}>
               <Typo 
-                size={16}
+                size={18}
                 color={colors.text}
                 fontWeight="600"
                 style={styles.residentsTitle}
