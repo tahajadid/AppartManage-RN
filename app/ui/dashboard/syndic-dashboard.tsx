@@ -88,7 +88,7 @@ export default function SyndicDashboard() {
           <View style={styles.headerOverlay}>
             {/* Top Row: Apartment Name and Notification */}
             <View style={[styles.headerTopRow, { paddingTop: insets.top }]}>
-              <Typo size={18} color={colors.white} fontWeight="700">
+              <Typo size={22} color={colors.brightOrange} fontWeight="600">
                 {MOCK_DATA.apartmentName}
               </Typo>
               <TouchableOpacity style={styles.notificationButton}>
@@ -132,7 +132,7 @@ export default function SyndicDashboard() {
         >
           {/* Monthly Progress / Expense Card */}
           <View style={styles.section}>
-            <View style={[styles.monthlyCard, { backgroundColor: colors.neutral900 }]}>
+            <View style={[styles.monthlyCard, { backgroundColor: colors.neutral800 }]}>
               <View style={styles.monthlyCardHeader}>
                 <TrendUp size={24} color={colors.primary} weight="bold" />
                 <Typo size={18} color={colors.titleText} fontWeight="600" style={styles.monthlyCardTitle}>
@@ -222,7 +222,7 @@ export default function SyndicDashboard() {
               {MOCK_DATA.lastPayments.map((payment) => (
                 <View
                   key={payment.id}
-                  style={[styles.paymentItem, { backgroundColor: colors.neutral900 }]}
+                  style={[styles.paymentItem, { backgroundColor: colors.neutral800 }]}
                 >
                   <View style={styles.paymentItemContent}>
                     <View style={[styles.paymentAvatar, { backgroundColor: colors.primary }]}>
@@ -270,7 +270,7 @@ const styles = StyleSheet.create({
   },
   headerOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
     paddingHorizontal: spacingX._20,
     justifyContent: 'space-between',
   },
@@ -294,8 +294,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: spacingX._5,
-    borderWidth: 2,
-    borderColor: '#fff',
   },
   headerBalanceContent: {
     paddingBottom: spacingY._24,
@@ -334,9 +332,9 @@ const styles = StyleSheet.create({
     ...Platform.select({
       ios: {
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 8,
+        shadowOffset: { width: 0, height: 6},
+        shadowOpacity: 0.5,
+        shadowRadius: 20,
       },
       android: {
         elevation: 4,

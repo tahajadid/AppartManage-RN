@@ -59,7 +59,7 @@ export default function SyndicSuccessSetup() {
           <View style={styles.content}>
             {/* Success Icon */}
             <View style={styles.iconContainer}>
-              <CheckCircle size={80} color={colors.primary} weight="fill" />
+              <CheckCircle size={100} color={colors.primary} weight="fill" />
             </View>
 
             {/* Success Message */}

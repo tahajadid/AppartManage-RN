@@ -10,6 +10,10 @@ export default function UILayout() {
       <Stack.Screen name="dashboard/resident-dashboard" />
       <Stack.Screen name="settings/edit-profile" />
       <Stack.Screen name="settings/change-password" />
+      <Stack.Screen name="apartment/syndic/modify-resident" />
+      <Stack.Screen name="apartment/syndic/modify-apartment" />
+      <Stack.Screen name="apartment/syndic/apartment-list-syndic" />
+      <Stack.Screen name="apartment/residents/apartment-list-resident" />
     </Stack>
   );
 }

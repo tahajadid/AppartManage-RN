@@ -121,7 +121,19 @@
   "newPasswordPlaceholder": "Enter your new password",
   "confirmNewPassword": "Confirm New Password",
   "confirmNewPasswordPlaceholder": "Re-enter your new password",
-  "updatePasswordButton": "Update Password"
+  "updatePasswordButton": "Update Password",
+  "forgetPassword": "Forgot Password?",
+  "forgetPasswordTitle": "Reset Password",
+  "forgetPasswordDescription": "Enter your email address and we'll send you a link to reset your password",
+  "sendResetLink": "Send Reset Link",
+  "sending": "Sending...",
+  "resetLinkSent": "Reset link sent!",
+  "resetLinkSentMessage": "Please check your email for password reset instructions",
+  "edit": "Edit",
+  "appartmentInformation": "Apartment Information",
+  "listOfResidents": "List of Residents",
+  "editApartment": "Edit Apartment",
+  "editResident": "Edit Resident"
 }
 
 

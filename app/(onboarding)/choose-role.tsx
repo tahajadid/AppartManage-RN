@@ -83,7 +83,7 @@ export default function ChooseRoleScreen() {
             >
               <View style={styles.roleButtonContent}>
                 <Typo 
-                  size={18}
+                  size={22}
                   color={colors.screenBackground}
                   fontWeight="600"
                 >
@@ -110,7 +110,7 @@ export default function ChooseRoleScreen() {
             >
               <View style={styles.roleButtonContent}>
                 <Typo 
-                  size={18}
+                  size={22}
                   color={colors.screenBackground}
                   fontWeight="600"
                 >
@@ -137,7 +137,7 @@ export default function ChooseRoleScreen() {
             >
               <View style={styles.roleButtonContent}>
                 <Typo 
-                  size={18}
+                  size={22}
                   color={colors.screenBackground}
                   fontWeight="600"
                 >
@@ -181,7 +181,7 @@ export default function ChooseRoleScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: spacingX._20,
+    paddingHorizontal: spacingX._20
   },
   header: {
     marginTop: spacingY._24,
@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
   },
   content: {
     width: '100%',
-    maxWidth: 400,
+    maxWidth: 400
   },
   subtitle: {
     marginBottom: spacingY._32,
@@ -204,9 +204,9 @@ const styles = StyleSheet.create({
   },
   roleButton: {
     marginBottom: spacingY._16,
-    paddingVertical: spacingY._20,
+    paddingVertical: spacingY._24,
     paddingHorizontal: spacingX._20,
-    height: 80,
+    height: 100,
     borderRadius: radius._8,
   },
   roleButtonSelected: {

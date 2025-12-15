@@ -8,6 +8,7 @@ export default function AuthLayout() {
       <Stack.Screen name="welcome" />
       <Stack.Screen name="login" options={{animation: 'none'}} />
       <Stack.Screen name="register" options={{animation: 'none'}} />
+      <Stack.Screen name="forget-password" options={{animation: 'none'}} />
     </Stack>
   );
 }

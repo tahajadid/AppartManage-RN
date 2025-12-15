@@ -2,6 +2,7 @@ import Constants from 'expo-constants';
 import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
+  sendPasswordResetEmail,
   signInWithCredential,
   signInWithEmailAndPassword
 } from 'firebase/auth';
@@ -233,6 +234,63 @@ export async function signInWithGoogle(): Promise<AuthResult> {
     
     return {
       user: null,
+      error: 'An error occurred, please try again',
+    };
+  }
+}
+
+/**
+ * Send password reset email using Firebase Auth
+ * @param email - User's email address
+ * @returns Promise with success status and error message (if any)
+ */
+export async function sendPasswordReset(email: string): Promise<{ success: boolean; error: string | null }> {
+  try {
+    // Validate email format before sending
+    if (!email || !email.trim()) {
+      return {
+        success: false,
+        error: 'Email is required',
+      };
+    }
+
+    // Send password reset email via Firebase
+    await sendPasswordResetEmail(auth, email.trim());
+    
+    console.log('Password reset email sent successfully to:', email);
+    
+    return {
+      success: true,
+      error: null,
+    };
+  } catch (error: any) {
+    console.log('Password reset error:', error);
+    
+    // Handle specific Firebase error cases
+    if (error?.code === 'auth/user-not-found') {
+      return {
+        success: false,
+        error: 'No account found with this email address',
+      };
+    }
+    
+    if (error?.code === 'auth/invalid-email') {
+      return {
+        success: false,
+        error: 'Invalid email address',
+      };
+    }
+
+    if (error?.code === 'auth/too-many-requests') {
+      return {
+        success: false,
+        error: 'Too many requests. Please try again later',
+      };
+    }
+    
+    // Generic error for other cases
+    return {
+      success: false,
       error: 'An error occurred, please try again',
     };
   }

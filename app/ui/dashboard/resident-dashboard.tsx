@@ -13,6 +13,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 // Mock data for Resident Dashboard
 const MOCK_DATA = {
   residentName: 'Ahmed Benali',
+  unreadNotifications: 3,
+  readNotifications: 10,
   monthlyFee: 500,
   paymentStatus: 'pending', // 'paid' | 'pending'
   paymentDueDate: '15 days remaining',
@@ -74,8 +76,15 @@ export default function ResidentDashboard() {
               </Typo>
             </View>
             <TouchableOpacity style={styles.notificationButton}>
-              <Bell size={28} color={colors.titleText} weight="regular" />
-            </TouchableOpacity>
+                <Bell size={28} color={colors.white} weight="regular" />
+                {MOCK_DATA.unreadNotifications > 0 && (
+                  <View style={[styles.notificationBadge, { backgroundColor: colors.rose }]}>
+                    <Typo size={10} color={colors.white} fontWeight="700">
+                      {MOCK_DATA.unreadNotifications > 9 ? '9+' : MOCK_DATA.unreadNotifications}
+                    </Typo>
+                  </View>
+                )}
+              </TouchableOpacity>
           </View>
         </View>
 
@@ -204,6 +213,17 @@ const styles = StyleSheet.create({
   },
   notificationButton: {
     padding: spacingX._8,
+  },
+  notificationBadge: {
+    position: 'absolute',
+    top: spacingY._5,
+    right: spacingY._5,
+    minWidth: 18,
+    height: 18,
+    borderRadius: 9,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: spacingX._5,
   },
   paymentStatusCard: {
     borderRadius: radius._16,

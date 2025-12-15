@@ -6,7 +6,7 @@ import { useLoadFonts } from '@/hooks/fonts';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import React from 'react';
-import { LogBox } from 'react-native';
+import { LogBox, StatusBar } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 // Prevent the splash screen from auto-hiding before fonts are loaded
@@ -55,6 +55,7 @@ export default function RootLayout() {
 
   return (
     <SafeAreaProvider>
+      <StatusBar barStyle="light-content" backgroundColor="#427DBD" translucent={false} />
       <ThemeProvider>
         <RTLProvider>
           <AuthProvider>

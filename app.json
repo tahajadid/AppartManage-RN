@@ -8,6 +8,10 @@
     "scheme": "appartmanage",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "androidStatusBar": {
+      "backgroundColor": "#427DBD",
+      "barStyle": "light-content"
+    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.tahadeta.appartmanage",
@@ -38,9 +42,9 @@
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff",
+          "backgroundColor": "#427DBD",
           "dark": {
-            "backgroundColor": "#000000"
+            "backgroundColor": "#427DBD"
           }
         }
       ],

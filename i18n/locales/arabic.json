@@ -120,7 +120,19 @@
   "newPasswordPlaceholder": "أدخل كلمة المرور الجديدة",
   "confirmNewPassword": "تأكيد كلمة المرور الجديدة",
   "confirmNewPasswordPlaceholder": "أعد إدخال كلمة المرور الجديدة",
-  "updatePasswordButton": "تحديث كلمة المرور"
+  "updatePasswordButton": "تحديث كلمة المرور",
+  "forgetPassword": "هل نسيت كلمة المرور؟",
+  "forgetPasswordTitle": "إعادة تعيين كلمة المرور",
+  "forgetPasswordDescription": "أدخل عنوان بريدك الإلكتروني وسنرسل لك رابطًا لإعادة تعيين كلمة المرور",
+  "sendResetLink": "إرسال رابط إعادة التعيين",
+  "sending": "جاري الإرسال...",
+  "resetLinkSent": "تم إرسال رابط إعادة التعيين!",
+  "resetLinkSentMessage": "يرجى التحقق من بريدك الإلكتروني للحصول على تعليمات إعادة تعيين كلمة المرور",
+  "edit": "تعديل",
+  "appartmentInformation": "معلومات الشقة",
+  "listOfResidents": "قائمة السكان",
+  "editApartment": "تعديل الشقة",
+  "editResident": "تعديل الساكن"
 }
 
 

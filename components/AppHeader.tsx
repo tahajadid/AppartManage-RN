@@ -78,7 +78,6 @@ const styles = StyleSheet.create({
   },
   title: {
     flex: 1,
-    marginTop: spacingY._5,
     alignSelf: "center",
     textAlign: "left",
     marginStart: spacingX._16,
