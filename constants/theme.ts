@@ -32,7 +32,7 @@ export const colors = {
 
 export const lightTheme = {
     // primary colors
-    screenBackground: "#EDEDED",
+    screenBackground: "#e5e5e5",
     primary: "#427DBD",
     primaryLight: "#6DA6E3",
     primaryDark: "#3269A6",
