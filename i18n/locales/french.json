@@ -133,6 +133,9 @@
   "appartmentInformation": "Informations de l'appartement",
   "listOfResidents": "Liste des résidents",
   "editApartment": "Modifier l'appartement",
-  "editResident": "Modifier le résident"
+  "editResident": "Modifier le résident",
+  "deleteResident": "Supprimer le résident",
+  "deleteResidentConfirm": "Êtes-vous sûr de vouloir supprimer {{name}} ?",
+  "delete": "Supprimer"
 }
 

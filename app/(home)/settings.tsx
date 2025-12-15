@@ -126,7 +126,9 @@ export default function SettingsScreen() {
         {/* Logout Button */}
         <View style={[styles.section, styles.logoutSection]}>
           <TouchableOpacity
-            style={[styles.logoutButton, { borderColor: colors.redClose }]}
+            style={[styles.logoutButton,
+              { backgroundColor: colors.redClose + '20',
+              borderColor: colors.redClose }]}
             onPress={handleLogout}
             disabled={loading}
             activeOpacity={0.7}

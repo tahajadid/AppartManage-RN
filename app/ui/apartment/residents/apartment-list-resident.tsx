@@ -1,5 +1,5 @@
+import ApartmentInfo from '@/components/apartment/ApartmentInfo';
 import ResidentItem from '@/components/apartment/ResidentItem';
-import AppHeader from '@/components/AppHeader';
 import ScreenWrapper from '@/components/ScreenWrapper';
 import Typo from '@/components/Typo';
 import { spacingX, spacingY } from '@/constants/theme';
@@ -7,7 +7,8 @@ import { useOnboarding } from '@/contexts/onboardingContext';
 import { useRTL } from '@/contexts/RTLContext';
 import useThemeColors from '@/contexts/useThemeColors';
 import { getApartmentData, Resident } from '@/services/apartmentService';
-import React, { useEffect, useState } from 'react';
+import { useFocusEffect } from 'expo-router';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
     ActivityIndicator,
@@ -26,6 +27,8 @@ export default function ApartmentListResident() {
   
   const [apartmentName, setApartmentName] = useState<string>('');
   const [residents, setResidents] = useState<Resident[]>([]);
+  const [syndicName, setSyndicName] = useState<string>('');
+  const [joinCode, setJoinCode] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -37,6 +40,15 @@ export default function ApartmentListResident() {
       setError('No apartment found');
     }
   }, [apartmentId]);
+
+  // Reload data when screen comes into focus
+  useFocusEffect(
+    useCallback(() => {
+      if (apartmentId) {
+        loadApartmentData();
+      }
+    }, [apartmentId])
+  );
 
   const loadApartmentData = async () => {
     if (!apartmentId) return;
@@ -50,6 +62,11 @@ export default function ApartmentListResident() {
       if (result.success && result.apartment) {
         setApartmentName(result.apartment.name);
         setResidents(result.apartment.residents);
+        setJoinCode(result.apartment.joinCode || '');
+        
+        // Find syndic resident
+        const syndicResident = result.apartment.residents.find(r => r.isSyndic);
+        setSyndicName(syndicResident?.name || '');
       } else {
         setError(result.error || 'Failed to load apartment data');
       }
@@ -66,7 +83,6 @@ export default function ApartmentListResident() {
     return (
       <ScreenWrapper>
         <View style={[styles.container, { backgroundColor: colors.screenBackground }]}>
-          <AppHeader title={t('tabApartment')} />
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color={colors.primary} />
           </View>
@@ -91,7 +107,11 @@ export default function ApartmentListResident() {
 
   return (
     <ScreenWrapper>
-      <View style={[styles.container, { backgroundColor: colors.screenBackground }]}>        
+      <View style={[styles.container, { backgroundColor: colors.screenBackground }]}>
+        <Typo size={28} color={colors.primary} style={styles.apartmentName} fontWeight="700">
+          {apartmentName || t('tabApartment')}
+        </Typo>
+        
         <ScrollView
           style={styles.scrollView}
           contentContainerStyle={[
@@ -101,13 +121,28 @@ export default function ApartmentListResident() {
           ]}
           showsVerticalScrollIndicator={false}
         >
+          {/* Apartment Information Header */}
+          <View style={styles.sectionHeader}>
+            <Typo size={18} color={colors.titleText} fontWeight="600">
+              {t('appartmentInformation')}
+            </Typo>
+          </View>
+          
+          {/* Apartment Information */}
+          {apartmentId && syndicName && (
+            <ApartmentInfo
+              syndicName={syndicName}
+              residentsCount={residents.length}
+              apartmentId={apartmentId}
+              joinCode={joinCode}
+              showEditButton={false}
+            />
+          )}
+
           {/* Residents List Header */}
           <View style={styles.sectionHeader}>
-            <Typo size={20} color={colors.titleText} fontWeight="700">
-              {t('residents')}
-            </Typo>
-            <Typo size={14} color={colors.subtitleText}>
-              {residents.length} {residents.length === 1 ? t('resident') : t('residents')}
+            <Typo size={18} color={colors.titleText} fontWeight="600">
+              {t('listOfResidents')}
             </Typo>
           </View>
 
@@ -130,12 +165,17 @@ export default function ApartmentListResident() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingTop: spacingY._24,
   },
   scrollView: {
     flex: 1,
   },
   scrollContent: {
     padding: spacingX._20,
+  },
+  apartmentName: {
+    marginStart: spacingX._20,
+    textAlign: 'left',
   },
   loadingContainer: {
     flex: 1,

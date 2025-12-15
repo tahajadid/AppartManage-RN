@@ -7,8 +7,8 @@ import { useOnboarding } from '@/contexts/onboardingContext';
 import { useRTL } from '@/contexts/RTLContext';
 import useThemeColors from '@/contexts/useThemeColors';
 import { getApartmentData, Resident } from '@/services/apartmentService';
-import { router } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+import { router, useFocusEffect } from 'expo-router';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
     ActivityIndicator,
@@ -28,6 +28,7 @@ export default function ApartmentListSyndic() {
   const [apartmentName, setApartmentName] = useState<string>('');
   const [residents, setResidents] = useState<Resident[]>([]);
   const [syndicName, setSyndicName] = useState<string>('');
+  const [joinCode, setJoinCode] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -39,6 +40,15 @@ export default function ApartmentListSyndic() {
       setError('No apartment found');
     }
   }, [apartmentId]);
+
+  // Reload data when screen comes into focus (e.g., after editing apartment or residents)
+  useFocusEffect(
+    useCallback(() => {
+      if (apartmentId) {
+        loadApartmentData();
+      }
+    }, [apartmentId])
+  );
 
   const loadApartmentData = async () => {
     if (!apartmentId) return;
@@ -52,6 +62,7 @@ export default function ApartmentListSyndic() {
       if (result.success && result.apartment) {
         setApartmentName(result.apartment.name);
         setResidents(result.apartment.residents);
+        setJoinCode(result.apartment.joinCode || '');
         
         // Find syndic resident
         const syndicResident = result.apartment.residents.find(r => r.isSyndic);
@@ -69,7 +80,7 @@ export default function ApartmentListSyndic() {
 
   const handleEditResident = (residentId: string) => {
     router.push({
-      pathname: '/ui/apartment/syndic/modify-apartment',
+      pathname: '/ui/apartment/syndic/modify-resident',
       params: { residentId },
     } as any);
   };
@@ -119,8 +130,8 @@ export default function ApartmentListSyndic() {
         >
 
         {/* Apartment Information Header */}
-          <View style={styles.sectionHeader}>
-            <Typo size={16} color={colors.titleText} fontWeight="600">
+        <View style={styles.sectionHeader}>
+            <Typo size={18} color={colors.titleText} fontWeight="600">
               {t('appartmentInformation')}
             </Typo>
           </View>
@@ -130,12 +141,13 @@ export default function ApartmentListSyndic() {
               syndicName={syndicName}
               residentsCount={residents.length}
               apartmentId={apartmentId}
+              joinCode={joinCode}
             />
           )}
 
           {/* Residents List Header */}
           <View style={styles.sectionHeader}>
-            <Typo size={16} color={colors.titleText} fontWeight="600">
+            <Typo size={18} color={colors.titleText} fontWeight="600">
               {t('listOfResidents')}
             </Typo>
           </View>

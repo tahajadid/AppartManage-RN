@@ -126,8 +126,8 @@ export const lightTheme = {
     primaryButtonDark : "#F2720A",
     
     goldColorBackground: "#d9be27",
-    goldLightBackground: "#f5d67a",
-    goldColorBorder: "#FFD700",
+    goldLightBackground: "#b58a0d",
+    goldColorBorder: "#5c4f05",
 
 
     text: "#fff",

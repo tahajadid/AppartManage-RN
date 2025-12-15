@@ -132,7 +132,10 @@
   "appartmentInformation": "معلومات الشقة",
   "listOfResidents": "قائمة السكان",
   "editApartment": "تعديل الشقة",
-  "editResident": "تعديل الساكن"
+  "editResident": "تعديل الساكن",
+  "deleteResident": "حذف الساكن",
+  "deleteResidentConfirm": "هل أنت متأكد أنك تريد حذف {{name}}؟",
+  "delete": "حذف"
 }
 
 
