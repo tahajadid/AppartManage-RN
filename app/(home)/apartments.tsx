@@ -1,28 +1,27 @@
-import ScreenWrapper from '@/components/ScreenWrapper';
-import Typo from '@/components/Typo';
-import useThemeColors from '@/contexts/useThemeColors';
+import { useOnboarding } from '@/contexts/onboardingContext';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
+import ApartmentListResident from '../ui/apartment/residents/apartment-list-resident';
+import ApartmentListSyndic from '../ui/apartment/syndic/apartment-list-syndic';
 
 export default function ApartmentScreen() {
-  const colors = useThemeColors();
+  const { role, isLoading } = useOnboarding();
 
-  return (
-    <ScreenWrapper>
-      <View style={[styles.container, { backgroundColor: colors.screenBackground }]}>
-        <Typo size={24} color={colors.text}>
-          Apartment
-        </Typo>
-      </View>
-    </ScreenWrapper>
-  );
+  // Render based on role
+  if (role === 'syndic' || role === 'syndic_resident') {
+    return <ApartmentListSyndic />;
+  }
+
+  if (role === 'resident') {
+    return <ApartmentListResident />;
+  }
+
+  // Loading or no role
+  return <View style={styles.container} />;
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 });
-

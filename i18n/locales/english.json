@@ -128,7 +128,10 @@
   "sendResetLink": "Send Reset Link",
   "sending": "Sending...",
   "resetLinkSent": "Reset link sent!",
-  "resetLinkSentMessage": "Please check your email for password reset instructions"
+  "resetLinkSentMessage": "Please check your email for password reset instructions",
+  "edit": "Edit",
+  "appartmentInformation": "Apartment Information",
+  "listOfResidents": "List of Residents"
 }
 
 
