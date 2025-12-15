@@ -130,7 +130,9 @@
   "resetLinkSentMessage": "يرجى التحقق من بريدك الإلكتروني للحصول على تعليمات إعادة تعيين كلمة المرور",
   "edit": "تعديل",
   "appartmentInformation": "معلومات الشقة",
-  "listOfResidents": "قائمة السكان"
+  "listOfResidents": "قائمة السكان",
+  "editApartment": "تعديل الشقة",
+  "editResident": "تعديل الساكن"
 }
 
 

@@ -36,6 +36,13 @@ export default function ModifyResidentScreen() {
   const [monthlyFee, setMonthlyFee] = useState<string>('');
   const [remainingAmount, setRemainingAmount] = useState<string>('');
 
+  // Track initial values to know when user has modified something
+  const [initialValues, setInitialValues] = useState({
+    name: '',
+    monthlyFee: '',
+    remainingAmount: '',
+  });
+
   useEffect(() => {
     if (residentId) {
       loadResidentData();
@@ -62,9 +69,19 @@ export default function ModifyResidentScreen() {
       }
 
       const residentData = residentDoc.data();
-      setName(residentData.name || '');
-      setMonthlyFee(residentData.monthlyFee?.toString() || '');
-      setRemainingAmount(residentData.remainingAmount?.toString() || '0');
+      const loadedName = residentData.name || '';
+      const loadedMonthlyFee = residentData.monthlyFee?.toString() || '';
+      const loadedRemainingAmount = residentData.remainingAmount?.toString() || '0';
+
+      setName(loadedName);
+      setMonthlyFee(loadedMonthlyFee);
+      setRemainingAmount(loadedRemainingAmount);
+
+      setInitialValues({
+        name: loadedName,
+        monthlyFee: loadedMonthlyFee,
+        remainingAmount: loadedRemainingAmount,
+      });
     } catch (err: any) {
       console.log('Error loading resident:', err);
       setError('An error occurred, please try again');
@@ -112,11 +129,16 @@ export default function ModifyResidentScreen() {
     }
   };
 
+  const isDirty =
+    name !== initialValues.name ||
+    monthlyFee !== initialValues.monthlyFee ||
+    remainingAmount !== initialValues.remainingAmount;
+
   if (loading) {
     return (
       <ScreenWrapper>
         <View style={[styles.container, { backgroundColor: colors.screenBackground }]}>
-          <AppHeader title={t('edit') || 'Edit'} />
+          <AppHeader title={t('editResident')} />
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color={colors.primary} />
           </View>
@@ -127,14 +149,14 @@ export default function ModifyResidentScreen() {
 
   return (
     <ScreenWrapper>
-      <KeyboardAvoidingView
-        style={styles.keyboardView}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
-      >
-        <View style={[styles.container, { backgroundColor: colors.screenBackground }]}>
-          <AppHeader title={t('edit') || 'Edit'} />
-          
+      <View style={[styles.container, { backgroundColor: colors.screenBackground }]}>
+        <AppHeader title={t('editResident')} />
+
+        <KeyboardAvoidingView
+          style={styles.keyboardView}
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
+        >
           <ScrollView
             style={styles.scrollView}
             contentContainerStyle={[
@@ -192,25 +214,26 @@ export default function ModifyResidentScreen() {
               </View>
             </View>
           </ScrollView>
+        </KeyboardAvoidingView>
 
-          <View
-            style={[
-              styles.buttonContainer,
-              { paddingBottom: insets.bottom + spacingY._16 },
-            ]}
+        <View
+          style={[
+            styles.buttonContainer,
+            { paddingBottom: insets.bottom + spacingY._16 },
+          ]}
+        >
+          <PrimaryButton
+            onPress={handleSave}
+            loading={saving}
+            disabled={!isDirty || saving}
+            backgroundColor={colors.primary}
           >
-            <PrimaryButton
-              onPress={handleSave}
-              loading={saving}
-              backgroundColor={colors.primary}
-            >
-              <Typo size={16} color={colors.white} fontWeight="600">
-                {t('saveChanges')}
-              </Typo>
-            </PrimaryButton>
-          </View>
+            <Typo size={16} color={colors.white} fontWeight="600">
+              {t('saveChanges')}
+            </Typo>
+          </PrimaryButton>
         </View>
-      </KeyboardAvoidingView>
+      </View>
     </ScreenWrapper>
   );
 }
@@ -218,6 +241,8 @@ export default function ModifyResidentScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingTop: spacingY._24,
+
   },
   keyboardView: {
     flex: 1,

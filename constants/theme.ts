@@ -26,6 +26,7 @@ export const colors = {
     brightOrange: "#FFAC1C",
     remainingPaymentBackground: '#ffffff1a',
     summaryDividerBackground: '#E5E5E5',
+    goldLightBackground: "#f5d67a",
 
 
 };
@@ -48,6 +49,7 @@ export const lightTheme = {
     primaryUnselectedBackground : "#cbdff5",
 
     goldColorBackground: "#f5c127",
+    goldLightBackground: "#f5d67a",
     goldColorBorder: "#bf9b2e",
 
     text: "#000",
@@ -108,7 +110,7 @@ export const lightTheme = {
   export const darkTheme = {
     // primary colors
     screenBackground: "#0F0F0F",
-    primary: "#3269A6",
+    primary: "#5287c4",
     primaryLight: "#427DBD",
     primaryDark: "#3269A6",
     unselectedPrimary : "#91b8e6",
@@ -124,6 +126,7 @@ export const lightTheme = {
     primaryButtonDark : "#F2720A",
     
     goldColorBackground: "#d9be27",
+    goldLightBackground: "#f5d67a",
     goldColorBorder: "#FFD700",
 
 

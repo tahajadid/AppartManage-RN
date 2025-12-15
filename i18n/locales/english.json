@@ -131,7 +131,9 @@
   "resetLinkSentMessage": "Please check your email for password reset instructions",
   "edit": "Edit",
   "appartmentInformation": "Apartment Information",
-  "listOfResidents": "List of Residents"
+  "listOfResidents": "List of Residents",
+  "editApartment": "Edit Apartment",
+  "editResident": "Edit Resident"
 }
 
 

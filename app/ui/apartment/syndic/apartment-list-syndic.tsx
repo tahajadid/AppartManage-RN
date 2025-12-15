@@ -69,7 +69,7 @@ export default function ApartmentListSyndic() {
 
   const handleEditResident = (residentId: string) => {
     router.push({
-      pathname: '/ui/apartment/syndic/modify-resident',
+      pathname: '/ui/apartment/syndic/modify-apartment',
       params: { residentId },
     } as any);
   };
@@ -104,7 +104,7 @@ export default function ApartmentListSyndic() {
     <ScreenWrapper>
       <View style={[styles.container, { backgroundColor: colors.screenBackground }]}>
 
-        <Typo size={24} color={colors.primary} style={styles.apartmentName} fontWeight="700">
+        <Typo size={28} color={colors.primary} style={styles.apartmentName} fontWeight="700">
             {apartmentName || t('tabApartment')}
         </Typo>
         
@@ -160,7 +160,7 @@ export default function ApartmentListSyndic() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginVertical: spacingY._20,
+    paddingTop: spacingY._24,
   },
   scrollView: {
     flex: 1,
@@ -169,7 +169,6 @@ const styles = StyleSheet.create({
     padding: spacingX._20,
   },
   apartmentName: {
-    marginTop: spacingY._20,
     marginStart: spacingX._20,
     textAlign: 'left',
   },

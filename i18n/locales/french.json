@@ -131,6 +131,8 @@
   "resetLinkSentMessage": "Veuillez vérifier votre e-mail pour les instructions de réinitialisation du mot de passe",
   "edit": "Modifier",
   "appartmentInformation": "Informations de l'appartement",
-  "listOfResidents": "Liste des résidents"
+  "listOfResidents": "Liste des résidents",
+  "editApartment": "Modifier l'appartement",
+  "editResident": "Modifier le résident"
 }
 

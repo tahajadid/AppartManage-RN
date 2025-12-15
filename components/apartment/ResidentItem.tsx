@@ -23,7 +23,7 @@ export default function ResidentItem({ resident, onPress, editable = false }: Re
   const { t } = useTranslation();
   
   const isSyndicResident = resident.isSyndic;
-  const isClickable = editable && !isSyndicResident; // Can only edit non-syndic residents
+  const isClickable = editable; // Syndic can edit all residents including themselves
 
   const handlePress = () => {
     if (isClickable && onPress) {
@@ -39,40 +39,39 @@ export default function ResidentItem({ resident, onPress, editable = false }: Re
         styles.residentItem,
         { backgroundColor: colors.neutral800 },
         isSyndicResident && {
-          backgroundColor: `${colors.goldColorBackground}20`,
+          backgroundColor: colors.goldLightBackground,
           borderColor: colors.goldColorBorder,
           borderWidth: 2,
         },
       ]}
       onPress={handlePress}
       disabled={!isClickable}
-      activeOpacity={isClickable ? 0.7 : 1}
     >
       <View style={styles.residentItemLeft}>
         <View style={[
           styles.residentAvatar,
-          { backgroundColor: isSyndicResident ? colors.goldColorBackground : colors.primary + '20' }
+          { backgroundColor: isSyndicResident ? colors.loginBackground : colors.primary + '20' }
         ]}>
           <User 
             size={24} 
-            color={isSyndicResident ? colors.goldColorBorder : colors.primary} 
+            color={colors.primary} 
             weight="bold" 
           />
         </View>
         <View style={styles.residentInfo}>
           <View style={styles.residentNameRow}>
-            <Typo size={16} color={colors.titleText} fontWeight="600">
+            <Typo size={16} color={colors.text} fontWeight="600">
               {resident.name}
             </Typo>
             {isSyndicResident && (
               <View style={[styles.syndicBadge, { backgroundColor: colors.goldColorBackground }]}>
-                <Typo size={12} color={colors.goldColorBorder} fontWeight="700">
+                <Typo size={12} color={colors.primary} fontWeight="700">
                   {t('syndic')}
                 </Typo>
               </View>
             )}
           </View>
-          <Typo size={14} color={colors.subtitleText} style={styles.residentDetails}>
+          <Typo size={14} color={colors.text} style={styles.residentDetails}>
             {t('monthlyFee')}: {resident.monthlyFee} MAD
           </Typo>
           {resident.remainingAmount > 0 && (
@@ -82,8 +81,12 @@ export default function ResidentItem({ resident, onPress, editable = false }: Re
           )}
         </View>
       </View>
-      {editable && isClickable && (
-        <Pencil size={20} color={colors.primary} weight="bold" />
+      {editable && (
+        <Pencil 
+          size={20} 
+          color={isSyndicResident ? colors.goldColorBorder : colors.primary} 
+          weight="bold" 
+        />
       )}
     </Container>
   );
