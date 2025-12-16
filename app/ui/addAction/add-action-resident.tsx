@@ -55,7 +55,7 @@ export default function AddActionResidentScreen() {
                   style={[
                     styles.optionCard,
                     {
-                      backgroundColor: colors.neutral900,
+                      backgroundColor: colors.neutral800,
                       borderColor: colors.neutral700,
                       flexDirection: isRTL ? 'row-reverse' : 'row',
                     },

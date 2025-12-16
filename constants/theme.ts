@@ -27,6 +27,7 @@ export const colors = {
     remainingPaymentBackground: '#ffffff1a',
     summaryDividerBackground: '#E5E5E5',
     goldLightBackground: "#f5d67a",
+    primaryBigTitle: "#164c87",
 
 
 };
@@ -38,6 +39,7 @@ export const lightTheme = {
     primaryLight: "#6DA6E3",
     primaryDark: "#3269A6",
     unselectedPrimary : "#91b8e6",
+    primaryBigTitle: "#164c87",
 
     primaryButton : "#F2720A",
     primaryButtonLight : "#FA973E",
@@ -114,6 +116,8 @@ export const lightTheme = {
     primaryLight: "#427DBD",
     primaryDark: "#3269A6",
     unselectedPrimary : "#91b8e6",
+    primaryBigTitle: "#4076b3",
+
 
     primaryUnselectedBackground : "#cbdff5",
 
