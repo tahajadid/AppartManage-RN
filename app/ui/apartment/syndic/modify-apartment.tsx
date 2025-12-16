@@ -1,5 +1,6 @@
 import ResidentItem from '@/components/apartment/ResidentItem';
 import AppHeader from '@/components/AppHeader';
+import DeleteConfirmationModal from '@/components/common/DeleteConfirmationModal';
 import Input from '@/components/Input';
 import PrimaryButton from '@/components/PrimaryButton';
 import ScreenWrapper from '@/components/ScreenWrapper';
@@ -17,7 +18,6 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
     ActivityIndicator,
-    Alert,
     KeyboardAvoidingView,
     Platform,
     ScrollView,
@@ -45,6 +45,8 @@ export default function ModifyApartmentScreen() {
   const [apartmentName, setApartmentName] = useState<string>('');
   const [residents, setResidents] = useState<Resident[]>([]);
   const [deleting, setDeleting] = useState<string | null>(null);
+  const [deleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
+  const [residentToDelete, setResidentToDelete] = useState<{ id: string; name: string } | null>(null);
 
   // Track initial values to know when user has modified something
   const [initialValues, setInitialValues] = useState({
@@ -135,23 +137,16 @@ export default function ModifyApartmentScreen() {
     const resident = residents.find(r => r.id === residentId);
     if (!resident) return;
 
-    Alert.alert(
-      t('deleteResident') || 'Delete Resident',
-      t('deleteResidentConfirm', { name: resident.name }) || `Are you sure you want to delete ${resident.name}?`,
-      [
-        {
-          text: t('cancel') || 'Cancel',
-          style: 'cancel',
-        },
-        {
-          text: t('delete') || 'Delete',
-          style: 'destructive',
-          onPress: async () => {
-            await deleteResident(residentId);
-          },
-        },
-      ]
-    );
+    setResidentToDelete({ id: residentId, name: resident.name });
+    setDeleteModalVisible(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!residentToDelete) return;
+    
+    await deleteResident(residentToDelete.id);
+    setDeleteModalVisible(false);
+    setResidentToDelete(null);
   };
 
   const deleteResident = async (residentId: string) => {
@@ -313,6 +308,24 @@ export default function ModifyApartmentScreen() {
             </Typo>
           </PrimaryButton>
         </View>
+
+        {/* Delete Confirmation Modal */}
+        <DeleteConfirmationModal
+          visible={deleteModalVisible}
+          loading={deleting === residentToDelete?.id}
+          title={t('deleteResident') || 'Delete Resident'}
+          message={
+            residentToDelete
+              ? t('deleteResidentConfirm', { name: residentToDelete.name }) ||
+                `Are you sure you want to delete ${residentToDelete.name}?`
+              : ''
+          }
+          onClose={() => {
+            setDeleteModalVisible(false);
+            setResidentToDelete(null);
+          }}
+          onConfirm={handleConfirmDelete}
+        />
       </View>
     </ScreenWrapper>
   );
