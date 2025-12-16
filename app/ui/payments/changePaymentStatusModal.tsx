@@ -77,7 +77,7 @@ export default function ChangePaymentStatusModal({
       <View style={styles.modalOverlay}>
         <View style={[styles.modalContent, { backgroundColor: colors.neutral800 }]}>
           <View style={styles.modalHeader}>
-            <Typo size={20} color={colors.titleText} fontWeight="700">
+            <Typo size={18} color={colors.titleText} fontWeight="600">
               {t('changeStatus') || 'Change Status'}
             </Typo>
             <TouchableOpacity
@@ -94,15 +94,22 @@ export default function ChangePaymentStatusModal({
             </TouchableOpacity>
           </View>
 
+          <View style={{backgroundColor: colors.neutral700, marginTop:spacingY._5,
+           marginBottom:spacingY._16, borderRadius: radius._1, height:spacingX._1}}>
+          </View>
+
           <View style={styles.modalBillInfo}>
-            <Typo size={16} color={colors.titleText} fontWeight="600">
+            <Typo size={18} color={colors.primaryBigTitle} fontWeight="700">
               {bill.residentName}
             </Typo>
-            <Typo size={14} color={colors.subtitleText}>
-              {bill.date} • {bill.amount} MAD
+            <Typo size={16} color={colors.text}>
+               {t('date')} : {bill.date}
+            </Typo>
+            <Typo size={16} color={colors.text}>
+               {t('amount')} : {bill.amount} MAD
             </Typo>
             <View style={styles.currentStatusContainer}>
-              <Typo size={14} color={colors.subtitleText}>
+              <Typo size={14} color={colors.primary}>
                 {t('currentStatus') || 'Current Status'}:{' '}
               </Typo>
               <View
@@ -236,7 +243,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: spacingY._20,
+    marginBottom: spacingY._8,
   },
   modalBillInfo: {
     marginBottom: spacingY._20,

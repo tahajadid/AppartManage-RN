@@ -54,7 +54,7 @@ export const getSyndicActionOptions = (
       icon: Receipt,
       title: t('addExpense') || 'Add Expense',
       subtitle: t('addExpenseDescription') || 'Record a new apartment expense',
-      route: '/(home)/expenses/add-expense',
+      route: '/ui/addAction/expenses/add-expense',
       iconColor: colors.rose,
     },
     {

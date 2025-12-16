@@ -142,6 +142,9 @@ export default function ApartmentListSyndic() {
     return (
       <ScreenWrapper>
         <View style={[styles.container, { backgroundColor: colors.screenBackground }]}>
+        <Typo size={28} color={colors.text} style={styles.title} fontWeight="700">
+            {t('tabApartment')}
+            </Typo>
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color={colors.primary} />
           </View>
@@ -154,6 +157,9 @@ export default function ApartmentListSyndic() {
     return (
       <ScreenWrapper>
         <View style={[styles.container, { backgroundColor: colors.screenBackground }]}>
+        <Typo size={28} color={colors.text} style={styles.title} fontWeight="700">
+            {t('tabApartment')}
+            </Typo>
           <View style={styles.errorContainer}>
             <Typo size={16} color={colors.redClose}>
               {error}
@@ -168,8 +174,8 @@ export default function ApartmentListSyndic() {
     <ScreenWrapper>
       <View style={[styles.container, { backgroundColor: colors.screenBackground }]}>
 
-        <Typo size={28} color={colors.primary} style={styles.apartmentName} fontWeight="700">
-            {apartmentName || t('tabApartment')}
+        <Typo size={28} color={colors.text} style={styles.title} fontWeight="700">
+            {t('tabApartment')}
         </Typo>
         
         <ScrollView
@@ -183,6 +189,9 @@ export default function ApartmentListSyndic() {
         >
 
         {/* Apartment Information Header */}
+        <Typo size={28} color={colors.primary} style={styles.apartmentName} fontWeight="700">
+            {apartmentName || t('tabApartment')}
+        </Typo>
         <View style={styles.sectionHeader}>
             <Typo size={18} color={colors.titleText} fontWeight="600">
               {t('appartmentInformation')}
@@ -247,11 +256,17 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    padding: spacingX._20,
+    paddingHorizontal: spacingX._20,
+    paddingBottom: spacingY._20,
   },
-  apartmentName: {
+  title: {
     marginStart: spacingX._20,
     textAlign: 'left',
+    marginBottom: spacingY._16,
+  },
+  apartmentName: {
+    textAlign: 'left',
+    marginBottom: spacingY._16,
   },
   loadingContainer: {
     flex: 1,

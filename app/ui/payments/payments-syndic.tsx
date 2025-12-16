@@ -4,6 +4,7 @@ import { radius, spacingX, spacingY } from '@/constants/theme';
 import { useOnboarding } from '@/contexts/onboardingContext';
 import { useRTL } from '@/contexts/RTLContext';
 import useThemeColors from '@/contexts/useThemeColors';
+import i18n from '@/i18n/index';
 import { getApartmentData } from '@/services/apartmentService';
 import { Bill, getApartmentBills, updateBillStatus } from '@/services/paymentService';
 import { useFocusEffect } from 'expo-router';
@@ -170,10 +171,73 @@ export default function PaymentsSyndic() {
     }
   };
 
+  // Format date from "MM-YYYY" to "MonthName YYYY"
+  const formatMonthYear = (dateStr: string): string => {
+    const [month, year] = dateStr.split('-');
+    const monthNum = parseInt(month, 10) - 1; // JavaScript months are 0-indexed
+    const date = new Date(parseInt(year, 10), monthNum, 1);
+    
+    // Get current language from i18n
+    const currentLang = i18n.language || 'en';
+    // Map language codes to locale strings
+    const localeMap: { [key: string]: string } = {
+      'en': 'en-US',
+      'ar': 'ar-SA',
+      'fr': 'fr-FR',
+    };
+    const locale = localeMap[currentLang] || 'en-US';
+    
+    // Use toLocaleDateString with options for month and year
+    return date.toLocaleDateString(locale, { month: 'long', year: 'numeric' });
+  };
+
+  // Group bills by month
+  const groupBillsByMonth = (bills: BillWithResidentName[]): Map<string, BillWithResidentName[]> => {
+    const grouped = new Map<string, BillWithResidentName[]>();
+    
+    bills.forEach((bill) => {
+      const monthKey = bill.date; // "MM-YYYY"
+      if (!grouped.has(monthKey)) {
+        grouped.set(monthKey, []);
+      }
+      grouped.get(monthKey)!.push(bill);
+    });
+    
+    // Sort bills within each month by last operation date (newest first)
+    grouped.forEach((monthBills, monthKey) => {
+      monthBills.sort((a, b) => {
+        // Get the last operation date from each bill
+        const lastOpA = a.listOfOperation && a.listOfOperation.length > 0 
+          ? a.listOfOperation[a.listOfOperation.length - 1].date 
+          : '';
+        const lastOpB = b.listOfOperation && b.listOfOperation.length > 0 
+          ? b.listOfOperation[b.listOfOperation.length - 1].date 
+          : '';
+        
+        // Sort by last operation date (newest first), then by resident name
+        if (lastOpA && lastOpB) {
+          // Convert "DD-MM-YYYY" to comparable format
+          const dateA = lastOpA.split('-').reverse().join('-'); // "YYYY-MM-DD"
+          const dateB = lastOpB.split('-').reverse().join('-'); // "YYYY-MM-DD"
+          if (dateA !== dateB) {
+            return dateB.localeCompare(dateA); // Newest first
+          }
+        }
+        // Fallback to resident name if dates are equal or missing
+        return a.residentName.localeCompare(b.residentName);
+      });
+    });
+    
+    return grouped;
+  };
+
   if (loading) {
     return (
       <ScreenWrapper>
         <View style={[styles.container, { backgroundColor: colors.screenBackground }]}>
+           <Typo size={28} color={colors.text} style={styles.title} fontWeight="700">
+            {t('tabPayments')}
+            </Typo>
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color={colors.primary} />
           </View>
@@ -186,6 +250,9 @@ export default function PaymentsSyndic() {
     return (
       <ScreenWrapper>
         <View style={[styles.container, { backgroundColor: colors.screenBackground }]}>
+        <Typo size={28} color={colors.text} style={styles.title} fontWeight="700">
+            {t('tabPayments')}
+            </Typo>
           <View style={styles.errorContainer}>
             <Typo size={16} color={colors.redClose}>
               {error}
@@ -199,7 +266,7 @@ export default function PaymentsSyndic() {
   return (
     <ScreenWrapper>
       <View style={[styles.container, { backgroundColor: colors.screenBackground }]}>
-        <Typo size={28} color={colors.primary} style={styles.title} fontWeight="700">
+        <Typo size={28} color={colors.text} style={styles.title} fontWeight="700">
           {t('tabPayments')}
         </Typo>
 
@@ -219,40 +286,67 @@ export default function PaymentsSyndic() {
               </Typo>
             </View>
           ) : (
-            bills.map((bill, index) => {
-              const statusColor = getStatusColor(bill.status);
+            (() => {
+              const groupedBills = groupBillsByMonth(bills);
+              // Sort months (newest first) - properly sort by year then month
+              const sortedMonths = Array.from(groupedBills.keys()).sort((a, b) => {
+                const [monthA, yearA] = a.split('-').map(Number);
+                const [monthB, yearB] = b.split('-').map(Number);
+                
+                // First compare by year (newest first)
+                if (yearB !== yearA) {
+                  return yearB - yearA;
+                }
+                // Then by month (newest first)
+                return monthB - monthA;
+              });
 
-              return (
-                <TouchableOpacity
-                  key={`${bill.ownerOfBill}-${bill.date}-${index}`}
-                  style={[styles.billCard, { backgroundColor: colors.neutral800 }]}
-                  onPress={() => handleBillPress(bill)}
-                  activeOpacity={0.7}
-                >
-                  <View style={styles.billHeader}>
-                    <View style={styles.billInfo}>
-                      <Typo size={18} color={colors.titleText} fontWeight="600">
-                        {bill.residentName}
-                      </Typo>
-                      <Typo size={14} color={colors.subtitleText}>
-                        {bill.date}
+              return sortedMonths.map((monthKey) => {
+                const monthBills = groupedBills.get(monthKey)!;
+                const monthTitle = formatMonthYear(monthKey);
+
+                return (
+                  <View key={monthKey} style={styles.monthSection}>
+                    <View style={styles.monthHeader}>
+                      <Typo size={20} color={colors.primary} fontWeight="700">
+                        {monthTitle}
                       </Typo>
                     </View>
-                    <View style={[styles.statusBadge, { backgroundColor: statusColor + '20' }]}>
-                      <Typo size={12} color={statusColor} fontWeight="600">
-                        {getStatusLabel(bill.status)}
-                      </Typo>
-                    </View>
-                  </View>
+                    {monthBills.map((bill, index) => {
+                      const statusColor = getStatusColor(bill.status);
 
-                  <View style={styles.billAmount}>
-                    <Typo size={24} color={colors.primary} fontWeight="700">
-                      {bill.amount} MAD
-                    </Typo>
+                      return (
+                        <TouchableOpacity
+                          key={`${bill.ownerOfBill}-${bill.date}-${index}`}
+                          style={[styles.billCard, { backgroundColor: colors.neutral800 }]}
+                          onPress={() => handleBillPress(bill)}
+                          activeOpacity={0.7}
+                        >
+                          <View style={styles.billHeader}>
+                            <View style={styles.billInfo}>
+                              <Typo size={20} color={colors.primaryBigTitle} fontWeight="600">
+                                {bill.residentName}
+                              </Typo>
+                            </View>
+                            <View style={[styles.statusBadge, { backgroundColor: statusColor + '20' }]}>
+                              <Typo size={12} color={statusColor} fontWeight="600">
+                                {getStatusLabel(bill.status)}
+                              </Typo>
+                            </View>
+                          </View>
+
+                          <View style={styles.billAmount}>
+                            <Typo size={20} color={colors.text} fontWeight="700">
+                              {bill.amount} MAD
+                            </Typo>
+                          </View>
+                        </TouchableOpacity>
+                      );
+                    })}
                   </View>
-                </TouchableOpacity>
-              );
-            })
+                );
+              });
+            })()
           )}
         </ScrollView>
 
@@ -306,9 +400,9 @@ const styles = StyleSheet.create({
     paddingVertical: spacingY._40,
   },
   billCard: {
-    padding: spacingX._16,
+    padding: spacingX._12,
     borderRadius: radius._12,
-    marginBottom: spacingY._12,
+    marginBottom: spacingY._8,
     ...Platform.select({
       ios: {
         shadowColor: '#000',
@@ -337,7 +431,12 @@ const styles = StyleSheet.create({
     marginStart: spacingX._12,
   },
   billAmount: {
-    marginBottom: spacingY._8,
+  },
+  monthSection: {
+    marginBottom: spacingY._24,
+  },
+  monthHeader: {
+    marginBottom: spacingY._16,
   },
 });
 

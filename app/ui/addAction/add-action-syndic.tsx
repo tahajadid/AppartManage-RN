@@ -5,6 +5,7 @@ import { getSyndicActionOptions } from '@/constants/addActionListHelper';
 import { radius, spacingX, spacingY } from '@/constants/theme';
 import { useRTL } from '@/contexts/RTLContext';
 import useThemeColors from '@/contexts/useThemeColors';
+import { router } from 'expo-router';
 import { Plus } from 'phosphor-react-native';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -23,9 +24,8 @@ export default function AddActionSyndicScreen() {
   const actionOptions = getSyndicActionOptions(t, colors);
 
   const handleActionPress = (route: string) => {
-    // Navigate to the corresponding screen (placeholder for now)
-    console.log('Navigate to:', route);
-    // router.push(route as any);
+    // Navigate to the corresponding screen
+    router.push(route as any);
   };
 
   return (
@@ -42,7 +42,7 @@ export default function AddActionSyndicScreen() {
             color={colors.subtitleText} 
             style={styles.subtitle}
           >
-            {t('selectActionToAdd') || 'Select an action to add'}
+            {t('selectActionToAdd')}
           </Typo>
 
           <View style={styles.optionsContainer}>
@@ -55,7 +55,7 @@ export default function AddActionSyndicScreen() {
                   style={[
                     styles.optionCard,
                     {
-                      backgroundColor: colors.neutral900,
+                      backgroundColor: colors.neutral800,
                       borderColor: colors.neutral700,
                       flexDirection: isRTL ? 'row-reverse' : 'row',
                     },
