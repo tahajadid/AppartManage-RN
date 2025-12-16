@@ -159,3 +159,18 @@ export  interface ActionOption {
     route: string;
     iconColor: string;
 }
+
+// Payment Types
+export interface Operation {
+    date: string; // "DD-MM-YYYY"
+    operation: "creation" | "request_payment" | "payment_rejected" | "payment_done";
+}
+
+export interface Bill {
+    ownerOfBill: string; // residentId
+    responsible: string; // syndicId
+    status: "not_paid" | "payment_requested" | "paid";
+    amount: number;
+    date: string; // "MM-YYYY"
+    listOfOperation: Operation[];
+}

@@ -136,6 +136,19 @@
   "editResident": "Modifier le résident",
   "deleteResident": "Supprimer le résident",
   "deleteResidentConfirm": "Êtes-vous sûr de vouloir supprimer {{name}} ?",
-  "delete": "Supprimer"
+  "delete": "Supprimer",
+  "copy": "Copier",
+  "createPayments": "Créer les paiements",
+  "billsCreated": "{{count}} factures créées avec succès",
+  "missingData": "Données requises manquantes",
+  "success": "Succès",
+  "paid": "Payé",
+  "notPaid": "Non payé",
+  "paymentRequested": "Paiement demandé",
+  "requestPayment": "Demander le paiement",
+  "noBills": "Aucune facture trouvée",
+  "changeStatus": "Changer le statut",
+  "currentStatus": "Statut actuel",
+  "monthlyBill": "Facture mensuelle"
 }
 

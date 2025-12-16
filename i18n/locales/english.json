@@ -136,7 +136,20 @@
   "editResident": "Edit Resident",
   "deleteResident": "Delete Resident",
   "deleteResidentConfirm": "Are you sure you want to delete {{name}}?",
-  "delete": "Delete"
+  "delete": "Delete",
+  "copy": "Copy",
+  "createPayments": "Create Payments",
+  "billsCreated": "{{count}} bills created successfully",
+  "missingData": "Missing required data",
+  "success": "Success",
+  "paid": "Paid",
+  "notPaid": "Not Paid",
+  "paymentRequested": "Payment Requested",
+  "requestPayment": "Request Payment",
+  "noBills": "No bills found",
+  "changeStatus": "Change Status",
+  "currentStatus": "Current Status",
+  "monthlyBill": "Monthly Bill"
 }
 
 

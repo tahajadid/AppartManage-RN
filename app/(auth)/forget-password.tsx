@@ -12,12 +12,12 @@ import { CaretLeft, CaretRight } from 'phosphor-react-native';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-    KeyboardAvoidingView,
-    Platform,
-    ScrollView,
-    StyleSheet,
-    TouchableOpacity,
-    View
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -58,7 +58,8 @@ const forgetPassword = () => {
 
               <TouchableOpacity 
               onPress={() => router.back()}
-              style={{flexDirection: 'row', alignItems: 'center', gap: spacingX._16}}>
+              style={{flexDirection: 'row', alignItems: 'center',
+              gap: spacingX._16}}>
 
                 <BackIcon size={14} color={colors.white} 
                 style={{backgroundColor: colors.primary, padding: spacingY._16,
