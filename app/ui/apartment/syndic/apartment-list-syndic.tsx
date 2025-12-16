@@ -1,17 +1,21 @@
 import ApartmentInfo from '@/components/apartment/ApartmentInfo';
 import ResidentItem from '@/components/apartment/ResidentItem';
+import PrimaryButton from '@/components/PrimaryButton';
 import ScreenWrapper from '@/components/ScreenWrapper';
 import Typo from '@/components/Typo';
 import { spacingX, spacingY } from '@/constants/theme';
+import { useAuth } from '@/contexts/authContext';
 import { useOnboarding } from '@/contexts/onboardingContext';
 import { useRTL } from '@/contexts/RTLContext';
 import useThemeColors from '@/contexts/useThemeColors';
 import { getApartmentData, Resident } from '@/services/apartmentService';
+import { createMonthlyBills } from '@/services/paymentService';
 import { router, useFocusEffect } from 'expo-router';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
     ActivityIndicator,
+    Alert,
     ScrollView,
     StyleSheet,
     View
@@ -22,6 +26,7 @@ export default function ApartmentListSyndic() {
   const colors = useThemeColors();
   const { isRTL } = useRTL();
   const { apartmentId } = useOnboarding();
+  const { user } = useAuth();
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   
@@ -31,6 +36,8 @@ export default function ApartmentListSyndic() {
   const [joinCode, setJoinCode] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [creatingPayments, setCreatingPayments] = useState<boolean>(false);
+  const [syndicResidentId, setSyndicResidentId] = useState<string>('');
 
   useEffect(() => {
     if (apartmentId) {
@@ -67,6 +74,7 @@ export default function ApartmentListSyndic() {
         // Find syndic resident
         const syndicResident = result.apartment.residents.find(r => r.isSyndic);
         setSyndicName(syndicResident?.name || '');
+        setSyndicResidentId(syndicResident?.id || '');
       } else {
         setError(result.error || 'Failed to load apartment data');
       }
@@ -83,6 +91,51 @@ export default function ApartmentListSyndic() {
       pathname: '/ui/apartment/syndic/modify-resident',
       params: { residentId },
     } as any);
+  };
+
+  const handleCreatePayments = async () => {
+    if (!apartmentId || !syndicResidentId || residents.length === 0) {
+      Alert.alert(t('error') || 'Error', t('missingData') || 'Missing required data');
+      return;
+    }
+
+    setCreatingPayments(true);
+    setError(null);
+
+    try {
+      // Prepare residents data for bill creation
+      const residentsData = residents.map((resident) => ({
+        id: resident.id,
+        monthlyFee: resident.monthlyFee,
+      }));
+
+      const result = await createMonthlyBills(
+        apartmentId,
+        residentsData,
+        syndicResidentId
+      );
+
+      if (result.success) {
+        Alert.alert(
+          t('success') || 'Success',
+          t('billsCreated', { count: result.billsCreated || 0 }) || 
+          `${result.billsCreated || 0} bills created successfully`
+        );
+      } else {
+        Alert.alert(
+          t('error') || 'Error',
+          result.error || 'Failed to create bills'
+        );
+      }
+    } catch (err: any) {
+      console.log('Error creating payments:', err);
+      Alert.alert(
+        t('error') || 'Error',
+        t('errorOccurred') || 'An error occurred, please try again'
+      );
+    } finally {
+      setCreatingPayments(false);
+    }
   };
 
   if (loading) {
@@ -145,6 +198,22 @@ export default function ApartmentListSyndic() {
             />
           )}
 
+          {/* Create Payments Button - Temporary */}
+          {apartmentId && syndicResidentId && residents.length > 0 && (
+            <View style={styles.createPaymentsContainer}>
+              <PrimaryButton
+                onPress={handleCreatePayments}
+                backgroundColor={colors.primary}
+                loading={creatingPayments}
+                style={styles.createPaymentsButton}
+              >
+                <Typo size={16} color={colors.white} fontWeight="600">
+                  {t('createPayments') || 'Create Payments'}
+                </Typo>
+              </PrimaryButton>
+            </View>
+          )}
+
           {/* Residents List Header */}
           <View style={styles.sectionHeader}>
             <Typo size={18} color={colors.titleText} fontWeight="600">
@@ -197,6 +266,12 @@ const styles = StyleSheet.create({
   },
   sectionHeader: {
     marginBottom: spacingY._16,
+  },
+  createPaymentsContainer: {
+    marginBottom: spacingY._20,
+  },
+  createPaymentsButton: {
+    width: '100%',
   },
   residentsList: {
     gap: spacingY._12,

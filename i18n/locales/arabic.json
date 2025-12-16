@@ -135,7 +135,20 @@
   "editResident": "تعديل الساكن",
   "deleteResident": "حذف الساكن",
   "deleteResidentConfirm": "هل أنت متأكد أنك تريد حذف {{name}}؟",
-  "delete": "حذف"
+  "delete": "حذف",
+  "copy": "نسخ",
+  "createPayments": "إنشاء المدفوعات",
+  "billsCreated": "تم إنشاء {{count}} فاتورة بنجاح",
+  "missingData": "البيانات المطلوبة مفقودة",
+  "success": "نجح",
+  "paid": "مدفوع",
+  "notPaid": "غير مدفوع",
+  "paymentRequested": "تم طلب الدفع",
+  "requestPayment": "طلب الدفع",
+  "noBills": "لا توجد فواتير",
+  "changeStatus": "تغيير الحالة",
+  "currentStatus": "الحالة الحالية",
+  "monthlyBill": "فاتورة شهرية"
 }
 
 

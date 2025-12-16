@@ -96,11 +96,11 @@ export default function ApartmentInfo({ syndicName, residentsCount, apartmentId,
                   style={[styles.copyButton, 
                   { backgroundColor: colors.neutral300 + '88', flexDirection: 'row', alignItems: 'center', gap: spacingX._5 }]}>
                     <Typo size={14} color={colors.white} fontWeight="600" >
-                        copy
+                    {t('copy')}
                     </Typo>
                   <Copy
                     size={14}
-                    style={{marginLeft: spacingX._8}}
+                    style={{marginLeft: spacingX._3}}
                     color={copied ? colors.white : colors.white}
                     weight={copied ? 'fill' : 'regular'}
                   />
