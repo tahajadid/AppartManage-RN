@@ -1,6 +1,7 @@
 import LanguageSelectionModal from '@/components/appSettings/LanguageSelectionModal';
 import SettingItem from '@/components/appSettings/SettingItem';
 import ThemeSelection from '@/components/appSettings/ThemeSelection';
+import LogoutConfirmationModal from '@/components/common/LogoutConfirmationModal';
 import ScreenWrapper from '@/components/ScreenWrapper';
 import Typo from '@/components/Typo';
 import { radius, spacingX, spacingY } from '@/constants/theme';
@@ -18,7 +19,6 @@ import {
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-  Alert,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
@@ -41,32 +41,22 @@ export default function SettingsScreen() {
   const insets = useSafeAreaInsets();
   const [loading, setLoading] = useState(false);
   const [languageModalVisible, setLanguageModalVisible] = useState(false);
+  const [logoutModalVisible, setLogoutModalVisible] = useState(false);
 
-  const handleLogout = async () => {
-    Alert.alert(
-      t('logout'),
-      t('logoutConfirmation'),
-      [
-        {
-          text: t('cancel'),
-          style: 'cancel',
-        },
-        {
-          text: t('logout'),
-          style: 'destructive',
-          onPress: async () => {
-            setLoading(true);
-            try {
-              await signOut();
-            } catch (error: any) {
-              console.log('Logout error:', error);
-              Alert.alert(t('error'), t('failedToLogout'));
-              setLoading(false);
-            }
-          },
-        },
-      ]
-    );
+  const handleLogout = () => {
+    setLogoutModalVisible(true);
+  };
+
+  const handleConfirmLogout = async () => {
+    setLoading(true);
+    try {
+      await signOut();
+    } catch (error: any) {
+      console.log('Logout error:', error);
+      setLoading(false);
+      setLogoutModalVisible(false);
+      // Error handling is done by the auth context
+    }
   };
 
   const handleLanguageSelect = async (langCode: 'en' | 'ar' | 'fr') => {
@@ -146,6 +136,14 @@ export default function SettingsScreen() {
         visible={languageModalVisible}
         onClose={() => setLanguageModalVisible(false)}
         onLanguageSelect={handleLanguageSelect}
+      />
+
+      {/* Logout Confirmation Modal */}
+      <LogoutConfirmationModal
+        visible={logoutModalVisible}
+        loading={loading}
+        onClose={() => setLogoutModalVisible(false)}
+        onConfirm={handleConfirmLogout}
       />
     </ScreenWrapper>
   );

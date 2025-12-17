@@ -1,3 +1,4 @@
+import AppHeader from '@/components/AppHeader';
 import ScreenWrapper from '@/components/ScreenWrapper';
 import Typo from '@/components/Typo';
 import { radius, spacingX, spacingY } from '@/constants/theme';
@@ -8,16 +9,17 @@ import i18n from '@/i18n/index';
 import { getApartmentData } from '@/services/apartmentService';
 import { Bill, getApartmentBills, updateBillStatus } from '@/services/paymentService';
 import { useFocusEffect } from 'expo-router';
+import { Swap } from 'phosphor-react-native';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-    ActivityIndicator,
-    Alert,
-    Platform,
-    ScrollView,
-    StyleSheet,
-    TouchableOpacity,
-    View
+  ActivityIndicator,
+  Alert,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import ChangePaymentStatusModal from './changePaymentStatusModal';
@@ -26,7 +28,7 @@ interface BillWithResidentName extends Bill {
   residentName: string;
 }
 
-export default function PaymentsSyndic() {
+export default function PaymentsBillsScreen() {
   const colors = useThemeColors();
   const { isRTL } = useRTL();
   const { apartmentId } = useOnboarding();
@@ -235,9 +237,8 @@ export default function PaymentsSyndic() {
     return (
       <ScreenWrapper>
         <View style={[styles.container, { backgroundColor: colors.screenBackground }]}>
-           <Typo size={28} color={colors.text} style={styles.title} fontWeight="700">
-            {t('tabPayments')}
-            </Typo>
+        <AppHeader title={t('residentsBills')} />
+
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color={colors.primary} />
           </View>
@@ -250,9 +251,8 @@ export default function PaymentsSyndic() {
     return (
       <ScreenWrapper>
         <View style={[styles.container, { backgroundColor: colors.screenBackground }]}>
-        <Typo size={28} color={colors.text} style={styles.title} fontWeight="700">
-            {t('tabPayments')}
-            </Typo>
+        <AppHeader title={t('residentsBills')} />
+
           <View style={styles.errorContainer}>
             <Typo size={16} color={colors.redClose}>
               {error}
@@ -266,9 +266,8 @@ export default function PaymentsSyndic() {
   return (
     <ScreenWrapper>
       <View style={[styles.container, { backgroundColor: colors.screenBackground }]}>
-        <Typo size={28} color={colors.text} style={styles.title} fontWeight="700">
-          {t('tabPayments')}
-        </Typo>
+
+      <AppHeader title={t('residentsBills')} />
 
         <ScrollView
           style={styles.scrollView}
@@ -308,39 +307,51 @@ export default function PaymentsSyndic() {
                 return (
                   <View key={monthKey} style={styles.monthSection}>
                     <View style={styles.monthHeader}>
-                      <Typo size={20} color={colors.primary} fontWeight="700">
+                      <Typo size={18} color={colors.text} fontWeight="600">
                         {monthTitle}
                       </Typo>
+                      <View style={{height: spacingY._1, backgroundColor: colors.text, marginTop: spacingX._3, marginHorizontal:spacingX._20}} />
                     </View>
                     {monthBills.map((bill, index) => {
                       const statusColor = getStatusColor(bill.status);
 
                       return (
-                        <TouchableOpacity
+                        <View
                           key={`${bill.ownerOfBill}-${bill.date}-${index}`}
                           style={[styles.billCard, { backgroundColor: colors.neutral800 }]}
-                          onPress={() => handleBillPress(bill)}
-                          activeOpacity={0.7}
                         >
-                          <View style={styles.billHeader}>
-                            <View style={styles.billInfo}>
-                              <Typo size={20} color={colors.primaryBigTitle} fontWeight="600">
-                                {bill.residentName}
-                              </Typo>
+                          <View style={styles.billContent}>
+                            <View style={styles.billHeader}>
+                              <View style={styles.billInfo}>
+                                <Typo size={18} color={colors.primaryBigTitle} fontWeight="600">
+                                  {bill.residentName}
+                                </Typo>
+                              </View>
+                              <View style={[styles.statusBadge, { backgroundColor: statusColor + '20' }]}>
+                                <Typo size={12} color={statusColor} fontWeight="600">
+                                  {getStatusLabel(bill.status)}
+                                </Typo>
+                              </View>
                             </View>
-                            <View style={[styles.statusBadge, { backgroundColor: statusColor + '20' }]}>
-                              <Typo size={12} color={statusColor} fontWeight="600">
-                                {getStatusLabel(bill.status)}
+
+                            <View>
+                              <Typo size={18} color={colors.text} fontWeight="700">
+                                {bill.amount} MAD
                               </Typo>
                             </View>
                           </View>
 
-                          <View style={styles.billAmount}>
-                            <Typo size={20} color={colors.text} fontWeight="700">
-                              {bill.amount} MAD
+                          <TouchableOpacity
+                            onPress={() => handleBillPress(bill)}
+                            style={[styles.changeStateButton, { backgroundColor: colors.goldLightBackground }]}
+                            activeOpacity={0.7}
+                          >
+                            <Swap size={22} color={colors.text} weight="regular" />
+                            <Typo size={16} color={colors.text} fontWeight="600">
+                              {t('changeState') || 'Change State'}
                             </Typo>
-                          </View>
-                        </TouchableOpacity>
+                          </TouchableOpacity>
+                        </View>
                       );
                     })}
                   </View>
@@ -380,7 +391,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    padding: spacingX._20,
+    paddingTop: spacingY._8,
+    paddingBottom: spacingY._20,
+    paddingHorizontal: spacingX._20,
   },
   loadingContainer: {
     flex: 1,
@@ -400,9 +413,9 @@ const styles = StyleSheet.create({
     paddingVertical: spacingY._40,
   },
   billCard: {
-    padding: spacingX._12,
     borderRadius: radius._12,
     marginBottom: spacingY._8,
+    overflow: 'hidden',
     ...Platform.select({
       ios: {
         shadowColor: '#000',
@@ -415,11 +428,14 @@ const styles = StyleSheet.create({
       },
     }),
   },
+  billContent: {
+    padding: spacingX._12,
+  },
   billHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    marginBottom: spacingY._12,
+    marginBottom: spacingY._8,
   },
   billInfo: {
     flex: 1,
@@ -430,13 +446,22 @@ const styles = StyleSheet.create({
     borderRadius: radius._8,
     marginStart: spacingX._12,
   },
-  billAmount: {
-  },
   monthSection: {
     marginBottom: spacingY._24,
   },
   monthHeader: {
     marginBottom: spacingY._16,
+    flexDirection: "column",
+  },
+  changeStateButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: spacingY._8,
+    paddingHorizontal: spacingX._16,
+    gap: spacingX._8,
+    borderBottomLeftRadius: radius._12,
+    borderBottomRightRadius: radius._12,
   },
 });
 

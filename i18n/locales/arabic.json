@@ -183,7 +183,13 @@
   "october": "أكتوبر",
   "november": "نوفمبر",
   "december": "ديسمبر",
-  "amountLabel": "المبلغ"
+  "amountLabel": "المبلغ",
+  "residentsBills": "فواتير السكان",
+  "expenses": "المصروفات",
+  "noExpenses": "لا توجد مصروفات",
+  "viewBills": "عرض وإدارة فواتير السكان",
+  "viewExpenses": "عرض مصروفات الشقة",
+  "changeState": "تغيير الحالة"
 }
 
 

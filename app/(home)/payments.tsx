@@ -2,7 +2,7 @@ import { useOnboarding } from '@/contexts/onboardingContext';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import PaymentsResident from '../ui/payments/payments-resident';
-import PaymentsSyndic from '../ui/payments/payments-syndic';
+import PaymentsSyndic from '../ui/payments/syndic/payments-syndic';
 
 export default function PaymentsScreen() {
   const { role, isLoading } = useOnboarding();

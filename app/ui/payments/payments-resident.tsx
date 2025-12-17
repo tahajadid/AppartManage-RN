@@ -267,9 +267,9 @@ export default function PaymentsResident() {
   return (
     <ScreenWrapper>
       <View style={[styles.container, { backgroundColor: colors.screenBackground }]}>
-      <Typo size={28} color={colors.text} style={styles.title} fontWeight="700">
+        <Typo size={28} color={colors.text} style={styles.title} fontWeight="700">
             {t('tabPayments')}
-            </Typo>
+        </Typo>
 
         <ScrollView
           style={styles.scrollView}
@@ -334,7 +334,7 @@ export default function PaymentsResident() {
                             </View>
                           </View>
 
-                          <View style={styles.billAmount}>
+                          <View>
                             <Typo size={24} color={colors.text} fontWeight="700">
                               {bill.amount} MAD
                             </Typo>
@@ -389,7 +389,6 @@ const styles = StyleSheet.create({
   billCard: {
     padding: spacingX._16,
     borderRadius: radius._12,
-    marginBottom: spacingY._12,
     ...Platform.select({
       ios: {
         shadowColor: '#000',
@@ -416,9 +415,6 @@ const styles = StyleSheet.create({
     paddingVertical: spacingY._5,
     borderRadius: radius._8,
     marginStart: spacingX._12,
-  },
-  billAmount: {
-    marginBottom: spacingY._8,
   },
   monthSection: {
     marginBottom: spacingY._24,
