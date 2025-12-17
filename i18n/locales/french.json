@@ -184,6 +184,12 @@
   "october": "Octobre",
   "november": "Novembre",
   "december": "Décembre",
-  "amountLabel": "Montant"
+  "amountLabel": "Montant",
+  "residentsBills": "Factures des résidents",
+  "expenses": "Dépenses",
+  "noExpenses": "Aucune dépense trouvée",
+  "viewBills": "Voir et gérer les factures des résidents",
+  "viewExpenses": "Voir les dépenses de l'appartement",
+  "changeState": "Changer l'état"
 }
 

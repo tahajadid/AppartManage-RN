@@ -184,7 +184,13 @@
   "october": "October",
   "november": "November",
   "december": "December",
-  "amountLabel": "Amount"
+  "amountLabel": "Amount",
+  "residentsBills": "Residents Bills",
+  "expenses": "Expenses",
+  "noExpenses": "No expenses found",
+  "viewBills": "View and manage resident bills",
+  "viewExpenses": "View apartment expenses",
+  "changeState": "Change State"
 }
 
 
