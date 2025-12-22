@@ -120,3 +120,68 @@ export async function getApartmentExpenses(apartmentId: string): Promise<{
   }
 }
 
+/**
+ * Delete an expense from an apartment
+ */
+export async function deleteExpense(
+  apartmentId: string,
+  expenseId: string
+): Promise<{
+  success: boolean;
+  error: string | null;
+}> {
+  try {
+    const user = auth.currentUser;
+    if (!user) {
+      return {
+        success: false,
+        error: 'User not authenticated',
+      };
+    }
+
+    // Get expenses document
+    const expensesDocRef = doc(firestore, 'expenses', apartmentId);
+    const expensesDoc = await getDoc(expensesDocRef);
+
+    if (!expensesDoc.exists()) {
+      return {
+        success: false,
+        error: 'Expenses document not found',
+      };
+    }
+
+    const data = expensesDoc.data();
+    const expenses: Expense[] = data.expenses || [];
+
+    // Find the expense to delete
+    const expenseToDelete = expenses.find((exp) => exp.id === expenseId);
+
+    if (!expenseToDelete) {
+      return {
+        success: false,
+        error: 'Expense not found',
+      };
+    }
+
+    // Remove the expense from the array
+    const updatedExpenses = expenses.filter((exp) => exp.id !== expenseId);
+
+    // Update the document
+    await updateDoc(expensesDocRef, {
+      expenses: updatedExpenses,
+      updatedAt: new Date().toISOString(),
+    });
+
+    return {
+      success: true,
+      error: null,
+    };
+  } catch (error: any) {
+    console.log('Error deleting expense:', error);
+    return {
+      success: false,
+      error: 'An error occurred, please try again',
+    };
+  }
+}
+

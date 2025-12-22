@@ -1,3 +1,6 @@
+import AppHeader from '@/components/AppHeader';
+import InfoModal from '@/components/common/InfoModal';
+import RequestPaymentModal from '@/components/payments/RequestPaymentModal';
 import ScreenWrapper from '@/components/ScreenWrapper';
 import Typo from '@/components/Typo';
 import { radius, spacingX, spacingY } from '@/constants/theme';
@@ -7,16 +10,17 @@ import { useRTL } from '@/contexts/RTLContext';
 import useThemeColors from '@/contexts/useThemeColors';
 import i18n from '@/i18n/index';
 import { getApartmentData } from '@/services/apartmentService';
-import { Bill, getApartmentBills } from '@/services/paymentService';
+import { Bill, getApartmentBills, getCurrentDate, requestPayment } from '@/services/paymentService';
 import { useFocusEffect } from 'expo-router';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-    ActivityIndicator,
-    Platform,
-    ScrollView,
-    StyleSheet,
-    View
+  ActivityIndicator,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -36,6 +40,10 @@ export default function PaymentsResident() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [residentId, setResidentId] = useState<string | null>(null);
+  const [requestModalVisible, setRequestModalVisible] = useState<boolean>(false);
+  const [selectedBill, setSelectedBill] = useState<BillWithResidentName | null>(null);
+  const [requestingPayment, setRequestingPayment] = useState<boolean>(false);
+  const [successModalVisible, setSuccessModalVisible] = useState<boolean>(false);
 
   useEffect(() => {
     if (apartmentId && user?.uid) {
@@ -206,6 +214,66 @@ export default function PaymentsResident() {
     return grouped;
   };
 
+  const handleRequestPayment = (bill: BillWithResidentName) => {
+    setSelectedBill(bill);
+    setRequestModalVisible(true);
+  };
+
+  const handleConfirmRequestPayment = async () => {
+    if (!selectedBill || !apartmentId || !residentId) return;
+
+    setRequestingPayment(true);
+    setError(null);
+
+    try {
+      const result = await requestPayment(
+        apartmentId,
+        residentId,
+        selectedBill.date
+      );
+
+      if (result.success) {
+        // Update the bill status in local state to "payment_requested"
+        setBills((prevBills) => {
+          return prevBills.map((bill) => {
+            if (bill.ownerOfBill === selectedBill.ownerOfBill && bill.date === selectedBill.date) {
+              // Update status and add the new operation
+              const operationDate = getCurrentDate();
+
+              return {
+                ...bill,
+                status: 'payment_requested' as const,
+                listOfOperation: [
+                  ...bill.listOfOperation,
+                  {
+                    date: operationDate,
+                    operation: 'request_payment' as const,
+                  },
+                ],
+              };
+            }
+            return bill;
+          });
+        });
+
+        setRequestModalVisible(false);
+        setSelectedBill(null);
+        setSuccessModalVisible(true);
+      } else {
+        setError(result.error || 'Failed to request payment');
+        setRequestModalVisible(false);
+        setSelectedBill(null);
+      }
+    } catch (err: any) {
+      console.log('Error requesting payment:', err);
+      setError('An error occurred, please try again');
+      setRequestModalVisible(false);
+      setSelectedBill(null);
+    } finally {
+      setRequestingPayment(false);
+    }
+  };
+
   const getStatusColor = (status: Bill['status']) => {
     switch (status) {
       case 'paid':
@@ -236,9 +304,7 @@ export default function PaymentsResident() {
     return (
       <ScreenWrapper>
         <View style={[styles.container, { backgroundColor: colors.screenBackground }]}>
-        <Typo size={28} color={colors.text} style={styles.title} fontWeight="700">
-            {t('tabPayments')}
-            </Typo>
+          <AppHeader title={t('tabPayments')} />
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color={colors.primary} />
           </View>
@@ -247,13 +313,11 @@ export default function PaymentsResident() {
     );
   }
 
-  if (error) {
+  if (error && !bills.length) {
     return (
       <ScreenWrapper>
         <View style={[styles.container, { backgroundColor: colors.screenBackground }]}>
-        <Typo size={28} color={colors.text} style={styles.title} fontWeight="700">
-            {t('tabPayments')}
-            </Typo>
+          <AppHeader title={t('tabPayments')} />
           <View style={styles.errorContainer}>
             <Typo size={16} color={colors.redClose}>
               {error}
@@ -267,9 +331,7 @@ export default function PaymentsResident() {
   return (
     <ScreenWrapper>
       <View style={[styles.container, { backgroundColor: colors.screenBackground }]}>
-        <Typo size={28} color={colors.text} style={styles.title} fontWeight="700">
-            {t('tabPayments')}
-        </Typo>
+        <AppHeader title={t('tabPayments')} />
 
         <ScrollView
           style={styles.scrollView}
@@ -280,6 +342,14 @@ export default function PaymentsResident() {
           ]}
           showsVerticalScrollIndicator={false}
         >
+          {error && (
+            <View style={styles.errorContainer}>
+              <Typo size={14} color={colors.redClose}>
+                {error}
+              </Typo>
+            </View>
+          )}
+
           {bills.length === 0 ? (
             <View style={styles.emptyContainer}>
               <Typo size={16} color={colors.subtitleText}>
@@ -309,9 +379,10 @@ export default function PaymentsResident() {
                 return (
                   <View key={monthKey} style={styles.monthSection}>
                     <View style={styles.monthHeader}>
-                      <Typo size={20} color={colors.primary} fontWeight="700">
+                      <Typo size={18} color={colors.text} fontWeight="600">
                         {monthTitle}
                       </Typo>
+                      <View style={{height: spacingY._1, backgroundColor: colors.text, marginTop: spacingX._3, marginHorizontal:spacingX._20}} />
                     </View>
                     {monthBills.map((bill, index) => {
                       const statusColor = getStatusColor(bill.status);
@@ -321,24 +392,38 @@ export default function PaymentsResident() {
                           key={`${bill.ownerOfBill}-${bill.date}-${index}`}
                           style={[styles.billCard, { backgroundColor: colors.neutral800 }]}
                         >
-                          <View style={styles.billHeader}>
-                            <View style={styles.billInfo}>
-                              <Typo size={18} color={colors.primaryBigTitle} fontWeight="600">
-                                {t('monthlyBill') || 'Monthly Bill'}
-                              </Typo>
+                          <View style={[styles.billContent, { backgroundColor: colors.neutral800 }]}>
+                            <View style={styles.billHeader}>
+                              <View style={styles.billInfo}>
+                                <Typo size={18} color={colors.primaryBigTitle} fontWeight="600">
+                                  {t('monthlyBill') || 'Monthly Bill'}
+                                </Typo>
+                              </View>
+                              <View style={[styles.statusBadge, { backgroundColor: statusColor + '20' }]}>
+                                <Typo size={12} color={statusColor} fontWeight="600">
+                                  {getStatusLabel(bill.status)}
+                                </Typo>
+                              </View>
                             </View>
-                            <View style={[styles.statusBadge, { backgroundColor: statusColor + '20' }]}>
-                              <Typo size={12} color={statusColor} fontWeight="600">
-                                {getStatusLabel(bill.status)}
+
+                            <View>
+                              <Typo size={18} color={colors.text} fontWeight="700">
+                                {bill.amount} MAD
                               </Typo>
                             </View>
                           </View>
 
-                          <View>
-                            <Typo size={24} color={colors.text} fontWeight="700">
-                              {bill.amount} MAD
-                            </Typo>
-                          </View>
+                          {bill.status === 'not_paid' && (
+                            <TouchableOpacity
+                              onPress={() => handleRequestPayment(bill)}
+                              style={[styles.requestPaymentButton, { backgroundColor: colors.primary }]}
+                              activeOpacity={0.7}
+                            >
+                              <Typo size={16} color={colors.white} fontWeight="600">
+                                {t('requestPayment') || 'Request Payment'}
+                              </Typo>
+                            </TouchableOpacity>
+                          )}
                         </View>
                       );
                     })}
@@ -348,6 +433,28 @@ export default function PaymentsResident() {
             })()
           )}
         </ScrollView>
+
+        {/* Request Payment Modal */}
+        <RequestPaymentModal
+          visible={requestModalVisible}
+          bill={selectedBill}
+          loading={requestingPayment}
+          onClose={() => {
+            setRequestModalVisible(false);
+            setSelectedBill(null);
+          }}
+          onConfirm={handleConfirmRequestPayment}
+        />
+
+        {/* Success Modal */}
+        <InfoModal
+          visible={successModalVisible}
+          type="success"
+          title={t('success') || 'Success'}
+          message={t('paymentRequested') || 'Payment request sent successfully. The syndic will be notified.'}
+          onClose={() => setSuccessModalVisible(false)}
+          showCancel={false}
+        />
       </View>
     </ScreenWrapper>
   );
@@ -367,7 +474,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    padding: spacingX._20,
+    paddingTop: spacingY._8,
+    paddingBottom: spacingY._20,
+    paddingHorizontal: spacingX._20,
   },
   loadingContainer: {
     flex: 1,
@@ -387,8 +496,9 @@ const styles = StyleSheet.create({
     paddingVertical: spacingY._40,
   },
   billCard: {
-    padding: spacingX._16,
     borderRadius: radius._12,
+    marginBottom: spacingY._8,
+    overflow: 'hidden',
     ...Platform.select({
       ios: {
         shadowColor: '#000',
@@ -401,11 +511,14 @@ const styles = StyleSheet.create({
       },
     }),
   },
+  billContent: {
+    padding: spacingX._12,
+  },
   billHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    marginBottom: spacingY._12,
+    marginBottom: spacingY._8,
   },
   billInfo: {
     flex: 1,
@@ -421,6 +534,17 @@ const styles = StyleSheet.create({
   },
   monthHeader: {
     marginBottom: spacingY._16,
+    flexDirection: 'column',
+  },
+  requestPaymentButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: spacingY._8,
+    margin: spacingY._8,
+    paddingHorizontal: spacingX._16,
+    gap: spacingX._8,
+    borderRadius: radius._12,
   },
 });
 

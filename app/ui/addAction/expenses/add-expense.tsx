@@ -1,5 +1,6 @@
 import AppHeader from '@/components/AppHeader';
 import DatePicker from '@/components/common/DatePicker';
+import InfoModal from '@/components/common/InfoModal';
 import ExpenseTypeSelector from '@/components/expenses/ExpenseTypeSelector';
 import Input from '@/components/Input';
 import PrimaryButton from '@/components/PrimaryButton';
@@ -16,7 +17,6 @@ import { Calendar } from 'phosphor-react-native';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-  Alert,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -40,6 +40,7 @@ export default function AddExpenseScreen() {
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [successModalVisible, setSuccessModalVisible] = useState<boolean>(false);
 
   const handleTypeSelect = (type: ExpenseType) => {
     setSelectedType(type);
@@ -100,16 +101,7 @@ export default function AddExpenseScreen() {
       );
 
       if (result.success) {
-        Alert.alert(
-          t('success') || 'Success',
-          t('expenseAdded') || 'Expense added successfully',
-          [
-            {
-              text: t('ok') || 'OK',
-              onPress: () => router.back(),
-            },
-          ]
-        );
+        setSuccessModalVisible(true);
       } else {
         setError(result.error || t('errorOccurred') || 'An error occurred, please try again');
       }
@@ -229,6 +221,19 @@ export default function AddExpenseScreen() {
           selectedDate={selectedDate}
           onDateChange={handleDateChange}
           onClose={() => setShowDatePicker(false)}
+        />
+
+        {/* Success Modal */}
+        <InfoModal
+          visible={successModalVisible}
+          type="success"
+          title={t('success') || 'Success'}
+          message={t('expenseAdded') || 'Expense added successfully'}
+          onClose={() => {
+            setSuccessModalVisible(false);
+            router.back();
+          }}
+          showCancel={false}
         />
       </View>
     </ScreenWrapper>

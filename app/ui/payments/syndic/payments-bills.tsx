@@ -458,10 +458,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: spacingY._8,
+    margin: spacingY._8,
     paddingHorizontal: spacingX._16,
     gap: spacingX._8,
-    borderBottomLeftRadius: radius._12,
-    borderBottomRightRadius: radius._12,
+    borderRadius: radius._12,
   },
 });
 
