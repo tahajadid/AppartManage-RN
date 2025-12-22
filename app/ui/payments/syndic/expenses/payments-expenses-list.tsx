@@ -315,13 +315,11 @@ export default function PaymentsExpensesScreen() {
                                   {expense.description}
                                 </Typo>
                               )}
-                              <Typo size={12} color={colors.subtitleText} style={styles.expenseDate}>
-                                {expense.date}
-                              </Typo>
-                            </View>
-                            <View style={styles.expenseAmount}>
                               <Typo size={20} color={colors.text} fontWeight="700">
                                 {expense.amount} MAD
+                              </Typo>
+                              <Typo size={12} color={colors.primary} style={styles.expenseDate}>
+                                {expense.date}
                               </Typo>
                             </View>
                             <TouchableOpacity
@@ -426,7 +424,7 @@ const styles = StyleSheet.create({
   expenseHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: spacingX._12,
+    gap: spacingX._8,
   },
   expenseIconContainer: {
     width: 48,
@@ -450,7 +448,7 @@ const styles = StyleSheet.create({
   },
   deleteButton: {
     padding: spacingX._8,
-    marginStart: spacingX._8,
+    borderRadius: radius._12,
   },
 });
 

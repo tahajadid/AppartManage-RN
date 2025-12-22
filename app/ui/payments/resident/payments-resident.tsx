@@ -1,6 +1,6 @@
+import RequestPaymentModal from '@/app/ui/payments/resident/RequestPaymentModal';
 import AppHeader from '@/components/AppHeader';
 import InfoModal from '@/components/common/InfoModal';
-import RequestPaymentModal from '@/components/payments/RequestPaymentModal';
 import ScreenWrapper from '@/components/ScreenWrapper';
 import Typo from '@/components/Typo';
 import { radius, spacingX, spacingY } from '@/constants/theme';

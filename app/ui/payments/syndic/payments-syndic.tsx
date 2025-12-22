@@ -28,7 +28,7 @@ export default function PaymentsSyndic() {
         {/* Navigation Items */}
         <View style={styles.navigationContainer}>
           <TouchableOpacity
-            onPress={() => router.push('/ui/payments/syndic/payments-bills' as any)}
+            onPress={() => router.push('/ui/payments/syndic/bills/payments-bills' as any)}
             style={[styles.navItem, { backgroundColor: colors.goldLightBackground}]}
             activeOpacity={0.7}
           >
@@ -46,7 +46,7 @@ export default function PaymentsSyndic() {
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => router.push('/ui/payments/syndic/payments-expenses' as any)}
+            onPress={() => router.push('/ui/payments/syndic/expenses/payments-expenses-list' as any)}
             style={[styles.navItem, { backgroundColor: colors.neutral600 }]}
             activeOpacity={0.7}
           >

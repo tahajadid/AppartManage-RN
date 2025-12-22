@@ -1,4 +1,5 @@
 import AppHeader from '@/components/AppHeader';
+import InfoModal from '@/components/common/InfoModal';
 import ScreenWrapper from '@/components/ScreenWrapper';
 import Typo from '@/components/Typo';
 import { radius, spacingX, spacingY } from '@/constants/theme';
@@ -14,7 +15,6 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   ActivityIndicator,
-  Alert,
   Platform,
   ScrollView,
   StyleSheet,
@@ -41,6 +41,8 @@ export default function PaymentsBillsScreen() {
   const [selectedBill, setSelectedBill] = useState<BillWithResidentName | null>(null);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [updatingStatus, setUpdatingStatus] = useState<boolean>(false);
+  const [errorModalVisible, setErrorModalVisible] = useState<boolean>(false);
+  const [errorModalMessage, setErrorModalMessage] = useState<string>('');
 
   useEffect(() => {
     if (apartmentId) {
@@ -137,11 +139,13 @@ export default function PaymentsBillsScreen() {
         // Reload bills to show updated status
         await loadBills();
       } else {
-        Alert.alert(t('error') || 'Error', result.error || 'Failed to update status');
+        setErrorModalMessage(result.error || 'Failed to update status');
+        setErrorModalVisible(true);
       }
     } catch (err: any) {
       console.log('Error updating status:', err);
-      Alert.alert(t('error') || 'Error', t('errorOccurred') || 'An error occurred, please try again');
+      setErrorModalMessage(t('errorOccurred') || 'An error occurred, please try again');
+      setErrorModalVisible(true);
     } finally {
       setUpdatingStatus(false);
     }
@@ -371,6 +375,16 @@ export default function PaymentsBillsScreen() {
             setSelectedBill(null);
           }}
           onStatusChange={handleStatusChange}
+        />
+
+        {/* Error Modal */}
+        <InfoModal
+          visible={errorModalVisible}
+          type="error"
+          title={t('error') || 'Error'}
+          message={errorModalMessage}
+          onClose={() => setErrorModalVisible(false)}
+          showCancel={false}
         />
       </View>
     </ScreenWrapper>
