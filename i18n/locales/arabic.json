@@ -189,7 +189,13 @@
   "noExpenses": "لا توجد مصروفات",
   "viewBills": "عرض وإدارة فواتير السكان",
   "viewExpenses": "عرض مصروفات الشقة",
-  "changeState": "تغيير الحالة"
+  "changeState": "تغيير الحالة",
+  "deleteExpense": "حذف المصروف",
+  "deleteExpenseConfirmation": "هل أنت متأكد من حذف مصروف {{type}} بقيمة {{amount}} درهم؟",
+  "deleteExpenseConfirmationGeneric": "هل أنت متأكد من حذف هذا المصروف؟",
+  "requestPaymentMessage": "يرجى تحويل مبلغ الدفع إلى السنديك. بمجرد اكتمال التحويل، انقر فوق تأكيد لإشعار السنديك.",
+  "amountToPay": "المبلغ المطلوب دفعه",
+  "confirm": "تأكيد"
 }
 
 

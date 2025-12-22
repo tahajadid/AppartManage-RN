@@ -190,6 +190,12 @@
   "noExpenses": "Aucune dépense trouvée",
   "viewBills": "Voir et gérer les factures des résidents",
   "viewExpenses": "Voir les dépenses de l'appartement",
-  "changeState": "Changer l'état"
+  "changeState": "Changer l'état",
+  "deleteExpense": "Supprimer la dépense",
+  "deleteExpenseConfirmation": "Êtes-vous sûr de vouloir supprimer cette dépense {{type}} de {{amount}} MAD ?",
+  "deleteExpenseConfirmationGeneric": "Êtes-vous sûr de vouloir supprimer cette dépense ?",
+  "requestPaymentMessage": "Veuillez transférer le montant du paiement au syndic. Une fois le transfert terminé, cliquez sur confirmer pour notifier le syndic.",
+  "amountToPay": "Montant à payer",
+  "confirm": "Confirmer"
 }
 

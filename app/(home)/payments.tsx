@@ -1,7 +1,7 @@
 import { useOnboarding } from '@/contexts/onboardingContext';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import PaymentsResident from '../ui/payments/payments-resident';
+import PaymentsResident from '../ui/payments/resident/payments-resident';
 import PaymentsSyndic from '../ui/payments/syndic/payments-syndic';
 
 export default function PaymentsScreen() {

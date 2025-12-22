@@ -1,4 +1,5 @@
 import AppHeader from '@/components/AppHeader';
+import DeleteConfirmationModal from '@/components/common/DeleteConfirmationModal';
 import ScreenWrapper from '@/components/ScreenWrapper';
 import Typo from '@/components/Typo';
 import { radius, spacingX, spacingY } from '@/constants/theme';
@@ -6,7 +7,7 @@ import { useOnboarding } from '@/contexts/onboardingContext';
 import { useRTL } from '@/contexts/RTLContext';
 import useThemeColors from '@/contexts/useThemeColors';
 import i18n from '@/i18n/index';
-import { Expense, ExpenseType, getApartmentExpenses } from '@/services/expenseService';
+import { deleteExpense, Expense, ExpenseType, getApartmentExpenses } from '@/services/expenseService';
 import { useFocusEffect } from 'expo-router';
 import {
   Drop,
@@ -14,6 +15,7 @@ import {
   Lock,
   Receipt,
   Sparkle,
+  Trash,
   Wrench
 } from 'phosphor-react-native';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -23,6 +25,7 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
+  TouchableOpacity,
   View
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -75,6 +78,9 @@ export default function PaymentsExpensesScreen() {
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [deleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
+  const [expenseToDelete, setExpenseToDelete] = useState<Expense | null>(null);
+  const [deleting, setDeleting] = useState<boolean>(false);
 
   useEffect(() => {
     if (apartmentId) {
@@ -177,6 +183,40 @@ export default function PaymentsExpensesScreen() {
     return grouped;
   };
 
+  const handleDeletePress = (expense: Expense) => {
+    setExpenseToDelete(expense);
+    setDeleteModalVisible(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!expenseToDelete || !apartmentId) return;
+
+    setDeleting(true);
+    setError(null);
+
+    try {
+      const result = await deleteExpense(apartmentId, expenseToDelete.id);
+
+      if (result.success) {
+        setDeleteModalVisible(false);
+        setExpenseToDelete(null);
+        // Reload expenses to show updated list
+        await loadExpenses();
+      } else {
+        setError(result.error || 'Failed to delete expense');
+        setDeleteModalVisible(false);
+        setExpenseToDelete(null);
+      }
+    } catch (err: any) {
+      console.log('Error deleting expense:', err);
+      setError('An error occurred, please try again');
+      setDeleteModalVisible(false);
+      setExpenseToDelete(null);
+    } finally {
+      setDeleting(false);
+    }
+  };
+
   if (loading) {
     return (
       <ScreenWrapper>
@@ -269,7 +309,7 @@ export default function PaymentsExpensesScreen() {
                             <View style={styles.expenseInfo}>
                               <Typo size={18} color={colors.titleText} fontWeight="600">
                                 {t(expense.type) || expense.type}
-                              </Typo>
+                              </Typo> 
                               {expense.description && (
                                 <Typo size={14} color={colors.subtitleText} style={styles.expenseDescription}>
                                   {expense.description}
@@ -284,6 +324,13 @@ export default function PaymentsExpensesScreen() {
                                 {expense.amount} MAD
                               </Typo>
                             </View>
+                            <TouchableOpacity
+                              onPress={() => handleDeletePress(expense)}
+                              style={styles.deleteButton}
+                              activeOpacity={0.7}
+                            >
+                              <Trash size={20} color={colors.redClose} weight="regular" />
+                            </TouchableOpacity>
                           </View>
                         </View>
                       );
@@ -294,6 +341,26 @@ export default function PaymentsExpensesScreen() {
             })()
           )}
         </ScrollView>
+
+        {/* Delete Confirmation Modal */}
+        <DeleteConfirmationModal
+          visible={deleteModalVisible}
+          loading={deleting}
+          title={t('deleteExpense') || 'Delete Expense'}
+          message={
+            expenseToDelete
+              ? t('deleteExpenseConfirmation', {
+                  type: t(expenseToDelete.type) || expenseToDelete.type,
+                  amount: expenseToDelete.amount,
+                }) || `Are you sure you want to delete this ${t(expenseToDelete.type) || expenseToDelete.type} expense of ${expenseToDelete.amount} MAD?`
+              : t('deleteExpenseConfirmationGeneric') || 'Are you sure you want to delete this expense?'
+          }
+          onClose={() => {
+            setDeleteModalVisible(false);
+            setExpenseToDelete(null);
+          }}
+          onConfirm={handleDeleteConfirm}
+        />
       </View>
     </ScreenWrapper>
   );
@@ -380,6 +447,10 @@ const styles = StyleSheet.create({
   },
   expenseAmount: {
     alignItems: 'flex-end',
+  },
+  deleteButton: {
+    padding: spacingX._8,
+    marginStart: spacingX._8,
   },
 });
 
