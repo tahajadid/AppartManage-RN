@@ -52,12 +52,7 @@ export default function ResidentItem({
     <Container
       style={[
         styles.residentItem,
-        { backgroundColor: colors.neutral800 },
-        isSyndicResident && {
-          backgroundColor: colors.goldLightBackground,
-          borderColor: colors.goldColorBorder,
-          borderWidth: 1,
-        },
+        { backgroundColor: colors.neutral800 }
       ]}
       onPress={handlePress}
       disabled={!isClickable}

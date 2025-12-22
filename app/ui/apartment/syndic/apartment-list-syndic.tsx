@@ -10,15 +10,17 @@ import { useRTL } from '@/contexts/RTLContext';
 import useThemeColors from '@/contexts/useThemeColors';
 import { getApartmentData, Resident } from '@/services/apartmentService';
 import { createMonthlyBills } from '@/services/paymentService';
+import { scale } from '@/utils/styling';
 import { router, useFocusEffect } from 'expo-router';
+import { HouseLineIcon } from 'phosphor-react-native';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-    ActivityIndicator,
-    Alert,
-    ScrollView,
-    StyleSheet,
-    View
+  ActivityIndicator,
+  Alert,
+  ScrollView,
+  StyleSheet,
+  View
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -189,9 +191,13 @@ export default function ApartmentListSyndic() {
         >
 
         {/* Apartment Information Header */}
-        <Typo size={28} color={colors.primary} style={styles.apartmentName} fontWeight="700">
-            {apartmentName || t('tabApartment')}
-        </Typo>
+        <View style={{flexDirection: 'row', alignItems: 'center', gap: spacingX._12}}>
+          <HouseLineIcon size={24} color={colors.primary} style={{marginBottom: scale(13)}} weight="regular" />
+          <Typo size={24} color={colors.primary} style={styles.apartmentName} fontWeight="700">
+              {apartmentName || t('tabApartment')}
+          </Typo>
+        </View>
+
         <View style={styles.sectionHeader}>
             <Typo size={18} color={colors.titleText} fontWeight="600">
               {t('appartmentInformation')}
