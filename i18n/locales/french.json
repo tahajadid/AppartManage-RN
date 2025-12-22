@@ -196,6 +196,8 @@
   "deleteExpenseConfirmationGeneric": "Êtes-vous sûr de vouloir supprimer cette dépense ?",
   "requestPaymentMessage": "Veuillez transférer le montant du paiement au syndic. Une fois le transfert terminé, cliquez sur confirmer pour notifier le syndic.",
   "amountToPay": "Montant à payer",
-  "confirm": "Confirmer"
+  "confirm": "Confirmer",
+  "expenseDetails": "Détails de la dépense",
+  "expenseUpdated": "Dépense mise à jour avec succès"
 }
 

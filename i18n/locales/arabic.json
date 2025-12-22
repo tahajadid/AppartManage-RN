@@ -195,7 +195,9 @@
   "deleteExpenseConfirmationGeneric": "هل أنت متأكد من حذف هذا المصروف؟",
   "requestPaymentMessage": "يرجى تحويل مبلغ الدفع إلى السنديك. بمجرد اكتمال التحويل، انقر فوق تأكيد لإشعار السنديك.",
   "amountToPay": "المبلغ المطلوب دفعه",
-  "confirm": "تأكيد"
+  "confirm": "تأكيد",
+  "expenseDetails": "تفاصيل المصروف",
+  "expenseUpdated": "تم تحديث المصروف بنجاح"
 }
 
 

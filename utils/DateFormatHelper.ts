@@ -26,3 +26,13 @@ export const formatDateForDisplay = (date: Date): string => {
   return `${day}/${month}/${year}`;
 };
 
+/**
+ * Parse date from DD/MM/YYYY format to Date object
+ * @param dateStr - Date string in DD/MM/YYYY format
+ * @returns Date object
+ */
+export const parseDate = (dateStr: string): Date => {
+  const [day, month, year] = dateStr.split('/').map(Number);
+  return new Date(year, month - 1, day);
+};
+
