@@ -1,20 +1,22 @@
 import ApartmentInfo from '@/components/apartment/ApartmentInfo';
-import ResidentItem from '@/components/apartment/ResidentItem';
 import ScreenWrapper from '@/components/ScreenWrapper';
 import Typo from '@/components/Typo';
-import { spacingX, spacingY } from '@/constants/theme';
+import { radius, spacingX, spacingY } from '@/constants/theme';
 import { useOnboarding } from '@/contexts/onboardingContext';
 import { useRTL } from '@/contexts/RTLContext';
 import useThemeColors from '@/contexts/useThemeColors';
 import { getApartmentData, Resident } from '@/services/apartmentService';
-import { useFocusEffect } from 'expo-router';
+import { scale } from '@/utils/styling';
+import { router, useFocusEffect } from 'expo-router';
+import { HouseLineIcon, Users, WarningCircle } from 'phosphor-react-native';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-    ActivityIndicator,
-    ScrollView,
-    StyleSheet,
-    View
+  ActivityIndicator,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -128,9 +130,13 @@ export default function ApartmentListResident() {
           showsVerticalScrollIndicator={false}
         >
         {/* Apartment Information Header */}
-        <Typo size={28} color={colors.primary} style={styles.apartmentName} fontWeight="700">
-            {apartmentName || t('tabApartment')}
-        </Typo>
+        <View style={{flexDirection: 'row', alignItems: 'center', gap: spacingX._12}}>
+          <HouseLineIcon size={24} color={colors.primary} style={{marginBottom: scale(13)}} weight="regular" />
+          <Typo size={24} color={colors.primary} style={styles.apartmentName} fontWeight="700">
+              {apartmentName || t('tabApartment')}
+          </Typo>
+        </View>
+        
           <View style={styles.sectionHeader}>
             <Typo size={18} color={colors.titleText} fontWeight="600">
               {t('appartmentInformation')}
@@ -148,23 +154,49 @@ export default function ApartmentListResident() {
             />
           )}
 
-          {/* Residents List Header */}
-          <View style={styles.sectionHeader}>
-            <Typo size={18} color={colors.titleText} fontWeight="600">
-              {t('listOfResidents')}
-            </Typo>
-          </View>
+          {/* List of Residents Section */}
+          <TouchableOpacity
+            style={[styles.sectionCard, { backgroundColor: colors.primary + '20' }]}
+            onPress={() => router.push('/ui/apartment/list-of-residents')}
+            activeOpacity={0.7}
+          >
+            <View style={styles.sectionContent}>
+              <View style={[styles.sectionIconContainer, { backgroundColor: colors.primary + '20' }]}>
+                <Users size={24} color={colors.primary} weight="regular" />
+              </View>
+              <View style={styles.sectionTextContainer}>
+                <Typo size={16} color={colors.titleText} fontWeight="600">
+                  {t('listOfResidents')}
+                </Typo>
+                <Typo size={14} color={colors.subtitleText}>
+                  {residents.length} {residents.length === 1 ? t('resident') : t('residents')}
+                </Typo>
+              </View>
+            </View>
+            <Typo size={18} color={colors.subtitleText}>›</Typo>
+          </TouchableOpacity>
 
-          {/* Residents List - Read Only */}
-          <View style={styles.residentsList}>
-            {residents.map((resident) => (
-              <ResidentItem 
-                key={resident.id} 
-                resident={resident} 
-                editable={false}
-              />
-            ))}
-          </View>
+          {/* Apartment Issues Section */}
+          <TouchableOpacity
+            style={[styles.sectionCard, { backgroundColor: colors.rose + '20' }]}
+            onPress={() => router.push('/ui/apartment/issues-list')}
+            activeOpacity={0.7}
+          >
+            <View style={styles.sectionContent}>
+              <View style={[styles.sectionIconContainer, { backgroundColor: colors.rose + '20' }]}>
+                <WarningCircle size={24} color={colors.rose} weight="regular" />
+              </View>
+              <View style={styles.sectionTextContainer}>
+                <Typo size={16} color={colors.titleText} fontWeight="600">
+                  {t('apartmentIssues')}
+                </Typo>
+                <Typo size={14} color={colors.subtitleText}>
+                  {t('viewIssues') || 'View all reported issues'}
+                </Typo>
+              </View>
+            </View>
+            <Typo size={18} color={colors.subtitleText}>›</Typo>
+          </TouchableOpacity>
         </ScrollView>
       </View>
     </ScreenWrapper>
@@ -208,6 +240,30 @@ const styles = StyleSheet.create({
   },
   residentsList: {
     gap: spacingY._12,
+  },
+  sectionCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: spacingX._16,
+    borderRadius: radius._12,
+    marginBottom: spacingY._12,
+  },
+  sectionContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+    gap: spacingX._12,
+  },
+  sectionIconContainer: {
+    width: 48,
+    height: 48,
+    borderRadius: radius._10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  sectionTextContainer: {
+    flex: 1,
   },
 });
 

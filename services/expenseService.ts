@@ -121,6 +121,92 @@ export async function getApartmentExpenses(apartmentId: string): Promise<{
 }
 
 /**
+ * Update an expense in an apartment
+ */
+export async function updateExpense(
+  apartmentId: string,
+  expenseId: string,
+  updates: {
+    type?: ExpenseType;
+    amount?: number;
+    date?: string; // "DD/MM/YYYY"
+    description?: string;
+  }
+): Promise<{
+  success: boolean;
+  error: string | null;
+}> {
+  try {
+    const user = auth.currentUser;
+    if (!user) {
+      return {
+        success: false,
+        error: 'User not authenticated',
+      };
+    }
+
+    // Get expenses document
+    const expensesDocRef = doc(firestore, 'expenses', apartmentId);
+    const expensesDoc = await getDoc(expensesDocRef);
+
+    if (!expensesDoc.exists()) {
+      return {
+        success: false,
+        error: 'Expenses document not found',
+      };
+    }
+
+    const data = expensesDoc.data();
+    const expenses: Expense[] = data.expenses || [];
+
+    // Find the expense to update
+    const expenseIndex = expenses.findIndex((exp) => exp.id === expenseId);
+
+    if (expenseIndex === -1) {
+      return {
+        success: false,
+        error: 'Expense not found',
+      };
+    }
+
+    // Update the expense
+    const updatedExpense: Expense = {
+      ...expenses[expenseIndex],
+      ...(updates.type && { type: updates.type }),
+      ...(updates.amount !== undefined && { amount: updates.amount }),
+      ...(updates.date && { date: updates.date }),
+      ...(updates.description !== undefined && {
+        ...(updates.description?.trim() ? { description: updates.description.trim() } : {}),
+      }),
+    };
+
+    // Remove description if it's empty string
+    if (updates.description === '') {
+      delete updatedExpense.description;
+    }
+
+    expenses[expenseIndex] = updatedExpense;
+
+    // Update the document
+    await updateDoc(expensesDocRef, {
+      expenses: expenses,
+      updatedAt: new Date().toISOString(),
+    });
+
+    return {
+      success: true,
+      error: null,
+    };
+  } catch (error: any) {
+    console.log('Error updating expense:', error);
+    return {
+      success: false,
+      error: 'An error occurred, please try again',
+    };
+  }
+}
+
+/**
  * Delete an expense from an apartment
  */
 export async function deleteExpense(

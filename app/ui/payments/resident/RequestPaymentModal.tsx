@@ -7,11 +7,11 @@ import { Money } from 'phosphor-react-native';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-    Modal,
-    Platform,
-    StyleSheet,
-    TouchableOpacity,
-    View
+  Modal,
+  Platform,
+  StyleSheet,
+  TouchableOpacity,
+  View
 } from 'react-native';
 
 interface RequestPaymentModalProps {

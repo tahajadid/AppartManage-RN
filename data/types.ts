@@ -169,7 +169,7 @@ export interface Operation {
 export interface Bill {
     ownerOfBill: string; // residentId
     responsible: string; // syndicId
-    status: "not_paid" | "payment_requested" | "paid";
+    status: "unpaid" | "pending" | "paid";
     amount: number;
     date: string; // "MM-YYYY"
     listOfOperation: Operation[];

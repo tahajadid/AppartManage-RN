@@ -16,6 +16,7 @@ export interface ApartmentData {
   name: string;
   joinCode: string;
   numberOfResidents: number;
+  actualBalance?: number;
   residents: Resident[];
 }
 
@@ -85,6 +86,7 @@ export async function getApartmentData(apartmentId: string): Promise<{
         name: apartmentData.name || '',
         joinCode: apartmentData.joinCode || '',
         numberOfResidents: apartmentData.numberOfResidents || 0,
+        actualBalance: apartmentData.actualBalance || 0,
         residents: residentsList,
       },
     };

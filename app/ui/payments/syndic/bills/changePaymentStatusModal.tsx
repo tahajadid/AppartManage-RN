@@ -22,7 +22,7 @@ interface ChangePaymentStatusModalProps {
   bill: BillWithResidentName | null;
   updatingStatus: boolean;
   onClose: () => void;
-  onStatusChange: (newStatus: 'not_paid' | 'payment_requested' | 'paid') => void;
+  onStatusChange: (newStatus: 'unpaid' | 'pending' | 'paid') => void;
 }
 
 export default function ChangePaymentStatusModal({
@@ -39,9 +39,9 @@ export default function ChangePaymentStatusModal({
     switch (status) {
       case 'paid':
         return colors.greenAdd;
-      case 'payment_requested':
+      case 'pending':
         return colors.brightOrange;
-      case 'not_paid':
+      case 'unpaid':
         return colors.redClose;
       default:
         return colors.subtitleText;
@@ -52,10 +52,10 @@ export default function ChangePaymentStatusModal({
     switch (status) {
       case 'paid':
         return t('paid') || 'Paid';
-      case 'payment_requested':
-        return t('paymentRequested') || 'Payment Requested';
-      case 'not_paid':
-        return t('notPaid') || 'Not Paid';
+      case 'pending':
+        return t('pending') || 'Pending';
+      case 'unpaid':
+        return t('unpaid') || 'Unpaid';
       default:
         return status;
     }
@@ -135,22 +135,22 @@ export default function ChangePaymentStatusModal({
                 styles.statusButton,
                 {
                   backgroundColor:
-                    bill.status === 'not_paid'
+                    bill.status === 'unpaid'
                       ? colors.redClose
                       : colors.neutral700,
                 },
               ]}
-              onPress={() => onStatusChange('not_paid')}
-              disabled={updatingStatus || bill.status === 'not_paid'}
+              onPress={() => onStatusChange('unpaid')}
+              disabled={updatingStatus || bill.status === 'unpaid'}
             >
               <Typo
                 size={14}
                 color={
-                  bill.status === 'not_paid' ? colors.white : colors.subtitleText
+                  bill.status === 'unpaid' ? colors.white : colors.subtitleText
                 }
                 fontWeight="600"
               >
-                {t('notPaid') || 'Not Paid'}
+                {t('unpaid') || 'Unpaid'}
               </Typo>
             </TouchableOpacity>
 
@@ -159,24 +159,24 @@ export default function ChangePaymentStatusModal({
                 styles.statusButton,
                 {
                   backgroundColor:
-                    bill.status === 'payment_requested'
+                    bill.status === 'pending'
                       ? colors.brightOrange
                       : colors.neutral700,
                 },
               ]}
-              onPress={() => onStatusChange('payment_requested')}
-              disabled={updatingStatus || bill.status === 'payment_requested'}
+              onPress={() => onStatusChange('pending')}
+              disabled={updatingStatus || bill.status === 'pending'}
             >
               <Typo
                 size={14}
                 color={
-                  bill.status === 'payment_requested'
+                  bill.status === 'pending'
                     ? colors.white
                     : colors.subtitleText
                 }
                 fontWeight="600"
               >
-                {t('requestPayment') || 'Request Payment'}
+                {t('pending') || 'Pending'}
               </Typo>
             </TouchableOpacity>
 

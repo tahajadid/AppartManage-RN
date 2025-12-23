@@ -1,6 +1,5 @@
-import AppHeader from '@/components/AppHeader';
+import RequestPaymentModal from '@/app/ui/payments/resident/RequestPaymentModal';
 import InfoModal from '@/components/common/InfoModal';
-import RequestPaymentModal from '@/components/payments/RequestPaymentModal';
 import ScreenWrapper from '@/components/ScreenWrapper';
 import Typo from '@/components/Typo';
 import { radius, spacingX, spacingY } from '@/constants/theme';
@@ -44,6 +43,7 @@ export default function PaymentsResident() {
   const [selectedBill, setSelectedBill] = useState<BillWithResidentName | null>(null);
   const [requestingPayment, setRequestingPayment] = useState<boolean>(false);
   const [successModalVisible, setSuccessModalVisible] = useState<boolean>(false);
+  const [selectedFilter, setSelectedFilter] = useState<'all' | 'unpaid' | 'pending' | 'paid'>('all');
 
   useEffect(() => {
     if (apartmentId && user?.uid) {
@@ -174,6 +174,14 @@ export default function PaymentsResident() {
     return date.toLocaleDateString(locale, { month: 'long', year: 'numeric' });
   };
 
+  // Filter bills based on selected filter
+  const getFilteredBills = (): BillWithResidentName[] => {
+    if (selectedFilter === 'all') {
+      return bills;
+    }
+    return bills.filter((bill) => bill.status === selectedFilter);
+  };
+
   // Group bills by month
   const groupBillsByMonth = (bills: BillWithResidentName[]): Map<string, BillWithResidentName[]> => {
     const grouped = new Map<string, BillWithResidentName[]>();
@@ -242,7 +250,7 @@ export default function PaymentsResident() {
 
               return {
                 ...bill,
-                status: 'payment_requested' as const,
+                status: 'pending' as const,
                 listOfOperation: [
                   ...bill.listOfOperation,
                   {
@@ -278,9 +286,9 @@ export default function PaymentsResident() {
     switch (status) {
       case 'paid':
         return colors.greenAdd;
-      case 'payment_requested':
+      case 'pending':
         return colors.brightOrange;
-      case 'not_paid':
+      case 'unpaid':
         return colors.redClose;
       default:
         return colors.subtitleText;
@@ -291,10 +299,10 @@ export default function PaymentsResident() {
     switch (status) {
       case 'paid':
         return t('paid') || 'Paid';
-      case 'payment_requested':
-        return t('paymentRequested') || 'Payment Requested';
-      case 'not_paid':
-        return t('notPaid') || 'Not Paid';
+      case 'pending':
+        return t('pending') || 'Pending';
+      case 'unpaid':
+        return t('unpaid') || 'Unpaid';
       default:
         return status;
     }
@@ -304,7 +312,9 @@ export default function PaymentsResident() {
     return (
       <ScreenWrapper>
         <View style={[styles.container, { backgroundColor: colors.screenBackground }]}>
-          <AppHeader title={t('tabPayments')} />
+          <Typo size={28} color={colors.text} style={styles.title} fontWeight="700">
+            {t('tabPayments')}
+          </Typo>
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color={colors.primary} />
           </View>
@@ -317,7 +327,9 @@ export default function PaymentsResident() {
     return (
       <ScreenWrapper>
         <View style={[styles.container, { backgroundColor: colors.screenBackground }]}>
-          <AppHeader title={t('tabPayments')} />
+          <Typo size={28} color={colors.text} style={styles.title} fontWeight="700">
+            {t('tabPayments')}
+          </Typo>
           <View style={styles.errorContainer}>
             <Typo size={16} color={colors.redClose}>
               {error}
@@ -331,8 +343,9 @@ export default function PaymentsResident() {
   return (
     <ScreenWrapper>
       <View style={[styles.container, { backgroundColor: colors.screenBackground }]}>
-        <AppHeader title={t('tabPayments')} />
-
+        <Typo size={28} color={colors.text} style={styles.title} fontWeight="700">
+          {t('tabPayments')}
+        </Typo>
         <ScrollView
           style={styles.scrollView}
           contentContainerStyle={[
@@ -350,17 +363,109 @@ export default function PaymentsResident() {
             </View>
           )}
 
-          {bills.length === 0 ? (
+          {/* Filter Buttons */}
+          <View style={styles.filterContainer}>
+            <TouchableOpacity
+              style={[
+                styles.filterButton,
+                { 
+                  backgroundColor: selectedFilter === 'all' ? colors.primary : colors.neutral800,
+                  borderColor: selectedFilter === 'all' ? colors.primary : colors.neutral700,
+                }
+              ]}
+              onPress={() => setSelectedFilter('all')}
+              activeOpacity={0.7}
+            >
+              <Typo 
+                size={14} 
+                color={selectedFilter === 'all' ? colors.white : colors.subtitleText} 
+                fontWeight="600"
+              >
+                {t('all') || 'All'}
+              </Typo>
+            </TouchableOpacity>
+            
+            <TouchableOpacity
+              style={[
+                styles.filterButton,
+                { 
+                  backgroundColor: selectedFilter === 'unpaid' ? colors.redClose : colors.neutral800,
+                  borderColor: selectedFilter === 'unpaid' ? colors.redClose : colors.neutral700,
+                }
+              ]}
+              onPress={() => setSelectedFilter('unpaid')}
+              activeOpacity={0.7}
+            >
+              <Typo 
+                size={14} 
+                color={selectedFilter === 'unpaid' ? colors.white : colors.subtitleText} 
+                fontWeight="600"
+              >
+                {t('unpaid') || 'Unpaid'}
+              </Typo>
+            </TouchableOpacity>
+            
+            <TouchableOpacity
+              style={[
+                styles.filterButton,
+                { 
+                  backgroundColor: selectedFilter === 'pending' ? colors.brightOrange : colors.neutral800,
+                  borderColor: selectedFilter === 'pending' ? colors.brightOrange : colors.neutral700,
+                }
+              ]}
+              onPress={() => setSelectedFilter('pending')}
+              activeOpacity={0.7}
+            >
+              <Typo 
+                size={14} 
+                color={selectedFilter === 'pending' ? colors.white : colors.subtitleText} 
+                fontWeight="600"
+              >
+                {t('pending') || 'Pending'}
+              </Typo>
+            </TouchableOpacity>
+            
+            <TouchableOpacity
+              style={[
+                styles.filterButton,
+                { 
+                  backgroundColor: selectedFilter === 'paid' ? colors.greenAdd : colors.neutral800,
+                  borderColor: selectedFilter === 'paid' ? colors.greenAdd : colors.neutral700,
+                }
+              ]}
+              onPress={() => setSelectedFilter('paid')}
+              activeOpacity={0.7}
+            >
+              <Typo 
+                size={14} 
+                color={selectedFilter === 'paid' ? colors.white : colors.subtitleText} 
+                fontWeight="600"
+              >
+                {t('paid') || 'Paid'}
+              </Typo>
+            </TouchableOpacity>
+          </View>
+
+          {(() => {
+            const filteredBills = getFilteredBills();
+            if (filteredBills.length === 0) {
+              return (
+                <View style={styles.emptyContainer}>
+                  <Typo size={16} color={colors.subtitleText}>
+                    {t('noBills') || 'No bills found'}
+                  </Typo>
+                </View>
+              );
+            }
+            
+            const groupedBills = groupBillsByMonth(filteredBills);
             <View style={styles.emptyContainer}>
               <Typo size={16} color={colors.subtitleText}>
                 {t('noBills') || 'No bills found'}
               </Typo>
             </View>
-          ) : (
-            (() => {
-              const groupedBills = groupBillsByMonth(bills);
-              // Sort months (newest first) - properly sort by year then month
-              const sortedMonths = Array.from(groupedBills.keys()).sort((a, b) => {
+            // Sort months (newest first) - properly sort by year then month
+            const sortedMonths = Array.from(groupedBills.keys()).sort((a, b) => {
                 const [monthA, yearA] = a.split('-').map(Number);
                 const [monthB, yearB] = b.split('-').map(Number);
                 
@@ -413,7 +518,7 @@ export default function PaymentsResident() {
                             </View>
                           </View>
 
-                          {bill.status === 'not_paid' && (
+                          {bill.status === 'unpaid' && (
                             <TouchableOpacity
                               onPress={() => handleRequestPayment(bill)}
                               style={[styles.requestPaymentButton, { backgroundColor: colors.primary }]}
@@ -430,8 +535,7 @@ export default function PaymentsResident() {
                   </View>
                 );
               });
-            })()
-          )}
+          })()}
         </ScrollView>
 
         {/* Request Payment Modal */}
@@ -545,6 +649,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacingX._16,
     gap: spacingX._8,
     borderRadius: radius._12,
+  },
+  filterContainer: {
+    flexDirection: 'row',
+    gap: spacingX._8,
+    marginBottom: spacingY._16,
+    flexWrap: 'wrap',
+  },
+  filterButton: {
+    paddingHorizontal: spacingX._16,
+    paddingVertical: spacingY._8,
+    borderRadius: radius._8,
+    borderWidth: 1,
+    minWidth: 100,
+    alignItems: 'center',
   },
 });
 
