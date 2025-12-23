@@ -19,6 +19,7 @@ export default function UILayout() {
       <Stack.Screen name="apartment/issues-list" options={{animation: 'none'}} />
       <Stack.Screen name="addAction/expenses/add-expense" />
       <Stack.Screen name="addAction/issues/add-issue" />
+      <Stack.Screen name="addAction/meetings/add-meeting" />
       <Stack.Screen name="payments/syndic/payments-syndic" options={{animation: 'none'}}/>
       <Stack.Screen name="payments/syndic/bills/payments-bills" options={{animation: 'none'}}/>
       <Stack.Screen name="payments/syndic/expenses/payments-expenses-list" options={{animation: 'none'}}/>

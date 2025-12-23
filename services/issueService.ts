@@ -8,8 +8,9 @@ export interface Issue {
   apartmentId: string;
   type: IssueType;
   description: string;
+  nameOfReported: string; // Name of the person who reported the issue
   images?: string[]; // Array of image URLs (will be populated after image upload implementation)
-  status: 'pending' | 'in_progress' | 'resolved';
+  status: 'open' | 'closed';
   reportedBy: string; // userId
   createdAt: string; // ISO timestamp
   updatedAt: string; // ISO timestamp
@@ -22,6 +23,7 @@ export async function createIssue(
   apartmentId: string,
   type: IssueType,
   description: string,
+  nameOfReported: string,
   images?: string[] // Will be empty array for now, populated later after image upload
 ): Promise<{
   success: boolean;
@@ -46,8 +48,9 @@ export async function createIssue(
       apartmentId,
       type,
       description: description.trim(),
+      nameOfReported: nameOfReported.trim(),
       images: images || [],
-      status: 'pending',
+      status: 'open',
       reportedBy: user.uid,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),

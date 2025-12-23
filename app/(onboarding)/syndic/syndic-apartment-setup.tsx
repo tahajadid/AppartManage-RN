@@ -22,6 +22,7 @@ export default function SyndicApartmentSetup() {
   const params = useLocalSearchParams<{ role?: string }>();
 
   const [apartmentName, setApartmentName] = useState('');
+  const [actualBalance, setActualBalance] = useState('0');
   const [numberOfResidents, setNumberOfResidents] = useState('');
   const [error, setError] = useState<string | null>(null);
 
@@ -42,6 +43,13 @@ export default function SyndicApartmentSetup() {
       return;
     }
 
+    // Validate actual balance (must be a valid number, can be 0 or positive)
+    const balanceValue = parseFloat(actualBalance);
+    if (actualBalance.trim() === '' || isNaN(balanceValue) || balanceValue < 0) {
+      setError(t('validBalanceRequired') || 'Please enter a valid balance (0 or greater)');
+      return;
+    }
+
     // Get the selected role from route params or default to 'syndic'
     const role = params.role || 'syndic';
 
@@ -50,6 +58,7 @@ export default function SyndicApartmentSetup() {
       pathname: '/(onboarding)/syndic/syndic-list-resident-setup',
       params: {
         apartmentName: apartmentName.trim(),
+        actualBalance: balanceValue.toString(),
         numberOfResidents: residentsCount.toString(),
         role: role,
       },
@@ -101,6 +110,28 @@ export default function SyndicApartmentSetup() {
                   value={apartmentName}
                   onChangeText={setApartmentName}
                   autoCapitalize="words"
+                  editable={true}
+                />
+              </View>
+
+              {/* Actual Balance Input */}
+              <View style={styles.inputContainer}>
+                <Typo 
+                  size={14}
+                  color={colors.primary}
+                  fontWeight="600"
+                  style={styles.label}
+                >
+                  {t('actualBalance') || 'Actual Balance'}
+                </Typo>
+                <Input
+                  containerStyle={{ borderColor: colors.primary }}
+                  inputStyle={rtlStyles.input()}
+                  placeholderTextColor={colors.neutral400}
+                  placeholder={t('actualBalancePlaceholder') || '0'}
+                  value={actualBalance}
+                  onChangeText={setActualBalance}
+                  keyboardType="decimal-pad"
                   editable={true}
                 />
               </View>

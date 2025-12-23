@@ -37,6 +37,7 @@ export default function AddIssueScreen() {
   const scrollViewRef = useRef<ScrollView>(null);
 
   const [selectedType, setSelectedType] = useState<IssueType | null>(null);
+  const [nameOfReported, setNameOfReported] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [images, setImages] = useState<string[]>([]); // Array of image URIs (local)
   const [loading, setLoading] = useState<boolean>(false);
@@ -209,6 +210,11 @@ export default function AddIssueScreen() {
       return;
     }
 
+    if (!nameOfReported.trim()) {
+      setError(t('nameOfReportedRequired') || 'Please enter your name');
+      return;
+    }
+
     if (!description.trim()) {
       setError(t('descriptionRequired') || 'Please enter a description');
       return;
@@ -228,6 +234,7 @@ export default function AddIssueScreen() {
         apartmentId,
         selectedType,
         description.trim(),
+        nameOfReported.trim(),
         [] // Empty array for now - will be populated after image upload implementation
       );
 
@@ -259,6 +266,23 @@ export default function AddIssueScreen() {
         selectedType={selectedType}
         onTypeSelect={handleTypeSelect}
       />
+
+      {/* Name of Reported Input */}
+      <View style={styles.section}>
+        <Typo size={16} color={colors.titleText} fontWeight="600" style={styles.label}>
+          {t('nameOfReported') || 'Your Name'} *
+        </Typo>
+        <Input
+          placeholder={t('nameOfReportedPlaceholder') || 'Enter your name'}
+          value={nameOfReported}
+          onChangeText={(text) => {
+            setNameOfReported(text);
+            setError(null);
+          }}
+          containerStyle={styles.inputContainer}
+          autoCapitalize="words"
+        />
+      </View>
 
       {/* Description Input */}
       <View style={styles.section}>

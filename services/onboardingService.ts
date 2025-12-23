@@ -13,6 +13,7 @@ export interface ResidentInfo {
 export interface SyndicOnboardingData {
   role: 'syndic' | 'syndic_resident';
   apartmentName: string;
+  actualBalance: number;
   numberOfResidents: number;
   residents?: ResidentInfo[];
 }
@@ -133,6 +134,7 @@ export async function completeOnboarding(data: OnboardingData): Promise<Onboardi
         syndicId: user.uid,
         residents: residentIds,
         residentsData: residentsList,
+        actualBalance: data.actualBalance || 0, // Use provided balance or default to 0
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       });

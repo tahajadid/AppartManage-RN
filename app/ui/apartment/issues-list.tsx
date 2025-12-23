@@ -9,15 +9,12 @@ import { getApartmentIssues, Issue } from '@/services/issueService';
 import { useFocusEffect } from 'expo-router';
 import {
     Broom,
-    CheckCircle,
-    Clock,
     Elevator,
     Plug,
     Shield,
     Thermometer,
     WarningCircle,
-    Wrench,
-    XCircle
+    Wrench
 } from 'phosphor-react-native';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -108,26 +105,21 @@ export default function IssuesListScreen() {
     return t(type) || type;
   };
 
-  const getStatusIcon = (status: Issue['status']) => {
-    const iconProps = { size: 16, weight: 'fill' as const };
+  const getStatusColor = (status: Issue['status']) => {
     switch (status) {
-      case 'resolved':
-        return <CheckCircle {...iconProps} color={colors.green} />;
-      case 'in_progress':
-        return <Clock {...iconProps} color={colors.brightOrange} />;
+      case 'closed':
+        return colors.greenAdd;
       default:
-        return <XCircle {...iconProps} color={colors.redClose} />;
+        return colors.redClose;
     }
   };
 
   const getStatusLabel = (status: Issue['status']) => {
     switch (status) {
-      case 'resolved':
-        return t('resolved') || 'Resolved';
-      case 'in_progress':
-        return t('inProgress') || 'In Progress';
+      case 'closed':
+        return t('closedIssue') || 'Closed';
       default:
-        return t('pending') || 'Pending';
+        return t('openIssue') || 'Open';
     }
   };
 
@@ -190,49 +182,62 @@ export default function IssuesListScreen() {
             </View>
           ) : (
             <View style={styles.issuesList}>
-              {issues.map((issue) => (
-                <View 
-                  key={issue.id} 
-                  style={[styles.issueCard, { backgroundColor: colors.neutral800 }]}
-                >
-                  <View style={styles.issueHeader}>
-                    <View style={[styles.iconContainer, { backgroundColor: colors.primary + '20' }]}>
-                      {getIssueTypeIcon(issue.type)}
-                    </View>
-                    <View style={styles.issueInfo}>
-                      <Typo size={16} color={colors.titleText} fontWeight="600">
-                        {getIssueTypeLabel(issue.type)}
-                      </Typo>
-                      <View style={styles.statusRow}>
-                        {getStatusIcon(issue.status)}
-                        <Typo size={12} color={colors.subtitleText} style={styles.statusText}>
-                          {getStatusLabel(issue.status)}
+              {issues.map((issue) => {
+                const statusColor = getStatusColor(issue.status);
+
+                return (
+                  <View 
+                    key={issue.id} 
+                    style={[styles.issueCard, { backgroundColor: colors.neutral800 }]}
+                  >
+                    <View style={[styles.issueContent, { backgroundColor: colors.neutral800 }]}>
+                      <View style={styles.issueHeader}>
+                        <View style={styles.issueInfo}>
+                          <View style={styles.issueTypeRow}>
+                            <View style={[styles.iconContainer, { backgroundColor: colors.primary + '20' }]}>
+                              {getIssueTypeIcon(issue.type)}
+                            </View>
+                            <Typo size={18} color={colors.primaryBigTitle} fontWeight="600">
+                              {getIssueTypeLabel(issue.type)}
+                            </Typo>
+                          </View>
+                        </View>
+                        <View style={[styles.statusBadge, { backgroundColor: statusColor + '20' }]}>
+                          <Typo size={12} color={statusColor} fontWeight="600">
+                            {getStatusLabel(issue.status)}
+                          </Typo>
+                        </View>
+                      </View>
+
+                      <View style={styles.issueDetails}>
+                        <Typo size={14} color={colors.subtitleText} style={styles.reportedBy}>
+                          {t('reportedBy') || 'Reported by'}: {issue.nameOfReported}
+                        </Typo>
+                        
+                        <Typo size={14} color={colors.text} style={styles.description}>
+                          {issue.description}
+                        </Typo>
+                        
+                        {issue.images && issue.images.length > 0 && (
+                          <View style={styles.imagesContainer}>
+                            {issue.images.slice(0, 2).map((imageUri, index) => (
+                              <RNImage
+                                key={index}
+                                source={{ uri: imageUri }}
+                                style={styles.issueImage}
+                              />
+                            ))}
+                          </View>
+                        )}
+                        
+                        <Typo size={12} color={colors.primary} style={styles.dateText}>
+                          {formatDate(issue.createdAt)}
                         </Typo>
                       </View>
                     </View>
                   </View>
-                  
-                  <Typo size={14} color={colors.text} style={styles.description}>
-                    {issue.description}
-                  </Typo>
-                  
-                  {issue.images && issue.images.length > 0 && (
-                    <View style={styles.imagesContainer}>
-                      {issue.images.slice(0, 2).map((imageUri, index) => (
-                        <RNImage
-                          key={index}
-                          source={{ uri: imageUri }}
-                          style={styles.issueImage}
-                        />
-                      ))}
-                    </View>
-                  )}
-                  
-                  <Typo size={12} color={colors.subtitleText} style={styles.dateText}>
-                    {formatDate(issue.createdAt)}
-                  </Typo>
-                </View>
-              ))}
+                );
+              })}
             </View>
           )}
         </ScrollView>
@@ -278,36 +283,47 @@ const styles = StyleSheet.create({
     gap: spacingY._16,
   },
   issueCard: {
-    padding: spacingX._16,
     borderRadius: radius._12,
-    gap: spacingY._12,
+    marginBottom: spacingY._8,
+    overflow: 'hidden',
+  },
+  issueContent: {
+    padding: spacingX._12,
   },
   issueHeader: {
     flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacingX._12,
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: spacingY._12,
   },
-  iconContainer: {
-    width: 48,
-    height: 48,
-    borderRadius: radius._10,
-    justifyContent: 'center',
-    alignItems: 'center',
+  statusBadge: {
+    paddingHorizontal: spacingX._12,
+    paddingVertical: spacingY._5,
+    borderRadius: radius._8,
+    marginStart: spacingX._12,
   },
   issueInfo: {
     flex: 1,
   },
-  statusRow: {
+  issueTypeRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: spacingX._5,
-    marginTop: spacingY._5,
+    gap: spacingX._8,
   },
-  statusText: {
-    marginLeft: spacingX._5,
+  iconContainer: {
+    width: 32,
+    height: 32,
+    borderRadius: radius._8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  issueDetails: {
+    gap: spacingY._8,
+  },
+  reportedBy: {
+    fontStyle: 'italic',
   },
   description: {
-    marginTop: spacingY._5,
     lineHeight: 20,
   },
   imagesContainer: {

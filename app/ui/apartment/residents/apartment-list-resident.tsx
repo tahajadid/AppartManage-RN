@@ -156,7 +156,7 @@ export default function ApartmentListResident() {
 
           {/* List of Residents Section */}
           <TouchableOpacity
-            style={[styles.sectionCard, { backgroundColor: colors.neutral800 }]}
+            style={[styles.sectionCard, { backgroundColor: colors.primary + '20' }]}
             onPress={() => router.push('/ui/apartment/list-of-residents')}
             activeOpacity={0.7}
           >
@@ -178,7 +178,7 @@ export default function ApartmentListResident() {
 
           {/* Apartment Issues Section */}
           <TouchableOpacity
-            style={[styles.sectionCard, { backgroundColor: colors.neutral800 }]}
+            style={[styles.sectionCard, { backgroundColor: colors.rose + '20' }]}
             onPress={() => router.push('/ui/apartment/issues-list')}
             activeOpacity={0.7}
           >

@@ -79,7 +79,7 @@ export async function createMonthlyBills(
       return {
         ownerOfBill: resident.id,
         responsible: syndicId,
-        status: 'not_paid',
+        status: 'unpaid',
         amount: resident.monthlyFee,
         date: currentMonth,
         listOfOperation: [initialOperation],
@@ -163,7 +163,7 @@ export async function requestPayment(
     // Update bill status and add operation
     const updatedBill: Bill = {
       ...bills[billIndex],
-      status: 'payment_requested',
+      status: 'pending',
       listOfOperation: [
         ...bills[billIndex].listOfOperation,
         {
@@ -236,7 +236,7 @@ export async function updateBillStatus(
   apartmentId: string,
   residentId: string,
   billDate: string,
-  newStatus: 'not_paid' | 'payment_requested' | 'paid'
+  newStatus: 'unpaid' | 'pending' | 'paid'
 ): Promise<{
   success: boolean;
   error: string | null;
@@ -278,13 +278,17 @@ export async function updateBillStatus(
 
     // Determine operation type based on status
     let operationType: Operation['operation'] = 'creation';
-    if (newStatus === 'payment_requested') {
+    if (newStatus === 'pending') {
       operationType = 'request_payment';
     } else if (newStatus === 'paid') {
       operationType = 'payment_done';
-    } else if (newStatus === 'not_paid') {
+    } else if (newStatus === 'unpaid') {
       operationType = 'payment_rejected';
     }
+
+    // Get the bill amount before updating
+    const billAmount = bills[billIndex].amount;
+    const oldStatus = bills[billIndex].status;
 
     // Update bill status and add operation
     const updatedBill: Bill = {
@@ -300,6 +304,24 @@ export async function updateBillStatus(
     };
 
     bills[billIndex] = updatedBill;
+
+    // Update apartment balance if status changed to "paid"
+    if (newStatus === 'paid' && oldStatus !== 'paid') {
+      // Get apartment document
+      const apartmentDocRef = doc(firestore, 'apartments', apartmentId);
+      const apartmentDoc = await getDoc(apartmentDocRef);
+      
+      if (apartmentDoc.exists()) {
+        const apartmentData = apartmentDoc.data();
+        const currentBalance = apartmentData.actualBalance || 0;
+        const newBalance = currentBalance + billAmount;
+        
+        await updateDoc(apartmentDocRef, {
+          actualBalance: newBalance,
+          updatedAt: new Date().toISOString(),
+        });
+      }
+    }
 
     await updateDoc(paymentsDocRef, {
       bills: bills,

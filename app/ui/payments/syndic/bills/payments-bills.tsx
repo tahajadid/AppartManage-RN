@@ -43,6 +43,7 @@ export default function PaymentsBillsScreen() {
   const [updatingStatus, setUpdatingStatus] = useState<boolean>(false);
   const [errorModalVisible, setErrorModalVisible] = useState<boolean>(false);
   const [errorModalMessage, setErrorModalMessage] = useState<string>('');
+  const [selectedFilter, setSelectedFilter] = useState<'all' | 'unpaid' | 'pending' | 'paid'>('all');
 
   useEffect(() => {
     if (apartmentId) {
@@ -120,7 +121,7 @@ export default function PaymentsBillsScreen() {
     setModalVisible(true);
   };
 
-  const handleStatusChange = async (newStatus: 'not_paid' | 'payment_requested' | 'paid') => {
+  const handleStatusChange = async (newStatus: 'unpaid' | 'pending' | 'paid') => {
     if (!apartmentId || !selectedBill) return;
 
     setUpdatingStatus(true);
@@ -155,9 +156,9 @@ export default function PaymentsBillsScreen() {
     switch (status) {
       case 'paid':
         return colors.greenAdd;
-      case 'payment_requested':
+      case 'pending':
         return colors.brightOrange;
-      case 'not_paid':
+      case 'unpaid':
         return colors.redClose;
       default:
         return colors.subtitleText;
@@ -168,10 +169,10 @@ export default function PaymentsBillsScreen() {
     switch (status) {
       case 'paid':
         return t('paid') || 'Paid';
-      case 'payment_requested':
-        return t('paymentRequested') || 'Payment Requested';
-      case 'not_paid':
-        return t('notPaid') || 'Not Paid';
+      case 'pending':
+        return t('pending') || 'Pending';
+      case 'unpaid':
+        return t('unpaid') || 'Unpaid';
       default:
         return status;
     }
@@ -195,6 +196,14 @@ export default function PaymentsBillsScreen() {
     
     // Use toLocaleDateString with options for month and year
     return date.toLocaleDateString(locale, { month: 'long', year: 'numeric' });
+  };
+
+  // Filter bills based on selected filter
+  const getFilteredBills = (): BillWithResidentName[] => {
+    if (selectedFilter === 'all') {
+      return bills;
+    }
+    return bills.filter((bill) => bill.status === selectedFilter);
   };
 
   // Group bills by month
@@ -282,15 +291,102 @@ export default function PaymentsBillsScreen() {
           ]}
           showsVerticalScrollIndicator={false}
         >
-          {bills.length === 0 ? (
-            <View style={styles.emptyContainer}>
-              <Typo size={16} color={colors.subtitleText}>
-                {t('noBills') || 'No bills found'}
+          {/* Filter Buttons */}
+          <View style={styles.filterContainer}>
+            <TouchableOpacity
+              style={[
+                styles.filterButton,
+                { 
+                  backgroundColor: selectedFilter === 'all' ? colors.primary : colors.neutral800,
+                  borderColor: selectedFilter === 'all' ? colors.primary : colors.neutral700,
+                }
+              ]}
+              onPress={() => setSelectedFilter('all')}
+              activeOpacity={0.7}
+            >
+              <Typo 
+                size={14} 
+                color={selectedFilter === 'all' ? colors.white : colors.subtitleText} 
+                fontWeight="600"
+              >
+                {t('all') || 'All'}
               </Typo>
-            </View>
-          ) : (
-            (() => {
-              const groupedBills = groupBillsByMonth(bills);
+            </TouchableOpacity>
+            
+            <TouchableOpacity
+              style={[
+                styles.filterButton,
+                { 
+                  backgroundColor: selectedFilter === 'unpaid' ? colors.redClose : colors.neutral800,
+                  borderColor: selectedFilter === 'unpaid' ? colors.redClose : colors.neutral700,
+                }
+              ]}
+              onPress={() => setSelectedFilter('unpaid')}
+              activeOpacity={0.7}
+            >
+              <Typo 
+                size={14} 
+                color={selectedFilter === 'unpaid' ? colors.white : colors.subtitleText} 
+                fontWeight="600"
+              >
+                {t('unpaid') || 'Unpaid'}
+              </Typo>
+            </TouchableOpacity>
+            
+            <TouchableOpacity
+              style={[
+                styles.filterButton,
+                { 
+                  backgroundColor: selectedFilter === 'pending' ? colors.brightOrange : colors.neutral800,
+                  borderColor: selectedFilter === 'pending' ? colors.brightOrange : colors.neutral700,
+                }
+              ]}
+              onPress={() => setSelectedFilter('pending')}
+              activeOpacity={0.7}
+            >
+              <Typo 
+                size={14} 
+                color={selectedFilter === 'pending' ? colors.white : colors.subtitleText} 
+                fontWeight="600"
+              >
+                {t('pending') || 'Pending'}
+              </Typo>
+            </TouchableOpacity>
+            
+            <TouchableOpacity
+              style={[
+                styles.filterButton,
+                { 
+                  backgroundColor: selectedFilter === 'paid' ? colors.greenAdd : colors.neutral800,
+                  borderColor: selectedFilter === 'paid' ? colors.greenAdd : colors.neutral700,
+                }
+              ]}
+              onPress={() => setSelectedFilter('paid')}
+              activeOpacity={0.7}
+            >
+              <Typo 
+                size={14} 
+                color={selectedFilter === 'paid' ? colors.white : colors.subtitleText} 
+                fontWeight="600"
+              >
+                {t('paid') || 'Paid'}
+              </Typo>
+            </TouchableOpacity>
+          </View>
+
+          {(() => {
+            const filteredBills = getFilteredBills();
+            if (filteredBills.length === 0) {
+              return (
+                <View style={styles.emptyContainer}>
+                  <Typo size={16} color={colors.subtitleText}>
+                    {t('noBills') || 'No bills found'}
+                  </Typo>
+                </View>
+              );
+            }
+            
+            const groupedBills = groupBillsByMonth(filteredBills);
               // Sort months (newest first) - properly sort by year then month
               const sortedMonths = Array.from(groupedBills.keys()).sort((a, b) => {
                 const [monthA, yearA] = a.split('-').map(Number);
@@ -361,8 +457,7 @@ export default function PaymentsBillsScreen() {
                   </View>
                 );
               });
-            })()
-          )}
+          })()}
         </ScrollView>
 
         {/* Status Change Modal */}
@@ -476,6 +571,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacingX._16,
     gap: spacingX._8,
     borderRadius: radius._12,
+  },
+  filterContainer: {
+    flexDirection: 'row',
+    gap: spacingX._8,
+    marginBottom: spacingY._16,
+    flexWrap: 'wrap',
+  },
+  filterButton: {
+    paddingHorizontal: spacingX._16,
+    paddingVertical: spacingY._8,
+    borderRadius: radius._8,
+    borderWidth: 1,
+    minWidth: 100,
+    alignItems: 'center',
   },
 });
 

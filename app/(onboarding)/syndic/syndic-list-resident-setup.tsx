@@ -25,11 +25,13 @@ export default function SyndicListResidentSetup() {
   const rtlStyles = createRTLStyles(isRTL);
   const params = useLocalSearchParams<{
     apartmentName: string;
+    actualBalance: string;
     numberOfResidents: string;
     role: string;
   }>();
 
   const apartmentName = params.apartmentName || '';
+  const actualBalance = parseFloat(params.actualBalance || '0');
   const numberOfResidents = parseInt(params.numberOfResidents || '0', 10);
   const role = (params.role as 'syndic' | 'syndic_resident') || 'syndic';
   const isSyndicResident = role === 'syndic_resident';
@@ -99,6 +101,7 @@ export default function SyndicListResidentSetup() {
       const result = await completeOnboarding({
         role: role,
         apartmentName: apartmentName,
+        actualBalance: actualBalance,
         numberOfResidents: numberOfResidents,
         residents: residentsData,
       });
