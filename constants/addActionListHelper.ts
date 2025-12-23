@@ -27,7 +27,7 @@ export const getResidentActionOptions = (
       icon: WarningCircle,
       title: t('addIssue') || 'Report Issue',
       subtitle: t('addIssueDescription') || 'Report an apartment issue or problem',
-      route: '/(home)/issues/add-issue',
+      route: '/ui/addAction/issues/add-issue',
       iconColor: colors.rose,
     },
   ];
@@ -65,6 +65,14 @@ export const getSyndicActionOptions = (
       route: '/(home)/meetings/add-meeting',
       iconColor: colors.brightOrange,
     },
+    {
+      id: 'add-issue',
+      icon: WarningCircle,
+      title: t('addIssue') || 'Report Issue',
+      subtitle: t('addIssueDescription') || 'Report an apartment issue or problem',
+      route: '/ui/addAction/issues/add-issue',
+      iconColor: colors.rose,
+    }
   ];
 };
 

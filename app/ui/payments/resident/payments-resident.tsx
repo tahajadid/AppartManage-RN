@@ -1,5 +1,4 @@
 import RequestPaymentModal from '@/app/ui/payments/resident/RequestPaymentModal';
-import AppHeader from '@/components/AppHeader';
 import InfoModal from '@/components/common/InfoModal';
 import ScreenWrapper from '@/components/ScreenWrapper';
 import Typo from '@/components/Typo';
@@ -304,7 +303,9 @@ export default function PaymentsResident() {
     return (
       <ScreenWrapper>
         <View style={[styles.container, { backgroundColor: colors.screenBackground }]}>
-          <AppHeader title={t('tabPayments')} />
+          <Typo size={28} color={colors.text} style={styles.title} fontWeight="700">
+            {t('tabPayments')}
+          </Typo>
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color={colors.primary} />
           </View>
@@ -317,7 +318,9 @@ export default function PaymentsResident() {
     return (
       <ScreenWrapper>
         <View style={[styles.container, { backgroundColor: colors.screenBackground }]}>
-          <AppHeader title={t('tabPayments')} />
+          <Typo size={28} color={colors.text} style={styles.title} fontWeight="700">
+            {t('tabPayments')}
+          </Typo>
           <View style={styles.errorContainer}>
             <Typo size={16} color={colors.redClose}>
               {error}
@@ -331,8 +334,9 @@ export default function PaymentsResident() {
   return (
     <ScreenWrapper>
       <View style={[styles.container, { backgroundColor: colors.screenBackground }]}>
-        <AppHeader title={t('tabPayments')} />
-
+        <Typo size={28} color={colors.text} style={styles.title} fontWeight="700">
+          {t('tabPayments')}
+        </Typo>
         <ScrollView
           style={styles.scrollView}
           contentContainerStyle={[

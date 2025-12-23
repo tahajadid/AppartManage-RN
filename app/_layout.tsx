@@ -13,25 +13,40 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 SplashScreen.preventAutoHideAsync();
 
 // Suppress "Unable to activate keep awake" errors (harmless development warnings)
-if (__DEV__) {
-  LogBox.ignoreLogs([
-    'Unable to activate keep awake',
-    'Error: Unable to activate keep awake',
-  ]);
-  
-  // Also catch unhandled promise rejections for keep awake errors
-  const originalErrorHandler = ErrorUtils.getGlobalHandler();
-  ErrorUtils.setGlobalHandler((error, isFatal) => {
-    if (error?.message?.includes('Unable to activate keep awake')) {
-      // Silently ignore keep awake errors
+LogBox.ignoreLogs([
+  'Unable to activate keep awake',
+  'Error: Unable to activate keep awake',
+]);
+
+// Catch unhandled promise rejections for keep awake errors
+// Note: We can't override Promise.reject directly, so we handle it in the global handler
+
+// Also catch unhandled promise rejections globally
+if (typeof global !== 'undefined') {
+  const originalUnhandledRejection = (global as any).onunhandledrejection;
+  (global as any).onunhandledrejection = (event: any) => {
+    if (event?.reason?.message && event.reason.message.includes('keep awake')) {
+      event.preventDefault();
       return;
     }
-    // Call original handler for other errors
-    if (originalErrorHandler) {
-      originalErrorHandler(error, isFatal);
+    if (originalUnhandledRejection) {
+      originalUnhandledRejection(event);
     }
-  });
+  };
 }
+
+// Also catch unhandled errors
+const originalErrorHandler = ErrorUtils.getGlobalHandler();
+ErrorUtils.setGlobalHandler((error, isFatal) => {
+  if (error?.message?.includes('Unable to activate keep awake')) {
+    // Silently ignore keep awake errors
+    return;
+  }
+  // Call original handler for other errors
+  if (originalErrorHandler) {
+    originalErrorHandler(error, isFatal);
+  }
+});
 
 const StackLayout = () => {
   return (

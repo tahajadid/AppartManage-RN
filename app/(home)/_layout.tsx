@@ -42,10 +42,10 @@ export default function HomeLayout() {
         }}
       />
       <Tabs.Screen 
-        name="payments" 
+        name="apartments" 
         options={{
-          title: 'Payments',
-          tabBarLabel: 'Payments',
+          title: 'Apartment',
+          tabBarLabel: 'Apartment',
         }}
       />
       <Tabs.Screen 
@@ -57,10 +57,10 @@ export default function HomeLayout() {
         }}
       />
       <Tabs.Screen 
-        name="apartments" 
+        name="payments" 
         options={{
-          title: 'Apartment',
-          tabBarLabel: 'Apartment',
+          title: 'Payments',
+          tabBarLabel: 'Payments',
         }}
       />
       <Tabs.Screen 
