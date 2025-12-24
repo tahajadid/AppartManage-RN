@@ -252,6 +252,26 @@
   "closedIssue": "Fermé",
   "reportedBy": "Signalé par",
   "noResidents": "Aucun résident trouvé",
-  "all": "Tous"
+  "all": "Tous",
+  "remainingPayments": "Paiements restants",
+  "remainingPaymentsDescription": "Payer ou gérer les soldes restants",
+  "noRemainingMoneyToPay": "Aucun montant restant à payer",
+  "remainingAmountToPay": "Montant restant à payer",
+  "amountToPay": "Montant à payer",
+  "maxAmount": "Maximum",
+  "pendingPayments": "Paiements en attente",
+  "createPayment": "Créer un paiement",
+  "totalRemainingMoney": "Total de l'argent restant",
+  "noResidentsWithRemaining": "Aucun résident avec solde restant",
+  "residentsWithRemaining": "Résidents avec solde restant",
+  "amountPaid": "Montant payé",
+  "validate": "Valider",
+  "remainingPaymentCreated": "Paiement restant créé avec succès",
+  "paymentValidated": "Paiement validé avec succès",
+  "amountExceedsRemaining": "Le montant ne peut pas dépasser le solde restant",
+  "remainingPayment": "Paiement restant",
+  "viewRemainingPayments": "Voir et gérer les paiements restants",
+  "noRemainingPayments": "Aucun paiement restant trouvé",
+  "paymentStatusUpdated": "Statut du paiement mis à jour avec succès"
 }
 

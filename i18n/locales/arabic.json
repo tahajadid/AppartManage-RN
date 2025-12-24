@@ -251,7 +251,27 @@
   "closedIssue": "مغلق",
   "reportedBy": "تم الإبلاغ بواسطة",
   "noResidents": "لم يتم العثور على سكان",
-  "all": "الكل"
+  "all": "الكل",
+  "remainingPayments": "المدفوعات المتبقية",
+  "remainingPaymentsDescription": "دفع أو إدارة الأرصدة المتبقية",
+  "noRemainingMoneyToPay": "لا يوجد مبلغ متبقي للدفع",
+  "remainingAmountToPay": "المبلغ المتبقي للدفع",
+  "amountToPay": "المبلغ المطلوب دفعه",
+  "maxAmount": "الحد الأقصى",
+  "pendingPayments": "المدفوعات المعلقة",
+  "createPayment": "إنشاء دفعة",
+  "totalRemainingMoney": "إجمالي المال المتبقي",
+  "noResidentsWithRemaining": "لا يوجد سكان برصيد متبقي",
+  "residentsWithRemaining": "السكان برصيد متبقي",
+  "amountPaid": "المبلغ المدفوع",
+  "validate": "التحقق",
+  "remainingPaymentCreated": "تم إنشاء الدفعة المتبقية بنجاح",
+  "paymentValidated": "تم التحقق من الدفعة بنجاح",
+  "amountExceedsRemaining": "لا يمكن أن يتجاوز المبلغ الرصيد المتبقي",
+  "remainingPayment": "دفعة متبقية",
+  "viewRemainingPayments": "عرض وإدارة المدفوعات المتبقية",
+  "noRemainingPayments": "لم يتم العثور على مدفوعات متبقية",
+  "paymentStatusUpdated": "تم تحديث حالة الدفعة بنجاح"
 }
 
 

@@ -2,6 +2,7 @@ import Typo from '@/components/Typo';
 import { radius, spacingX, spacingY } from '@/constants/theme';
 import useThemeColors from '@/contexts/useThemeColors';
 import { Bill } from '@/services/paymentService';
+import { RemainingPayment } from '@/services/remainingPaymentService';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -20,6 +21,7 @@ interface BillWithResidentName extends Bill {
 interface ChangePaymentStatusModalProps {
   visible: boolean;
   bill: BillWithResidentName | null;
+  remainingPayment?: RemainingPayment | null;
   updatingStatus: boolean;
   onClose: () => void;
   onStatusChange: (newStatus: 'unpaid' | 'pending' | 'paid') => void;
@@ -28,6 +30,7 @@ interface ChangePaymentStatusModalProps {
 export default function ChangePaymentStatusModal({
   visible,
   bill,
+  remainingPayment,
   updatingStatus,
   onClose,
   onStatusChange,
@@ -35,7 +38,12 @@ export default function ChangePaymentStatusModal({
   const colors = useThemeColors();
   const { t } = useTranslation();
 
-  const getStatusColor = (status: Bill['status']) => {
+  const isRemainingPayment = !!remainingPayment;
+  const currentStatus = isRemainingPayment 
+    ? remainingPayment!.status 
+    : (bill?.status || 'unpaid');
+
+  const getStatusColor = (status: string) => {
     switch (status) {
       case 'paid':
         return colors.greenAdd;
@@ -48,7 +56,7 @@ export default function ChangePaymentStatusModal({
     }
   };
 
-  const getStatusLabel = (status: Bill['status']) => {
+  const getStatusLabel = (status: string) => {
     switch (status) {
       case 'paid':
         return t('paid') || 'Paid';
@@ -61,7 +69,7 @@ export default function ChangePaymentStatusModal({
     }
   };
 
-  if (!bill) return null;
+  if (!bill && !remainingPayment) return null;
 
   return (
     <Modal
@@ -100,13 +108,17 @@ export default function ChangePaymentStatusModal({
 
           <View style={styles.modalBillInfo}>
             <Typo size={18} color={colors.primaryBigTitle} fontWeight="700">
-              {bill.residentName}
+              {isRemainingPayment ? remainingPayment!.residentName : bill!.residentName}
             </Typo>
             <Typo size={16} color={colors.text}>
-               {t('date')} : {bill.date}
+               {t('date')} : {isRemainingPayment 
+                 ? new Date(remainingPayment!.createdAt).toLocaleDateString()
+                 : bill!.date}
             </Typo>
             <Typo size={16} color={colors.text}>
-               {t('amount')} : {bill.amount} MAD
+               {t('amount')} : {isRemainingPayment 
+                 ? remainingPayment!.amount.toLocaleString()
+                 : bill!.amount} MAD
             </Typo>
             <View style={styles.currentStatusContainer}>
               <Typo size={14} color={colors.primary}>
@@ -115,62 +127,64 @@ export default function ChangePaymentStatusModal({
               <View
                 style={[
                   styles.statusBadge,
-                  { backgroundColor: getStatusColor(bill.status) + '20' },
+                  { backgroundColor: getStatusColor(currentStatus) + '20' },
                 ]}
               >
                 <Typo
                   size={12}
-                  color={getStatusColor(bill.status)}
+                  color={getStatusColor(currentStatus)}
                   fontWeight="600"
                 >
-                  {getStatusLabel(bill.status)}
+                  {getStatusLabel(currentStatus)}
                 </Typo>
               </View>
             </View>
           </View>
 
           <View style={styles.statusButtons}>
-            <TouchableOpacity
-              style={[
-                styles.statusButton,
-                {
-                  backgroundColor:
-                    bill.status === 'unpaid'
-                      ? colors.redClose
-                      : colors.neutral700,
-                },
-              ]}
-              onPress={() => onStatusChange('unpaid')}
-              disabled={updatingStatus || bill.status === 'unpaid'}
-            >
-              <Typo
-                size={14}
-                color={
-                  bill.status === 'unpaid' ? colors.white : colors.subtitleText
-                }
-                fontWeight="600"
+            {!isRemainingPayment && (
+              <TouchableOpacity
+                style={[
+                  styles.statusButton,
+                  {
+                    backgroundColor:
+                      currentStatus === 'unpaid'
+                        ? colors.redClose
+                        : colors.neutral700,
+                  },
+                ]}
+                onPress={() => onStatusChange('unpaid')}
+                disabled={updatingStatus || currentStatus === 'unpaid'}
               >
-                {t('unpaid') || 'Unpaid'}
-              </Typo>
-            </TouchableOpacity>
+                <Typo
+                  size={14}
+                  color={
+                    currentStatus === 'unpaid' ? colors.white : colors.subtitleText
+                  }
+                  fontWeight="600"
+                >
+                  {t('unpaid') || 'Unpaid'}
+                </Typo>
+              </TouchableOpacity>
+            )}
 
             <TouchableOpacity
               style={[
                 styles.statusButton,
                 {
                   backgroundColor:
-                    bill.status === 'pending'
+                    currentStatus === 'pending'
                       ? colors.brightOrange
                       : colors.neutral700,
                 },
               ]}
               onPress={() => onStatusChange('pending')}
-              disabled={updatingStatus || bill.status === 'pending'}
+              disabled={updatingStatus || currentStatus === 'pending'}
             >
               <Typo
                 size={14}
                 color={
-                  bill.status === 'pending'
+                  currentStatus === 'pending'
                     ? colors.white
                     : colors.subtitleText
                 }
@@ -185,16 +199,16 @@ export default function ChangePaymentStatusModal({
                 styles.statusButton,
                 {
                   backgroundColor:
-                    bill.status === 'paid' ? colors.greenAdd : colors.neutral700,
+                    currentStatus === 'paid' ? colors.greenAdd : colors.neutral700,
                 },
               ]}
               onPress={() => onStatusChange('paid')}
-              disabled={updatingStatus || bill.status === 'paid'}
+              disabled={updatingStatus || currentStatus === 'paid'}
             >
               <Typo
                 size={14}
                 color={
-                  bill.status === 'paid' ? colors.white : colors.subtitleText
+                  currentStatus === 'paid' ? colors.white : colors.subtitleText
                 }
                 fontWeight="600"
               >

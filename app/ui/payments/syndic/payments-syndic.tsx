@@ -4,7 +4,7 @@ import { radius, spacingX, spacingY } from '@/constants/theme';
 import { useRTL } from '@/contexts/RTLContext';
 import useThemeColors from '@/contexts/useThemeColors';
 import { router } from 'expo-router';
-import { CreditCard, Receipt } from 'phosphor-react-native';
+import { CreditCard, Money, Receipt } from 'phosphor-react-native';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -47,11 +47,11 @@ export default function PaymentsSyndic() {
 
           <TouchableOpacity
             onPress={() => router.push('/ui/payments/syndic/expenses/payments-expenses-list' as any)}
-            style={[styles.navItem, { backgroundColor: colors.neutral600 }]}
+            style={[styles.navItem, { backgroundColor: colors.neutral500 }]}
             activeOpacity={0.7}
           >
             <View style={[styles.navIconContainer, { backgroundColor: colors.neutral800 + '50' }]}>
-              <Receipt size={24} color={colors.brightOrange} weight="bold" />
+              <Receipt size={24} color={colors.neutral400 + '90'} weight="bold" />
             </View>
             <View style={styles.navContent}>
               <Typo size={18} color={colors.titleText} fontWeight="600">
@@ -62,6 +62,25 @@ export default function PaymentsSyndic() {
               </Typo>
             </View>
           </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => router.push('/ui/payments/syndic/remaining-payments/remaining-payments-list' as any)}
+            style={[styles.navItem, { backgroundColor: colors.green + '3a' }]}
+            activeOpacity={0.7}
+          >
+            <View style={[styles.navIconContainer, { backgroundColor: colors.neutral800 + '50' }]}>
+              <Money size={24} color={colors.green + '9a'} weight="bold" />
+            </View>
+            <View style={styles.navContent}>
+              <Typo size={18} color={colors.titleText} fontWeight="600">
+                {t('remainingPayments') || 'Remaining Payments'}
+              </Typo>
+              <Typo size={14} color={colors.subtitleText} style={styles.navSubtitle}>
+                {t('viewRemainingPayments') || 'View and manage remaining payments'}
+              </Typo>
+            </View>
+          </TouchableOpacity>
+
         </View>
       </View>
     </ScreenWrapper>

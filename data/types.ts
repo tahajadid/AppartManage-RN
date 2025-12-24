@@ -174,3 +174,17 @@ export interface Bill {
     date: string; // "MM-YYYY"
     listOfOperation: Operation[];
 }
+
+// Remaining Payment Types
+export interface RemainingPayment {
+    id: string;
+    apartmentId: string;
+    residentId: string;
+    residentName: string;
+    amount: number;
+    status: "pending" | "paid";
+    createdAt: string; // ISO timestamp
+    updatedAt: string; // ISO timestamp
+    createdBy: string; // userId
+    paidAt?: string; // ISO timestamp (when status becomes paid)
+}

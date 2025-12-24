@@ -252,7 +252,27 @@
   "closedIssue": "Closed",
   "reportedBy": "Reported by",
   "noResidents": "No residents found",
-  "all": "All"
+  "all": "All",
+  "remainingPayments": "Remaining Payments",
+  "remainingPaymentsDescription": "Pay or manage remaining balances",
+  "noRemainingMoneyToPay": "No remaining money to pay",
+  "remainingAmountToPay": "Remaining amount to pay",
+  "amountToPay": "Amount to Pay",
+  "maxAmount": "Maximum",
+  "pendingPayments": "Pending Payments",
+  "createPayment": "Create Payment",
+  "totalRemainingMoney": "Total Remaining Money",
+  "noResidentsWithRemaining": "No residents with remaining balance",
+  "residentsWithRemaining": "Residents with Remaining Balance",
+  "amountPaid": "Amount Paid",
+  "validate": "Validate",
+  "remainingPaymentCreated": "Remaining payment created successfully",
+  "paymentValidated": "Payment validated successfully",
+  "amountExceedsRemaining": "Amount cannot exceed remaining balance",
+  "remainingPayment": "Remaining Payment",
+  "viewRemainingPayments": "View and manage remaining payments",
+  "noRemainingPayments": "No remaining payments found",
+  "paymentStatusUpdated": "Payment status updated successfully"
 }
 
 
