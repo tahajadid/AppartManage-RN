@@ -5,12 +5,12 @@ import useThemeColors from '@/contexts/useThemeColors';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-  Modal,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  View
+    Modal,
+    Platform,
+    ScrollView,
+    StyleSheet,
+    TouchableOpacity,
+    View
 } from 'react-native';
 
 interface TimePickerProps {

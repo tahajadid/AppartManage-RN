@@ -247,7 +247,6 @@
   "noIssues": "لم يتم الإبلاغ عن أي مشاكل",
   "resolved": "تم الحل",
   "inProgress": "قيد التنفيذ",
-  "pending": "قيد الانتظار",
   "openIssue": "مفتوح",
   "closedIssue": "مغلق",
   "reportedBy": "تم الإبلاغ بواسطة",

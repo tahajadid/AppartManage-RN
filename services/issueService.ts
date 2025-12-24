@@ -1,5 +1,5 @@
 import { auth, firestore } from '@/config/firebase';
-import { doc, getDoc, setDoc, updateDoc, arrayUnion } from 'firebase/firestore';
+import { arrayUnion, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 
 export type IssueType = 'plumbing' | 'electrical' | 'heating' | 'elevator' | 'security' | 'cleaning' | 'other';
 
@@ -119,6 +119,76 @@ export async function getApartmentIssues(apartmentId: string): Promise<{
     };
   } catch (error: any) {
     console.log('Error fetching issues:', error);
+    return {
+      success: false,
+      error: 'An error occurred, please try again',
+    };
+  }
+}
+
+/**
+ * Update issue status
+ */
+export async function updateIssueStatus(
+  apartmentId: string,
+  issueId: string,
+  newStatus: 'open' | 'closed'
+): Promise<{
+  success: boolean;
+  error: string | null;
+}> {
+  try {
+    const user = auth.currentUser;
+    if (!user) {
+      return {
+        success: false,
+        error: 'User not authenticated',
+      };
+    }
+
+    const issuesDocRef = doc(firestore, 'issues', apartmentId);
+    const issuesDoc = await getDoc(issuesDocRef);
+
+    if (!issuesDoc.exists()) {
+      return {
+        success: false,
+        error: 'Issues document not found',
+      };
+    }
+
+    const data = issuesDoc.data();
+    const issues: Issue[] = data.issues || [];
+
+    // Find the issue
+    const issueIndex = issues.findIndex((issue) => issue.id === issueId);
+
+    if (issueIndex === -1) {
+      return {
+        success: false,
+        error: 'Issue not found',
+      };
+    }
+
+    // Update issue status
+    const updatedIssue: Issue = {
+      ...issues[issueIndex],
+      status: newStatus,
+      updatedAt: new Date().toISOString(),
+    };
+
+    issues[issueIndex] = updatedIssue;
+
+    await updateDoc(issuesDocRef, {
+      issues: issues,
+      updatedAt: new Date().toISOString(),
+    });
+
+    return {
+      success: true,
+      error: null,
+    };
+  } catch (error: any) {
+    console.log('Error updating issue status:', error);
     return {
       success: false,
       error: 'An error occurred, please try again',

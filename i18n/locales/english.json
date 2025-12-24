@@ -248,7 +248,6 @@
   "noIssues": "No issues reported",
   "resolved": "Resolved",
   "inProgress": "In Progress",
-  "pending": "Pending",
   "openIssue": "Open",
   "closedIssue": "Closed",
   "reportedBy": "Reported by",
