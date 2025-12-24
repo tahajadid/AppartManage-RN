@@ -1,18 +1,19 @@
 import AppHeader from '@/components/AppHeader';
+import InfoModal from '@/components/common/InfoModal';
+import ChangeIssueStatusModal from '@/components/issues/ChangeIssueStatusModal';
 import ScreenWrapper from '@/components/ScreenWrapper';
 import Typo from '@/components/Typo';
 import { radius, spacingX, spacingY } from '@/constants/theme';
 import { useOnboarding } from '@/contexts/onboardingContext';
 import { useRTL } from '@/contexts/RTLContext';
 import useThemeColors from '@/contexts/useThemeColors';
-import { getApartmentIssues, Issue } from '@/services/issueService';
+import { getApartmentIssues, Issue, updateIssueStatus } from '@/services/issueService';
 import { useFocusEffect } from 'expo-router';
 import {
     Broom,
     Elevator,
     Plug,
-    Shield,
-    Thermometer,
+    Shield, Swap, Thermometer,
     WarningCircle,
     Wrench
 } from 'phosphor-react-native';
@@ -23,6 +24,7 @@ import {
     Image as RNImage,
     ScrollView,
     StyleSheet,
+    TouchableOpacity,
     View
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -30,13 +32,20 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 export default function IssuesListScreen() {
   const colors = useThemeColors();
   const { isRTL } = useRTL();
-  const { apartmentId } = useOnboarding();
+  const { apartmentId, role } = useOnboarding();
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   
   const [issues, setIssues] = useState<Issue[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedIssue, setSelectedIssue] = useState<Issue | null>(null);
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [updatingStatus, setUpdatingStatus] = useState<boolean>(false);
+  const [errorModalVisible, setErrorModalVisible] = useState<boolean>(false);
+  const [errorModalMessage, setErrorModalMessage] = useState<string>('');
+
+  const isSyndic = role === 'syndic' || role === 'syndic_resident';
 
   useEffect(() => {
     if (apartmentId) {
@@ -131,6 +140,43 @@ export default function IssuesListScreen() {
     return `${day}/${month}/${year}`;
   };
 
+  const handleIssuePress = (issue: Issue) => {
+    if (isSyndic) {
+      setSelectedIssue(issue);
+      setModalVisible(true);
+    }
+  };
+
+  const handleStatusChange = async (newStatus: 'open' | 'closed') => {
+    if (!apartmentId || !selectedIssue) return;
+
+    setUpdatingStatus(true);
+
+    try {
+      const result = await updateIssueStatus(
+        apartmentId,
+        selectedIssue.id,
+        newStatus
+      );
+
+      if (result.success) {
+        setModalVisible(false);
+        setSelectedIssue(null);
+        // Reload issues to show updated status
+        await loadIssues();
+      } else {
+        setErrorModalMessage(result.error || 'Failed to update status');
+        setErrorModalVisible(true);
+      }
+    } catch (err: any) {
+      console.log('Error updating status:', err);
+      setErrorModalMessage(t('errorOccurred') || 'An error occurred, please try again');
+      setErrorModalVisible(true);
+    } finally {
+      setUpdatingStatus(false);
+    }
+  };
+
   if (loading) {
     return (
       <ScreenWrapper>
@@ -214,7 +260,9 @@ export default function IssuesListScreen() {
                           {t('reportedBy') || 'Reported by'}: {issue.nameOfReported}
                         </Typo>
                         
-                        <Typo size={14} color={colors.text} style={styles.description}>
+                        <Typo size={14} color={colors.text} 
+                        style={{ color: colors.text, lineHeight: 20, backgroundColor: colors.neutral700,
+                         borderRadius: radius._4, padding: spacingX._8}}>
                           {issue.description}
                         </Typo>
                         
@@ -235,12 +283,47 @@ export default function IssuesListScreen() {
                         </Typo>
                       </View>
                     </View>
+
+                    {isSyndic && (
+                      <TouchableOpacity
+                        onPress={() => handleIssuePress(issue)}
+                        style={[styles.changeStatusButton, { backgroundColor: colors.neutral400 }]}
+                        activeOpacity={0.7}
+                      >
+                        <Swap size={16} color={colors.white} weight="regular" />
+                        <Typo size={14} color={colors.white} fontWeight="600" style={styles.changeStatusText}>
+                          {t('changeState') || 'Change State'}
+                        </Typo>
+                      </TouchableOpacity>
+                    )}
                   </View>
                 );
               })}
             </View>
           )}
         </ScrollView>
+
+        {/* Change Issue Status Modal */}
+        <ChangeIssueStatusModal
+          visible={modalVisible}
+          issue={selectedIssue}
+          updatingStatus={updatingStatus}
+          onClose={() => {
+            setModalVisible(false);
+            setSelectedIssue(null);
+          }}
+          onStatusChange={handleStatusChange}
+        />
+
+        {/* Error Modal */}
+        <InfoModal
+          visible={errorModalVisible}
+          type="error"
+          title={t('error') || 'Error'}
+          message={errorModalMessage}
+          onClose={() => setErrorModalVisible(false)}
+          showCancel={false}
+        />
       </View>
     </ScreenWrapper>
   );
@@ -339,6 +422,19 @@ const styles = StyleSheet.create({
   },
   dateText: {
     marginTop: spacingY._5,
+  },
+  changeStatusButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: spacingY._8,
+    margin: spacingY._8,
+    paddingHorizontal: spacingX._16,
+    borderRadius: radius._10,
+    gap: spacingX._8,
+  },
+  changeStatusText: {
+    marginLeft: spacingX._5,
   },
 });
 

@@ -5,6 +5,7 @@ import { getResidentActionOptions } from '@/constants/addActionListHelper';
 import { radius, spacingX, spacingY } from '@/constants/theme';
 import { useRTL } from '@/contexts/RTLContext';
 import useThemeColors from '@/contexts/useThemeColors';
+import { router } from 'expo-router';
 import { Plus } from 'phosphor-react-native';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -24,9 +25,8 @@ export default function AddActionResidentScreen() {
   const actionOptions = getResidentActionOptions(t, colors);
 
   const handleActionPress = (route: string) => {
-    // Navigate to the corresponding screen (placeholder for now)
-    console.log('Navigate to:', route);
-    // router.push(route as any);
+    // Navigate to the corresponding screen
+    router.push(route as any);
   };
 
   return (

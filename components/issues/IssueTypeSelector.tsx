@@ -4,13 +4,13 @@ import { useRTL } from '@/contexts/RTLContext';
 import useThemeColors from '@/contexts/useThemeColors';
 import { IssueType } from '@/services/issueService';
 import {
-  Drop,
-  Elevator,
-  Flame,
-  Lock,
-  Plug,
-  Sparkle,
-  Wrench
+    Drop,
+    Elevator,
+    Flame,
+    Lock,
+    Plug,
+    Sparkle,
+    Wrench
 } from 'phosphor-react-native';
 import React from 'react';
 import { useTranslation } from 'react-i18next';

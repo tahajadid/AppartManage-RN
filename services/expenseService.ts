@@ -1,5 +1,5 @@
 import { auth, firestore } from '@/config/firebase';
-import { doc, getDoc, setDoc, updateDoc, arrayUnion } from 'firebase/firestore';
+import { arrayUnion, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 
 export type ExpenseType = 'electricity' | 'water' | 'elevator' | 'security' | 'clean' | 'other';
 
