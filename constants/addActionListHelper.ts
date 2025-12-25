@@ -19,7 +19,7 @@ export const getResidentActionOptions = (
       icon: Money,
       title: t('remainingPayments') || 'Remaining Payments',
       subtitle: t('remainingPaymentsDescription') || 'Pay or manage remaining balances',
-      route: '/ui/addAction/remainingPayments/remaining-payments',
+      route: '/ui/addAction/remainingPayments/remaining-payments-resident',
       iconColor: colors.green,
     },
     {
@@ -46,7 +46,7 @@ export const getSyndicActionOptions = (
       icon: Money,
       title: t('remainingPayments') || 'Remaining Payments',
       subtitle: t('remainingPaymentsDescription') || 'Manage remaining balances',
-      route: '/ui/addAction/remainingPayments/remaining-payments',
+      route: '/ui/addAction/remainingPayments/remaining-payments-syndic',
       iconColor: colors.green,
     },
     {
