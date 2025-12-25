@@ -34,7 +34,7 @@ export const colors = {
 
 export const lightTheme = {
     // primary colors
-    screenBackground: "#e5e5e5",
+    screenBackground: "#f0eded",
     primary: "#427DBD",
     primaryLight: "#6DA6E3",
     primaryDark: "#3269A6",
@@ -65,6 +65,7 @@ export const lightTheme = {
     neutral900: "#F9F9F9",
     neutral850: "#f0f0f0",
     neutral800: "#f5f5f5",
+    neutral750: "#e9e9e9",
     neutral700: "#e5e5e5",
     neutral600: "#d4d4d4",
     neutral500: "#CCCCCC",
@@ -146,6 +147,7 @@ export const lightTheme = {
     neutral900: "#121010",
     neutral850: "#1F1E1E",
     neutral800: "#2E2E2E",
+    neutral750: "#2d2d2d",
     neutral700: "#404040",
     neutral600: "#525252",
     neutral500: "#737373",

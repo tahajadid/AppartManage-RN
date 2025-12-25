@@ -245,6 +245,7 @@
   "apartmentIssues": "مشاكل الشقة",
   "viewIssues": "عرض جميع المشاكل المبلغ عنها",
   "noIssues": "لم يتم الإبلاغ عن أي مشاكل",
+  "noIssuesFound": "لم يتم العثور على مشاكل",
   "resolved": "تم الحل",
   "inProgress": "قيد التنفيذ",
   "openIssue": "مفتوح",

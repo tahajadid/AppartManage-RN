@@ -246,6 +246,7 @@
   "apartmentIssues": "Apartment Issues",
   "viewIssues": "View all reported issues",
   "noIssues": "No issues reported",
+  "noIssuesFound": "No issues found",
   "resolved": "Resolved",
   "inProgress": "In Progress",
   "openIssue": "Open",

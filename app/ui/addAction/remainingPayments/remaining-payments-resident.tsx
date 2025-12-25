@@ -201,12 +201,7 @@ export default function RemainingPaymentsResidentScreen() {
             )}
 
             {residentRemainingAmount <= 0 ? (
-              <View style={styles.emptyContainer}>
-                <Money size={48} color={colors.subtitleText} weight="regular" />
-                <Typo size={16} color={colors.subtitleText} style={styles.emptyText}>
-                  {t('noRemainingMoneyToPay') || 'No remaining money to pay'}
-                </Typo>
-              </View>
+              <EmptyState message={t('noRemainingMoneyToPay') || 'No remaining money to pay'} />
             ) : (
               <>
                 <View style={[styles.summaryCard, { backgroundColor: colors.neutral800 }]}>
@@ -308,16 +303,6 @@ const styles = StyleSheet.create({
     padding: spacingX._12,
     borderRadius: radius._8,
     marginBottom: spacingY._16,
-  },
-  emptyContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: spacingY._40,
-    gap: spacingY._12,
-  },
-  emptyText: {
-    marginTop: spacingY._8,
-    textAlign: 'center',
   },
   summaryCard: {
     padding: spacingX._20,

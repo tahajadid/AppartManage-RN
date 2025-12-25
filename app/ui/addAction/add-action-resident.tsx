@@ -29,11 +29,16 @@ export default function AddActionResidentScreen() {
     router.push(route as any);
   };
 
+  const handleBack = () => {
+    // Navigate directly to home instead of going back through add-action screen
+    router.replace('/(home)' as any);
+  };
+
   return (
     <ScreenWrapper>
       <View style={[styles.container, { backgroundColor: colors.screenBackground, direction: isRTL ? 'rtl' : 'ltr' }]}>
         {/* Header */}
-        <AppHeader title={t('addAction') || 'Add Action'} />
+        <AppHeader title={t('addAction') || 'Add Action'} onBack={handleBack} />
 
         {/* Content */}
         <ScrollView contentContainerStyle={[styles.scrollContent, { direction: isRTL ? 'rtl' : 'ltr' }]}>

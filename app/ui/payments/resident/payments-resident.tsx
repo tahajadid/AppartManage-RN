@@ -1,4 +1,5 @@
 import RequestPaymentModal from '@/app/ui/payments/resident/RequestPaymentModal';
+import EmptyState from '@/components/common/EmptyState';
 import InfoModal from '@/components/common/InfoModal';
 import ScreenWrapper from '@/components/ScreenWrapper';
 import Typo from '@/components/Typo';
@@ -505,11 +506,7 @@ export default function PaymentsResident() {
             const filteredItems = getFilteredItems();
             if (filteredItems.length === 0) {
               return (
-                <View style={styles.emptyContainer}>
-                  <Typo size={16} color={colors.subtitleText}>
-                    {t('noBills') || 'No payments found'}
-                  </Typo>
-                </View>
+                <EmptyState message={t('noBills') || 'No payments found'} />
               );
             }
             
@@ -684,12 +681,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: spacingX._20,
   },
-  emptyContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: spacingY._40,
-  },
   billCard: {
     borderRadius: radius._12,
     marginBottom: spacingY._8,
@@ -748,11 +739,11 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   filterButton: {
-    paddingHorizontal: spacingX._16,
+    paddingHorizontal: spacingX._8,
     paddingVertical: spacingY._8,
     borderRadius: radius._8,
     borderWidth: 1,
-    minWidth: 100,
+    minWidth: 80,
     alignItems: 'center',
   },
 });
