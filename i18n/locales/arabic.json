@@ -256,7 +256,6 @@
   "remainingPaymentsDescription": "دفع أو إدارة الأرصدة المتبقية",
   "noRemainingMoneyToPay": "لا يوجد مبلغ متبقي للدفع",
   "remainingAmountToPay": "المبلغ المتبقي للدفع",
-  "amountToPay": "المبلغ المطلوب دفعه",
   "maxAmount": "الحد الأقصى",
   "pendingPayments": "المدفوعات المعلقة",
   "createPayment": "إنشاء دفعة",
@@ -271,7 +270,12 @@
   "remainingPayment": "دفعة متبقية",
   "viewRemainingPayments": "عرض وإدارة المدفوعات المتبقية",
   "noRemainingPayments": "لم يتم العثور على مدفوعات متبقية",
-  "paymentStatusUpdated": "تم تحديث حالة الدفعة بنجاح"
+  "paymentStatusUpdated": "تم تحديث حالة الدفعة بنجاح",
+  "meetings": "الاجتماعات",
+  "meeting": "اجتماع",
+  "viewMeetings": "عرض جميع الاجتماعات المجدولة",
+  "noMeetings": "لا توجد اجتماعات مجدولة",
+  "reason": "السبب"
 }
 
 

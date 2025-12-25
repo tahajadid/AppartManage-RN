@@ -99,8 +99,8 @@
   "meetingPlace": "Lieu de la réunion",
   "meetingPlacePlaceholder": "Entrez le lieu de la réunion",
   "meetingPlaceRequired": "Veuillez entrer un lieu pour la réunion",
-  "meetingDate": "Date de la réunion",
-  "meetingTime": "Heure de la réunion",
+  "meetingDate": "Date",
+  "meetingTime": "Heure",
   "selectTime": "Sélectionner l'heure",
   "hour": "Heure",
   "minute": "Minute",
@@ -212,7 +212,6 @@
   "deleteExpenseConfirmation": "Êtes-vous sûr de vouloir supprimer cette dépense {{type}} de {{amount}} MAD ?",
   "deleteExpenseConfirmationGeneric": "Êtes-vous sûr de vouloir supprimer cette dépense ?",
   "requestPaymentMessage": "Veuillez transférer le montant du paiement au syndic. Une fois le transfert terminé, cliquez sur confirmer pour notifier le syndic.",
-  "amountToPay": "Montant à payer",
   "confirm": "Confirmer",
   "expenseDetails": "Détails de la dépense",
   "expenseUpdated": "Dépense mise à jour avec succès",
@@ -272,6 +271,11 @@
   "remainingPayment": "Paiement restant",
   "viewRemainingPayments": "Voir et gérer les paiements restants",
   "noRemainingPayments": "Aucun paiement restant trouvé",
-  "paymentStatusUpdated": "Statut du paiement mis à jour avec succès"
+  "paymentStatusUpdated": "Statut du paiement mis à jour avec succès",
+  "meetings": "Réunions",
+  "meeting": "Réunion",
+  "viewMeetings": "Voir toutes les réunions programmées",
+  "noMeetings": "Aucune réunion programmée",
+  "reason": "Raison"
 }
 

@@ -99,8 +99,8 @@
   "meetingPlace": "Place of Meeting",
   "meetingPlacePlaceholder": "Enter place of meeting",
   "meetingPlaceRequired": "Please enter a place for the meeting",
-  "meetingDate": "Date of Meeting",
-  "meetingTime": "Time of Meeting",
+  "meetingDate": "Date",
+  "meetingTime": "Time",
   "selectTime": "Select Time",
   "hour": "Hour",
   "minute": "Minute",
@@ -257,7 +257,6 @@
   "remainingPaymentsDescription": "Pay or manage remaining balances",
   "noRemainingMoneyToPay": "No remaining money to pay",
   "remainingAmountToPay": "Remaining amount to pay",
-  "amountToPay": "Amount to Pay",
   "maxAmount": "Maximum",
   "pendingPayments": "Pending Payments",
   "createPayment": "Create Payment",
@@ -272,7 +271,12 @@
   "remainingPayment": "Remaining Payment",
   "viewRemainingPayments": "View and manage remaining payments",
   "noRemainingPayments": "No remaining payments found",
-  "paymentStatusUpdated": "Payment status updated successfully"
+  "paymentStatusUpdated": "Payment status updated successfully",
+  "meetings": "Meetings",
+  "meeting": "Meeting",
+  "viewMeetings": "View all scheduled meetings",
+  "noMeetings": "No meetings scheduled",
+  "reason": "Reason"
 }
 
 
