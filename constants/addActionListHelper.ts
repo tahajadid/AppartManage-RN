@@ -1,7 +1,7 @@
 import { ActionOption } from '@/data/types';
 import {
   Calendar,
-  CreditCard,
+  Money,
   Receipt,
   WarningCircle
 } from 'phosphor-react-native';
@@ -15,11 +15,11 @@ export const getResidentActionOptions = (
 ): ActionOption[] => {
   return [
     {
-      id: 'add-payment',
-      icon: CreditCard,
-      title: t('addPayment') || 'Add Payment',
-      subtitle: t('addPaymentDescription') || 'Record a payment you made',
-      route: '/(home)/payments/add-payment',
+      id: 'remaining-payments',
+      icon: Money,
+      title: t('remainingPayments') || 'Remaining Payments',
+      subtitle: t('remainingPaymentsDescription') || 'Pay or manage remaining balances',
+      route: '/ui/addAction/remainingPayments/remaining-payments-resident',
       iconColor: colors.green,
     },
     {
@@ -29,7 +29,7 @@ export const getResidentActionOptions = (
       subtitle: t('addIssueDescription') || 'Report an apartment issue or problem',
       route: '/ui/addAction/issues/add-issue',
       iconColor: colors.rose,
-    },
+    }
   ];
 };
 
@@ -42,11 +42,11 @@ export const getSyndicActionOptions = (
 ): ActionOption[] => {
   return [
     {
-      id: 'add-payment',
-      icon: CreditCard,
-      title: t('addPaymentForResident') || 'Add Payment for Resident',
-      subtitle: t('addPaymentForResidentDescription') || 'Record a payment made by a resident',
-      route: '/(home)/payments/add-payment',
+      id: 'remaining-payments',
+      icon: Money,
+      title: t('remainingPayments') || 'Remaining Payments',
+      subtitle: t('remainingPaymentsDescription') || 'Manage remaining balances',
+      route: '/ui/addAction/remainingPayments/remaining-payments-syndic',
       iconColor: colors.green,
     },
     {

@@ -216,6 +216,7 @@ export const spacingX = {
 
 export const spacingY = {
     _1: verticalScale(1),
+    _2: verticalScale(2),
     _5: verticalScale(5),
     _7: verticalScale(7), 
     _8: verticalScale(8), 

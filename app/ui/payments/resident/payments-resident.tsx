@@ -7,9 +7,11 @@ import { useAuth } from '@/contexts/authContext';
 import { useOnboarding } from '@/contexts/onboardingContext';
 import { useRTL } from '@/contexts/RTLContext';
 import useThemeColors from '@/contexts/useThemeColors';
+import { RemainingPayment } from '@/data/types';
 import i18n from '@/i18n/index';
 import { getApartmentData } from '@/services/apartmentService';
 import { Bill, getApartmentBills, getCurrentDate, requestPayment } from '@/services/paymentService';
+import { getResidentRemainingPayments } from '@/services/remainingPaymentService';
 import { useFocusEffect } from 'expo-router';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -27,6 +29,10 @@ interface BillWithResidentName extends Bill {
   residentName: string;
 }
 
+type PaymentItem = 
+  | { type: 'bill'; data: BillWithResidentName }
+  | { type: 'remaining'; data: RemainingPayment };
+
 export default function PaymentsResident() {
   const colors = useThemeColors();
   const { isRTL } = useRTL();
@@ -36,6 +42,8 @@ export default function PaymentsResident() {
   const insets = useSafeAreaInsets();
 
   const [bills, setBills] = useState<BillWithResidentName[]>([]);
+  const [remainingPayments, setRemainingPayments] = useState<RemainingPayment[]>([]);
+  const [paymentItems, setPaymentItems] = useState<PaymentItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [residentId, setResidentId] = useState<string | null>(null);
@@ -140,8 +148,42 @@ export default function PaymentsResident() {
       billsWithNames.sort((a, b) => b.date.localeCompare(a.date));
 
       setBills(billsWithNames);
+
+      // Get remaining payments for this resident
+      const remainingPaymentsResult = await getResidentRemainingPayments(apartmentId, residentIdToLoad);
+      
+      if (remainingPaymentsResult.success && remainingPaymentsResult.payments) {
+        // Sort by creation date (newest first)
+        const sortedRemaining = [...remainingPaymentsResult.payments].sort((a, b) => 
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+        setRemainingPayments(sortedRemaining);
+      } else {
+        setRemainingPayments([]);
+      }
+
+      // Combine bills and remaining payments into unified list
+      const combinedItems: PaymentItem[] = [
+        ...billsWithNames.map((bill) => ({ type: 'bill' as const, data: bill })),
+        ...(remainingPaymentsResult.success && remainingPaymentsResult.payments 
+          ? remainingPaymentsResult.payments.map((payment) => ({ type: 'remaining' as const, data: payment }))
+          : [])
+      ];
+
+      // Sort by date (newest first) - for bills use date field, for remaining payments use createdAt
+      combinedItems.sort((a, b) => {
+        const dateA = a.type === 'bill' 
+          ? a.data.date 
+          : new Date(a.data.createdAt).toISOString().split('T')[0];
+        const dateB = b.type === 'bill' 
+          ? b.data.date 
+          : new Date(b.data.createdAt).toISOString().split('T')[0];
+        return dateB.localeCompare(dateA);
+      });
+
+      setPaymentItems(combinedItems);
     } catch (err: any) {
-      console.log('Error loading bills:', err);
+      console.log('Error loading payments:', err);
       setError('An error occurred, please try again');
     } finally {
       setLoading(false);
@@ -174,48 +216,56 @@ export default function PaymentsResident() {
     return date.toLocaleDateString(locale, { month: 'long', year: 'numeric' });
   };
 
-  // Filter bills based on selected filter
-  const getFilteredBills = (): BillWithResidentName[] => {
+  // Filter payment items based on selected filter
+  const getFilteredItems = (): PaymentItem[] => {
     if (selectedFilter === 'all') {
-      return bills;
+      return paymentItems;
     }
-    return bills.filter((bill) => bill.status === selectedFilter);
+    return paymentItems.filter((item) => {
+      if (item.type === 'bill') {
+        return item.data.status === selectedFilter;
+      } else {
+        // For remaining payments, map 'unpaid' to 'pending' since remaining payments only have pending/paid
+        if (selectedFilter === 'unpaid') {
+          return item.data.status === 'pending';
+        }
+        return item.data.status === selectedFilter;
+      }
+    });
   };
 
-  // Group bills by month
-  const groupBillsByMonth = (bills: BillWithResidentName[]): Map<string, BillWithResidentName[]> => {
-    const grouped = new Map<string, BillWithResidentName[]>();
+  // Group payment items by month/date
+  const groupPaymentItems = (items: PaymentItem[]): Map<string, PaymentItem[]> => {
+    const grouped = new Map<string, PaymentItem[]>();
     
-    bills.forEach((bill) => {
-      const monthKey = bill.date; // "MM-YYYY"
+    items.forEach((item) => {
+      let monthKey: string;
+      if (item.type === 'bill') {
+        monthKey = item.data.date; // "MM-YYYY"
+      } else {
+        // For remaining payments, use the month from createdAt
+        const date = new Date(item.data.createdAt);
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        monthKey = `${month}-${year}`;
+      }
+      
       if (!grouped.has(monthKey)) {
         grouped.set(monthKey, []);
       }
-      grouped.get(monthKey)!.push(bill);
+      grouped.get(monthKey)!.push(item);
     });
     
-    // Sort bills within each month by last operation date (newest first)
-    grouped.forEach((monthBills) => {
-      monthBills.sort((a, b) => {
-        // Get the last operation date from each bill
-        const lastOpA = a.listOfOperation && a.listOfOperation.length > 0 
-          ? a.listOfOperation[a.listOfOperation.length - 1].date 
-          : '';
-        const lastOpB = b.listOfOperation && b.listOfOperation.length > 0 
-          ? b.listOfOperation[b.listOfOperation.length - 1].date 
-          : '';
-        
-        // Sort by last operation date (newest first)
-        if (lastOpA && lastOpB) {
-          // Convert "DD-MM-YYYY" to comparable format
-          const dateA = lastOpA.split('-').reverse().join('-'); // "YYYY-MM-DD"
-          const dateB = lastOpB.split('-').reverse().join('-'); // "YYYY-MM-DD"
-          if (dateA !== dateB) {
-            return dateB.localeCompare(dateA); // Newest first
-          }
-        }
-        // If no operations or dates are equal, maintain original order
-        return 0;
+    // Sort items within each month by date (newest first)
+    grouped.forEach((monthItems) => {
+      monthItems.sort((a, b) => {
+        const dateA = a.type === 'bill' 
+          ? a.data.date 
+          : new Date(a.data.createdAt).toISOString();
+        const dateB = b.type === 'bill' 
+          ? b.data.date 
+          : new Date(b.data.createdAt).toISOString();
+        return dateB.localeCompare(dateA);
       });
     });
     
@@ -263,6 +313,11 @@ export default function PaymentsResident() {
             return bill;
           });
         });
+
+        // Reload payment items to reflect the update
+        if (residentId) {
+          await loadBillsForResident(residentId);
+        }
 
         setRequestModalVisible(false);
         setSelectedBill(null);
@@ -447,54 +502,52 @@ export default function PaymentsResident() {
           </View>
 
           {(() => {
-            const filteredBills = getFilteredBills();
-            if (filteredBills.length === 0) {
+            const filteredItems = getFilteredItems();
+            if (filteredItems.length === 0) {
               return (
                 <View style={styles.emptyContainer}>
                   <Typo size={16} color={colors.subtitleText}>
-                    {t('noBills') || 'No bills found'}
+                    {t('noBills') || 'No payments found'}
                   </Typo>
                 </View>
               );
             }
             
-            const groupedBills = groupBillsByMonth(filteredBills);
-            <View style={styles.emptyContainer}>
-              <Typo size={16} color={colors.subtitleText}>
-                {t('noBills') || 'No bills found'}
-              </Typo>
-            </View>
+            const groupedItems = groupPaymentItems(filteredItems);
+            
             // Sort months (newest first) - properly sort by year then month
-            const sortedMonths = Array.from(groupedBills.keys()).sort((a, b) => {
-                const [monthA, yearA] = a.split('-').map(Number);
-                const [monthB, yearB] = b.split('-').map(Number);
-                
-                // First compare by year (newest first)
-                if (yearB !== yearA) {
-                  return yearB - yearA;
-                }
-                // Then by month (newest first)
-                return monthB - monthA;
-              });
+            const sortedMonths = Array.from(groupedItems.keys()).sort((a, b) => {
+              const [monthA, yearA] = a.split('-').map(Number);
+              const [monthB, yearB] = b.split('-').map(Number);
+              
+              // First compare by year (newest first)
+              if (yearB !== yearA) {
+                return yearB - yearA;
+              }
+              // Then by month (newest first)
+              return monthB - monthA;
+            });
 
-              return sortedMonths.map((monthKey) => {
-                const monthBills = groupedBills.get(monthKey)!;
-                const monthTitle = formatMonthYear(monthKey);
+            return sortedMonths.map((monthKey) => {
+              const monthItems = groupedItems.get(monthKey)!;
+              const monthTitle = formatMonthYear(monthKey);
 
-                return (
-                  <View key={monthKey} style={styles.monthSection}>
-                    <View style={styles.monthHeader}>
-                      <Typo size={18} color={colors.text} fontWeight="600">
-                        {monthTitle}
-                      </Typo>
-                      <View style={{height: spacingY._1, backgroundColor: colors.text, marginTop: spacingX._3, marginHorizontal:spacingX._20}} />
-                    </View>
-                    {monthBills.map((bill, index) => {
+              return (
+                <View key={monthKey} style={styles.monthSection}>
+                  <View style={styles.monthHeader}>
+                    <Typo size={18} color={colors.text} fontWeight="600">
+                      {monthTitle}
+                    </Typo>
+                    <View style={{height: spacingY._1, backgroundColor: colors.text, marginTop: spacingX._3, marginHorizontal:spacingX._20}} />
+                  </View>
+                  {monthItems.map((item, index) => {
+                    if (item.type === 'bill') {
+                      const bill = item.data;
                       const statusColor = getStatusColor(bill.status);
 
                       return (
                         <View
-                          key={`${bill.ownerOfBill}-${bill.date}-${index}`}
+                          key={`bill-${bill.ownerOfBill}-${bill.date}-${index}`}
                           style={[styles.billCard, { backgroundColor: colors.neutral800 }]}
                         >
                           <View style={[styles.billContent, { backgroundColor: colors.neutral800 }]}>
@@ -531,10 +584,48 @@ export default function PaymentsResident() {
                           )}
                         </View>
                       );
-                    })}
-                  </View>
-                );
-              });
+                    } else {
+                      const payment = item.data;
+                      const statusColor = payment.status === 'paid' ? colors.greenAdd : colors.brightOrange;
+                      const statusLabel = payment.status === 'paid' 
+                        ? (t('paid') || 'Paid') 
+                        : (t('pending') || 'Pending');
+
+                      return (
+                        <View
+                          key={`remaining-${payment.id}-${index}`}
+                          style={[styles.billCard, { backgroundColor: colors.neutral800 }]}
+                        >
+                          <View style={[styles.billContent, { backgroundColor: colors.neutral800 }]}>
+                            <View style={styles.billHeader}>
+                              <View style={styles.billInfo}>
+                                <Typo size={18} color={colors.primaryBigTitle} fontWeight="600">
+                                  {t('remainingPayment') || 'Remaining Payment'}
+                                </Typo>
+                              </View>
+                              <View style={[styles.statusBadge, { backgroundColor: statusColor + '20' }]}>
+                                <Typo size={12} color={statusColor} fontWeight="600">
+                                  {statusLabel}
+                                </Typo>
+                              </View>
+                            </View>
+
+                            <View>
+                              <Typo size={18} color={colors.text} fontWeight="700">
+                                {payment.amount} MAD
+                              </Typo>
+                              <Typo size={12} color={colors.subtitleText} style={{ marginTop: spacingY._5 }}>
+                                {new Date(payment.createdAt).toLocaleDateString()}
+                              </Typo>
+                            </View>
+                          </View>
+                        </View>
+                      );
+                    }
+                  })}
+                </View>
+              );
+            });
           })()}
         </ScrollView>
 

@@ -8,7 +8,7 @@ import useThemeColors from '@/contexts/useThemeColors';
 import { getApartmentData, Resident } from '@/services/apartmentService';
 import { scale } from '@/utils/styling';
 import { router, useFocusEffect } from 'expo-router';
-import { HouseLineIcon, Users, WarningCircle } from 'phosphor-react-native';
+import { Calendar, HouseLineIcon, Users, WarningCircle } from 'phosphor-react-native';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -156,13 +156,13 @@ export default function ApartmentListResident() {
 
           {/* List of Residents Section */}
           <TouchableOpacity
-            style={[styles.sectionCard, { backgroundColor: colors.primary + '20' }]}
+            style={[styles.sectionCard, { backgroundColor: colors.neutral800 }]}
             onPress={() => router.push('/ui/apartment/list-of-residents')}
             activeOpacity={0.7}
           >
             <View style={styles.sectionContent}>
-              <View style={[styles.sectionIconContainer, { backgroundColor: colors.primary + '20' }]}>
-                <Users size={24} color={colors.primary} weight="regular" />
+              <View style={[styles.sectionIconContainer, { backgroundColor: colors.green + '20' }]}>
+                <Users size={24} color={colors.green} weight="regular" />
               </View>
               <View style={styles.sectionTextContainer}>
                 <Typo size={16} color={colors.titleText} fontWeight="600">
@@ -178,7 +178,7 @@ export default function ApartmentListResident() {
 
           {/* Apartment Issues Section */}
           <TouchableOpacity
-            style={[styles.sectionCard, { backgroundColor: colors.rose + '20' }]}
+            style={[styles.sectionCard, { backgroundColor: colors.neutral800 }]}
             onPress={() => router.push('/ui/apartment/issues-list')}
             activeOpacity={0.7}
           >
@@ -197,6 +197,29 @@ export default function ApartmentListResident() {
             </View>
             <Typo size={18} color={colors.subtitleText}>›</Typo>
           </TouchableOpacity>
+
+          {/* Meetings Section */}
+          <TouchableOpacity
+            style={[styles.sectionCard, { backgroundColor: colors.neutral800 }]}
+            onPress={() => router.push('/ui/apartment/meetings-list')}
+            activeOpacity={0.7}
+          >
+            <View style={styles.sectionContent}>
+              <View style={[styles.sectionIconContainer, { backgroundColor: colors.primary + '20' }]}>
+                <Calendar size={24} color={colors.primary} weight="regular" />
+              </View>
+              <View style={styles.sectionTextContainer}>
+                <Typo size={16} color={colors.titleText} fontWeight="600">
+                  {t('meetings')}
+                </Typo>
+                <Typo size={14} color={colors.subtitleText}>
+                  {t('viewMeetings') || 'View all scheduled meetings'}
+                </Typo>
+              </View>
+            </View>
+            <Typo size={18} color={colors.subtitleText}>›</Typo>
+          </TouchableOpacity>
+          
         </ScrollView>
       </View>
     </ScreenWrapper>
