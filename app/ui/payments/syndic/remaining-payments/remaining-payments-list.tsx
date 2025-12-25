@@ -1,5 +1,6 @@
 import ChangePaymentStatusModal from '@/app/ui/payments/syndic/bills/changePaymentStatusModal';
 import AppHeader from '@/components/AppHeader';
+import EmptyState from '@/components/common/EmptyState';
 import InfoModal from '@/components/common/InfoModal';
 import ScreenWrapper from '@/components/ScreenWrapper';
 import Typo from '@/components/Typo';
@@ -14,12 +15,12 @@ import { Swap } from 'phosphor-react-native';
 import React, { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-    ActivityIndicator,
-    Platform,
-    ScrollView,
-    StyleSheet,
-    TouchableOpacity,
-    View
+  ActivityIndicator,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -244,11 +245,7 @@ export default function RemainingPaymentsListScreen() {
             
             if (filteredPayments.length === 0) {
               return (
-                <View style={styles.emptyContainer}>
-                  <Typo size={16} color={colors.subtitleText}>
-                    {t('noRemainingPayments') || 'No remaining payments found'}
-                  </Typo>
-                </View>
+                <EmptyState message={t('noRemainingPayments') || 'No remaining payments found'} />
               );
             }
 
@@ -355,12 +352,6 @@ const styles = StyleSheet.create({
     padding: spacingX._12,
     borderRadius: radius._8,
     marginBottom: spacingY._16,
-  },
-  emptyContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: spacingY._40,
   },
   paymentCard: {
     borderRadius: radius._12,

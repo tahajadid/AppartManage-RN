@@ -1,4 +1,5 @@
 import AppHeader from '@/components/AppHeader';
+import EmptyState from '@/components/common/EmptyState';
 import InfoModal from '@/components/common/InfoModal';
 import ScreenWrapper from '@/components/ScreenWrapper';
 import Typo from '@/components/Typo';
@@ -378,11 +379,7 @@ export default function PaymentsBillsScreen() {
             const filteredBills = getFilteredBills();
             if (filteredBills.length === 0) {
               return (
-                <View style={styles.emptyContainer}>
-                  <Typo size={16} color={colors.subtitleText}>
-                    {t('noBills') || 'No bills found'}
-                  </Typo>
-                </View>
+                <EmptyState message={t('noBills') || 'No bills found'} />
               );
             }
             
@@ -446,8 +443,8 @@ export default function PaymentsBillsScreen() {
                             style={[styles.changeStateButton, { backgroundColor: colors.goldLightBackground }]}
                             activeOpacity={0.7}
                           >
-                            <Swap size={22} color={colors.text} weight="regular" />
-                            <Typo size={16} color={colors.text} fontWeight="600">
+                            <Swap size={16} color={colors.text} weight="regular" />
+                            <Typo size={14} color={colors.text} fontWeight="600">
                               {t('changeState') || 'Change State'}
                             </Typo>
                           </TouchableOpacity>
@@ -515,12 +512,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: spacingX._20,
   },
-  emptyContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: spacingY._40,
-  },
   billCard: {
     borderRadius: radius._12,
     marginBottom: spacingY._8,
@@ -579,11 +570,11 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   filterButton: {
-    paddingHorizontal: spacingX._16,
+    paddingHorizontal: spacingX._8,
     paddingVertical: spacingY._8,
     borderRadius: radius._8,
     borderWidth: 1,
-    minWidth: 100,
+    minWidth: 80,
     alignItems: 'center',
   },
 });

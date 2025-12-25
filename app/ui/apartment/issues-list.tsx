@@ -1,4 +1,5 @@
 import AppHeader from '@/components/AppHeader';
+import EmptyState from '@/components/common/EmptyState';
 import InfoModal from '@/components/common/InfoModal';
 import ChangeIssueStatusModal from '@/components/issues/ChangeIssueStatusModal';
 import ScreenWrapper from '@/components/ScreenWrapper';
@@ -220,12 +221,7 @@ export default function IssuesListScreen() {
           showsVerticalScrollIndicator={false}
         >
           {issues.length === 0 ? (
-            <View style={styles.emptyContainer}>
-              <WarningCircle size={48} color={colors.subtitleText} weight="regular" />
-              <Typo size={16} color={colors.subtitleText} style={styles.emptyText}>
-                {t('noIssues') || 'No issues reported'}
-              </Typo>
-            </View>
+            <EmptyState message={t('noIssuesFound') || 'No issues found'} />
           ) : (
             <View style={styles.issuesList}>
               {issues.map((issue) => {
@@ -243,7 +239,7 @@ export default function IssuesListScreen() {
                             <View style={[styles.iconContainer, { backgroundColor: colors.primary + '20' }]}>
                               {getIssueTypeIcon(issue.type)}
                             </View>
-                            <Typo size={18} color={colors.primaryBigTitle} fontWeight="600">
+                            <Typo size={18} color={colors.primary} fontWeight="600">
                               {getIssueTypeLabel(issue.type)}
                             </Typo>
                           </View>
@@ -261,7 +257,7 @@ export default function IssuesListScreen() {
                         </Typo>
                         
                         <Typo size={14} color={colors.text} 
-                        style={{ color: colors.text, lineHeight: 20, backgroundColor: colors.neutral700,
+                        style={{ color: colors.text, lineHeight: 20, backgroundColor: colors.neutral850,
                          borderRadius: radius._4, padding: spacingX._8}}>
                           {issue.description}
                         </Typo>
@@ -278,7 +274,7 @@ export default function IssuesListScreen() {
                           </View>
                         )}
                         
-                        <Typo size={12} color={colors.primary} style={styles.dateText}>
+                        <Typo size={12} color={colors.primaryBigTitle} style={styles.dateText}>
                           {formatDate(issue.createdAt)}
                         </Typo>
                       </View>
@@ -351,16 +347,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: spacingX._20,
-  },
-  emptyContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: spacingY._40,
-    gap: spacingY._12,
-  },
-  emptyText: {
-    marginTop: spacingY._8,
   },
   issuesList: {
     gap: spacingY._16,

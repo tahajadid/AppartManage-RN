@@ -245,6 +245,7 @@
   "apartmentIssues": "Problèmes de l'appartement",
   "viewIssues": "Voir tous les problèmes signalés",
   "noIssues": "Aucun problème signalé",
+  "noIssuesFound": "Aucun problème trouvé",
   "resolved": "Résolu",
   "inProgress": "En cours",
   "openIssue": "Ouvert",

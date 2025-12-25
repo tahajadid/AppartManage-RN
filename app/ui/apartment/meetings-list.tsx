@@ -1,4 +1,5 @@
 import AppHeader from '@/components/AppHeader';
+import EmptyState from '@/components/common/EmptyState';
 import ScreenWrapper from '@/components/ScreenWrapper';
 import Typo from '@/components/Typo';
 import { radius, spacingX, spacingY } from '@/constants/theme';
@@ -117,12 +118,7 @@ export default function MeetingsListScreen() {
           )}
 
           {meetings.length === 0 ? (
-            <View style={styles.emptyContainer}>
-              <Calendar size={48} color={colors.subtitleText} weight="regular" />
-              <Typo size={16} color={colors.subtitleText} style={styles.emptyText}>
-                {t('noMeetings') || 'No meetings scheduled'}
-              </Typo>
-            </View>
+            <EmptyState message={t('noMeetings') || 'No meetings scheduled'} />
           ) : (
             <View style={styles.meetingsList}>
               {meetings.map((meeting) => (
@@ -207,16 +203,6 @@ const styles = StyleSheet.create({
     padding: spacingX._12,
     borderRadius: radius._8,
     marginBottom: spacingY._16,
-  },
-  emptyContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: spacingY._40,
-    gap: spacingY._12,
-  },
-  emptyText: {
-    marginTop: spacingY._8,
-    textAlign: 'center',
   },
   meetingsList: {
     gap: spacingY._12,

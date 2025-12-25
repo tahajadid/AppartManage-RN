@@ -29,14 +29,14 @@ export default function PaymentsSyndic() {
         <View style={styles.navigationContainer}>
           <TouchableOpacity
             onPress={() => router.push('/ui/payments/syndic/bills/payments-bills' as any)}
-            style={[styles.navItem, { backgroundColor: colors.goldLightBackground}]}
+            style={[styles.navItem, { backgroundColor: colors.neutral800 }]}
             activeOpacity={0.7}
           >
-            <View style={[styles.navIconContainer, { backgroundColor: colors.neutral800 + '50' }]}>
+            <View style={[styles.navIconContainer, { backgroundColor: colors.white  }]}>
               <CreditCard size={24} color={colors.brightOrange} weight="bold" />
             </View>
             <View style={styles.navContent}>
-              <Typo size={18} color={colors.titleText} fontWeight="600">
+              <Typo size={18} color={colors.brightOrange} fontWeight="600">
                 {t('residentsBills') || 'Residents Bills'}
               </Typo>
               <Typo size={14} color={colors.subtitleText} style={styles.navSubtitle}>
@@ -47,14 +47,14 @@ export default function PaymentsSyndic() {
 
           <TouchableOpacity
             onPress={() => router.push('/ui/payments/syndic/expenses/payments-expenses-list' as any)}
-            style={[styles.navItem, { backgroundColor: colors.neutral500 }]}
+            style={[styles.navItem, { backgroundColor: colors.neutral800 }]}
             activeOpacity={0.7}
           >
-            <View style={[styles.navIconContainer, { backgroundColor: colors.neutral800 + '50' }]}>
-              <Receipt size={24} color={colors.neutral400 + '90'} weight="bold" />
+            <View style={[styles.navIconContainer, { backgroundColor: colors.white }]}>
+              <Receipt size={24} color={colors.rose } weight="bold" />
             </View>
             <View style={styles.navContent}>
-              <Typo size={18} color={colors.titleText} fontWeight="600">
+              <Typo size={18} color={colors.rose} fontWeight="600">
                 {t('expenses') || 'Expenses'}
               </Typo>
               <Typo size={14} color={colors.subtitleText} style={styles.navSubtitle}>
@@ -65,14 +65,14 @@ export default function PaymentsSyndic() {
 
           <TouchableOpacity
             onPress={() => router.push('/ui/payments/syndic/remaining-payments/remaining-payments-list' as any)}
-            style={[styles.navItem, { backgroundColor: colors.green + '3a' }]}
+            style={[styles.navItem, { backgroundColor: colors.neutral800 }]}
             activeOpacity={0.7}
           >
-            <View style={[styles.navIconContainer, { backgroundColor: colors.neutral800 + '50' }]}>
+            <View style={[styles.navIconContainer, { backgroundColor: colors.white }]}>
               <Money size={24} color={colors.green + '9a'} weight="bold" />
             </View>
             <View style={styles.navContent}>
-              <Typo size={18} color={colors.titleText} fontWeight="600">
+              <Typo size={18} color={colors.green} fontWeight="600">
                 {t('remainingPayments') || 'Remaining Payments'}
               </Typo>
               <Typo size={14} color={colors.subtitleText} style={styles.navSubtitle}>
@@ -105,9 +105,11 @@ const styles = StyleSheet.create({
   navItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: spacingX._16,
+    paddingVertical: spacingY._16,
+    paddingEnd: spacingX._20,
     borderRadius: radius._12,
     gap: spacingX._16,
+    marginStart: spacingX._20
   },
   navIconContainer: {
     width: 56,
@@ -115,6 +117,7 @@ const styles = StyleSheet.create({
     borderRadius: radius._12,
     alignItems: 'center',
     justifyContent: 'center',
+    marginStart: -spacingX._20,
   },
   navContent: {
     flex: 1,

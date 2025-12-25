@@ -1,4 +1,5 @@
 import AppHeader from '@/components/AppHeader';
+import EmptyState from '@/components/common/EmptyState';
 import ScreenWrapper from '@/components/ScreenWrapper';
 import Typo from '@/components/Typo';
 import { radius, spacingX, spacingY } from '@/constants/theme';
@@ -228,11 +229,7 @@ export default function PaymentsExpensesScreen() {
           showsVerticalScrollIndicator={false}
         >
           {expenses.length === 0 ? (
-            <View style={styles.emptyContainer}>
-              <Typo size={16} color={colors.subtitleText}>
-                {t('noExpenses')}
-              </Typo>
-            </View>
+            <EmptyState message={t('noExpenses') || 'No expenses found'} />
           ) : (
             (() => {
               const groupedExpenses = groupExpensesByMonth(expenses);
@@ -335,12 +332,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: spacingX._20,
-  },
-  emptyContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: spacingY._40,
   },
   monthSection: {
     marginBottom: spacingY._24,
