@@ -1,6 +1,7 @@
 import AppHeader from '@/components/AppHeader';
 import EmptyState from '@/components/common/EmptyState';
 import InfoModal from '@/components/common/InfoModal';
+import Shimmer from '@/components/common/Shimmer';
 import ScreenWrapper from '@/components/ScreenWrapper';
 import Typo from '@/components/Typo';
 import { radius, spacingX, spacingY } from '@/constants/theme';
@@ -15,7 +16,6 @@ import { Swap } from 'phosphor-react-native';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-  ActivityIndicator,
   Platform,
   ScrollView,
   StyleSheet,
@@ -247,26 +247,31 @@ export default function PaymentsBillsScreen() {
     return grouped;
   };
 
-  if (loading) {
-    return (
-      <ScreenWrapper>
-        <View style={[styles.container, { backgroundColor: colors.screenBackground }]}>
-        <AppHeader title={t('residentsBills')} />
-
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color={colors.primary} />
+  // Render shimmer loading state
+  const renderShimmerItems = () => {
+    return Array.from({ length: 3 }).map((_, index) => (
+      <View key={`shimmer-${index}`} style={[styles.billCard, { backgroundColor: colors.neutral800 }]}>
+        <View style={styles.billContent}>
+          <View style={styles.billHeader}>
+            <View style={styles.billInfo}>
+              <Shimmer width={120} height={18} borderRadius={radius._8} />
+            </View>
+            <Shimmer width={60} height={24} borderRadius={radius._8} />
+          </View>
+          <View>
+            <Shimmer width={100} height={18} borderRadius={radius._8} />
           </View>
         </View>
-      </ScreenWrapper>
-    );
-  }
+        <Shimmer width="100%" height={40} borderRadius={radius._8} style={{ marginTop: spacingY._12 }} />
+      </View>
+    ));
+  };
 
-  if (error) {
+  if (error && !bills.length && !loading) {
     return (
       <ScreenWrapper>
         <View style={[styles.container, { backgroundColor: colors.screenBackground }]}>
-        <AppHeader title={t('residentsBills')} />
-
+          <AppHeader title={t('residentsBills')} />
           <View style={styles.errorContainer}>
             <Typo size={16} color={colors.redClose}>
               {error}
@@ -375,7 +380,15 @@ export default function PaymentsBillsScreen() {
             </TouchableOpacity>
           </View>
 
-          {(() => {
+          {loading && bills.length === 0 ? (
+            <View style={styles.monthSection}>
+              <View style={styles.monthHeader}>
+                <Shimmer width={150} height={18} borderRadius={radius._8} />
+                <View style={{height: spacingY._1, backgroundColor: colors.text, marginTop: spacingX._3, marginHorizontal:spacingX._20}} />
+              </View>
+              {renderShimmerItems()}
+            </View>
+          ) : (() => {
             const filteredBills = getFilteredBills();
             if (filteredBills.length === 0) {
               return (
@@ -440,11 +453,11 @@ export default function PaymentsBillsScreen() {
 
                           <TouchableOpacity
                             onPress={() => handleBillPress(bill)}
-                            style={[styles.changeStateButton, { backgroundColor: colors.goldLightBackground }]}
+                            style={[styles.changeStateButton, { backgroundColor: colors.neutral700 }]}
                             activeOpacity={0.7}
                           >
-                            <Swap size={16} color={colors.text} weight="regular" />
-                            <Typo size={14} color={colors.text} fontWeight="600">
+                            <Swap size={16} color={colors.primary} weight="regular" />
+                            <Typo size={14} color={colors.primary} fontWeight="600">
                               {t('changeState') || 'Change State'}
                             </Typo>
                           </TouchableOpacity>
