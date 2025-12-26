@@ -2,6 +2,7 @@ import Typo from '@/components/Typo';
 import { radius, spacingX, spacingY } from '@/constants/theme';
 import { useRTL } from '@/contexts/RTLContext';
 import useThemeColors from '@/contexts/useThemeColors';
+import { Fonts } from '@/hooks/fonts';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
@@ -74,6 +75,7 @@ export default function LanguageSelectionModal({
                   size={16}
                   color={currentLanguage === lang.code ? colors.primary : colors.titleText}
                   fontWeight={currentLanguage === lang.code ? '700' : '400'}
+                  style={lang.code === 'ar' ? { fontFamily: Fonts.ARABIC } :  { fontFamily: Fonts.ENGLISH }}
                 >
                   {lang.name}
                 </Typo>

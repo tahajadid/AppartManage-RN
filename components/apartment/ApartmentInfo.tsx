@@ -7,10 +7,10 @@ import { Copy, IdentificationBadge, Pencil, User, Users } from 'phosphor-react-n
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-    Platform,
-    StyleSheet,
-    TouchableOpacity,
-    View
+  Platform,
+  StyleSheet,
+  TouchableOpacity,
+  View
 } from 'react-native';
 
 interface ApartmentInfoProps {
@@ -94,20 +94,16 @@ export default function ApartmentInfo({ syndicName, residentsCount, apartmentId,
                 <TouchableOpacity
                   onPress={handleCopyCode}
                   style={[styles.copyButton, 
-                  { backgroundColor: colors.neutral300 + '88', flexDirection: 'row', alignItems: 'center', gap: spacingX._5 }]}>
-                    <Typo size={14} color={colors.white} fontWeight="600" >
-                    {t('copy')}
-                    </Typo>
+                  { backgroundColor: colors.neutral300 + '66', flexDirection: 'row', alignItems: 'center', gap: spacingX._5 }]}>
                   <Copy
                     size={14}
-                    style={{marginLeft: spacingX._3}}
                     color={copied ? colors.white : colors.white}
                     weight={copied ? 'fill' : 'regular'}
                   />
                 </TouchableOpacity>
               </View>
               {copied && (
-                <Typo size={12} color={colors.primary} fontWeight="400" style={styles.copiedText}>
+                <Typo size={12} color={colors.neutral300} fontWeight="400" style={styles.copiedText}>
                   {t('copied') || 'Copied!'}
                 </Typo>
               )}

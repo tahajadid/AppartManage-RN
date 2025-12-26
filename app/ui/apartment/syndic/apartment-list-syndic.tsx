@@ -105,7 +105,7 @@ export default function ApartmentListSyndic() {
   };
 
   const handleCreatePayments = async () => {
-    if (!apartmentId || !syndicResidentId || residents.length === 0) {
+    if (!apartmentId || !user?.uid || residents.length === 0) {
       Alert.alert(t('error') || 'Error', t('missingData') || 'Missing required data');
       return;
     }
@@ -120,10 +120,13 @@ export default function ApartmentListSyndic() {
         monthlyFee: resident.monthlyFee,
       }));
 
+      // For syndic-residents, use syndicResidentId; for regular syndics, use user.uid
+      const syndicId = syndicResidentId || user.uid;
+
       const result = await createMonthlyBills(
         apartmentId,
         residentsData,
-        syndicResidentId
+        syndicId
       );
 
       if (result.success) {

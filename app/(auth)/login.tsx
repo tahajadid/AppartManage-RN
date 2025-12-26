@@ -5,12 +5,13 @@ import ScreenWrapper from '@/components/ScreenWrapper';
 import Typo from '@/components/Typo';
 import { radius, spacingX, spacingY } from '@/constants/theme';
 import { useRTL } from '@/contexts/RTLContext';
+import { useTheme } from '@/contexts/themeContext';
 import useThemeColors from '@/contexts/useThemeColors';
 import { createRTLStyles } from '@/utils/rtlStyles';
 import { useLoginViewModel } from '@/viewmodels/useLoginViewModel';
 import { GoogleSigninButton } from '@react-native-google-signin/google-signin';
 import { router } from 'expo-router';
-import { Globe } from 'phosphor-react-native';
+import { Globe, Moon, Sun } from 'phosphor-react-native';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -39,10 +40,15 @@ const login = () => {
   const rtlStyles = createRTLStyles(isRTL);
   const [languageModalVisible, setLanguageModalVisible] = useState(false);
   const { currentLanguage, changeLanguage } = useRTL();
+  const { theme, setMode } = useTheme();
 
   const handleLanguageSelect = async (langCode: 'en' | 'ar' | 'fr') => {
     await changeLanguage(langCode);
     setLanguageModalVisible(false);
+  };
+
+  const handleThemeChange = (newTheme: 'light' | 'dark') => {
+    setMode(newTheme);
   };
 
   return (
@@ -59,15 +65,50 @@ const login = () => {
               style={[styles.content, { direction: isRTL ? 'rtl' : 'ltr' }]}
             >
               
-              <TouchableOpacity
-                onPress={() => setLanguageModalVisible(true)}
-                style={[styles.languageSelector,{ direction: isRTL ? 'rtl' : 'ltr',
-                  backgroundColor: colors.neutral800}]}>
-                  <Globe size={20} color={colors.primary} weight="regular" />
-                  <Typo size={14} color={colors.primary} fontWeight="700">
-                    {t('language')}
-                  </Typo>
-              </TouchableOpacity>
+              {/* Language and Theme Selector Row */}
+              <View style={styles.selectorRow}>
+                <TouchableOpacity
+                  onPress={() => setLanguageModalVisible(true)}
+                  style={[styles.languageSelector,{ direction: isRTL ? 'rtl' : 'ltr',
+                    backgroundColor: colors.neutral800}]}>
+                    <Globe size={20} color={colors.primary} weight="regular" />
+                    <Typo size={14} color={colors.primary} fontWeight="700">
+                      {t('language')}
+                    </Typo>
+                </TouchableOpacity>
+
+                {/* Theme Switcher */}
+                <View style={[styles.themeSwitcher, { backgroundColor: colors.neutral800 }]}>
+                  <TouchableOpacity
+                    onPress={() => handleThemeChange('light')}
+                    style={[
+                      styles.themeIconButton,
+                      theme === 'light' && { backgroundColor: colors.primary + '20' }
+                    ]}
+                    activeOpacity={0.7}
+                  >
+                    <Sun 
+                      size={20} 
+                      color={theme === 'light' ? colors.primary : colors.subtitleText} 
+                      weight={theme === 'light' ? 'fill' : 'regular'} 
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => handleThemeChange('dark')}
+                    style={[
+                      styles.themeIconButton,
+                      theme === 'dark' && { backgroundColor: colors.primary + '20' }
+                    ]}
+                    activeOpacity={0.7}
+                  >
+                    <Moon 
+                      size={20} 
+                      color={theme === 'dark' ? colors.primary : colors.subtitleText} 
+                      weight={theme === 'dark' ? 'fill' : 'regular'} 
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
 
               <Typo 
                 size={26}
@@ -237,6 +278,26 @@ const styles = StyleSheet.create({
   container: {
     flex: 1
   },
+  selectorRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: spacingY._24,
+    width: '100%',
+  },
+  themeSwitcher: {
+    flexDirection: 'row',
+    borderRadius: radius._8,
+    padding: spacingX._5,
+    gap: spacingX._5
+  },
+  themeIconButton: {
+    width: 36,
+    height: 36,
+    borderRadius: radius._8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   scrollContent: {
     flexGrow: 1,
     justifyContent: 'center',
@@ -245,11 +306,8 @@ const styles = StyleSheet.create({
   languageSelector: {
     padding: spacingX._10,
     flexDirection: 'row',
-    marginBottom: spacingY._24,
-    alignSelf: "flex-start",
-    alignItems: "flex-start",
-    justifyContent: "flex-start",
-    textAlign: "left",
+    alignItems: "center",
+    justifyContent: "center",
     borderRadius: radius._8,
     gap: spacingX._8,
   },
