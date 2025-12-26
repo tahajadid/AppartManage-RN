@@ -2,8 +2,8 @@ import { useOnboarding } from '@/contexts/onboardingContext';
 import { router } from 'expo-router';
 import React, { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
-import ResidentDashboard from '../ui/dashboard/resident-dashboard';
-import SyndicDashboard from '../ui/dashboard/syndic-dashboard';
+import ResidentDashboard from '../ui/dashboard/dashboard-resident';
+import SyndicDashboard from '../ui/dashboard/dashboard-syndic';
 
 export default function HomeScreen() {
   const { role, isLoading } = useOnboarding();

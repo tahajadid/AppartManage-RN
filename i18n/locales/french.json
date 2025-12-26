@@ -277,6 +277,27 @@
   "meeting": "Réunion",
   "viewMeetings": "Voir toutes les réunions programmées",
   "noMeetings": "Aucune réunion programmée",
-  "reason": "Raison"
+  "reason": "Raison",
+  "currentBalance": "Solde actuel",
+  "remainingToCollectThisMonth": "Reste à collecter ce mois",
+  "upcomingMeetings": "Réunions à venir",
+  "seeMore": "Voir plus",
+  "monthlyFinancialSummary": "Résumé financier mensuel",
+  "totalExpected": "Total attendu",
+  "totalCollected": "Total collecté",
+  "totalExpenses": "Total des dépenses",
+  "netBalance": "Solde net",
+  "collectionRate": "Taux de collecte",
+  "incomeVsExpenses": "Revenus vs Dépenses",
+  "paymentStatus": "Statut du paiement",
+  "income": "Revenus",
+  "collected": "Collecté",
+  "lastUpdated": "Dernière mise à jour",
+  "paymentCompleted": "Paiement terminé",
+  "paymentRequired": "Paiement requis",
+  "thankYouForPayment": "Merci pour votre paiement ce mois-ci",
+  "paymentHistory": "Historique des paiements",
+  "seeAll": "Voir tout",
+  "noPayments": "Aucun paiement trouvé"
 }
 

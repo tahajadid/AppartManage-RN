@@ -73,10 +73,19 @@ export default function ApartmentListSyndic() {
         setResidents(result.apartment.residents);
         setJoinCode(result.apartment.joinCode || '');
         
-        // Find syndic resident
+        // Find syndic resident (for syndic-resident role)
         const syndicResident = result.apartment.residents.find(r => r.isSyndic);
-        setSyndicName(syndicResident?.name || '');
-        setSyndicResidentId(syndicResident?.id || '');
+        
+        // For regular syndics (not syndic-resident), use user's name as fallback
+        // For syndic-residents, use the resident's name
+        if (syndicResident) {
+          setSyndicName(syndicResident.name);
+          setSyndicResidentId(syndicResident.id);
+        } else {
+          // Regular syndic: use current user's name as syndic name
+          setSyndicName(user?.name || t('syndic') || 'Syndic');
+          setSyndicResidentId(''); // No syndic resident ID for regular syndics
+        }
       } else {
         setError(result.error || 'Failed to load apartment data');
       }
@@ -203,18 +212,18 @@ export default function ApartmentListSyndic() {
               {t('appartmentInformation')}
             </Typo>
           </View>
-          {/* Apartment Information */}
-          {apartmentId && syndicName && (
+          {/* Apartment Information - Show for all syndics (regular syndic or syndic-resident) */}
+          {apartmentId && (
             <ApartmentInfo
-              syndicName={syndicName}
+              syndicName={syndicName || user?.name || t('syndic') || 'Syndic'}
               residentsCount={residents.length}
               apartmentId={apartmentId}
               joinCode={joinCode}
             />
           )}
 
-          {/* Create Payments Button - Temporary */}
-          {apartmentId && syndicResidentId && residents.length > 0 && (
+          {/* Create Payments Button - Show for all syndics (regular syndic or syndic-resident) */}
+          {apartmentId && residents.length > 0 && (
             <View style={styles.createPaymentsContainer}>
               <PrimaryButton
                 onPress={handleCreatePayments}
