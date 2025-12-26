@@ -167,7 +167,7 @@ const login = () => {
             >
               <Typo 
                   size={16}
-                  color={colors.screenBackground}
+                  color={colors.white}
                   fontWeight="600">
                   {loading ? t('signingIn') : t('signIn')}
               </Typo>

@@ -276,7 +276,28 @@
   "meeting": "اجتماع",
   "viewMeetings": "عرض جميع الاجتماعات المجدولة",
   "noMeetings": "لا توجد اجتماعات مجدولة",
-  "reason": "السبب"
+  "reason": "السبب",
+  "currentBalance": "الرصيد الحالي",
+  "remainingToCollectThisMonth": "المتبقي للتحصيل هذا الشهر",
+  "upcomingMeetings": "الاجتماعات القادمة",
+  "seeMore": "المزيد",
+  "monthlyFinancialSummary": "الملخص المالي الشهري",
+  "totalExpected": "إجمالي المتوقع",
+  "totalCollected": "إجمالي المحصل",
+  "totalExpenses": "إجمالي المصروفات",
+  "netBalance": "صافي الرصيد",
+  "collectionRate": "معدل التحصيل",
+  "incomeVsExpenses": "الدخل مقابل المصروفات",
+  "paymentStatus": "حالة الدفع",
+  "income": "الدخل",
+  "collected": "محصل",
+  "lastUpdated": "آخر تحديث",
+  "paymentCompleted": "اكتمل الدفع",
+  "paymentRequired": "الدفع مطلوب",
+  "thankYouForPayment": "شكراً لك على دفعتك هذا الشهر",
+  "paymentHistory": "سجل المدفوعات",
+  "seeAll": "عرض الكل",
+  "noPayments": "لم يتم العثور على مدفوعات"
 }
 
 

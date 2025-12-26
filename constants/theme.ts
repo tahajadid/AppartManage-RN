@@ -141,7 +141,7 @@ export const lightTheme = {
     textLighter: "#d4d4d4",
     blueText: "#36BEDA",
     primarySelection: "#8fccd9",
-    loginBackground:"#AFCDED",
+    loginBackground:"#1c3c5c",
 
     // common colors
     neutral900: "#121010",
@@ -161,7 +161,7 @@ export const lightTheme = {
 
     // general colors
     rose: "#ef4444",
-    redClose: "#c85250",
+    redClose: "#ad3634",
     green: "#16a34a",
     white: "#fff",
     black: "#000",
@@ -219,6 +219,8 @@ export const spacingX = {
 export const spacingY = {
     _1: verticalScale(1),
     _2: verticalScale(2),
+    _3: verticalScale(3),
+    _4: verticalScale(4),
     _5: verticalScale(5),
     _7: verticalScale(7), 
     _8: verticalScale(8), 
