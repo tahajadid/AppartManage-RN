@@ -1,8 +1,10 @@
 import ResidentItem from '@/components/apartment/ResidentItem';
 import AppHeader from '@/components/AppHeader';
+import EmptyState from '@/components/common/EmptyState';
+import Shimmer from '@/components/common/Shimmer';
 import ScreenWrapper from '@/components/ScreenWrapper';
 import Typo from '@/components/Typo';
-import { spacingX, spacingY } from '@/constants/theme';
+import { radius, spacingX, spacingY } from '@/constants/theme';
 import { useOnboarding } from '@/contexts/onboardingContext';
 import { useRTL } from '@/contexts/RTLContext';
 import useThemeColors from '@/contexts/useThemeColors';
@@ -78,20 +80,27 @@ export default function ListOfResidentsScreen() {
     } as any);
   };
 
-  if (loading) {
-    return (
-      <ScreenWrapper>
-        <View style={[styles.container, { backgroundColor: colors.screenBackground }]}>
-          <AppHeader title={t('listOfResidents') || 'List of Residents'} />
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color={colors.primary} />
+  // Render shimmer loading state
+  const renderShimmerItems = () => {
+    return Array.from({ length: 3 }).map((_, index) => (
+      <View key={`shimmer-${index}`} style={[styles.residentItemShimmer, { backgroundColor: colors.neutral800 }]}>
+        <View style={styles.residentItemLeft}>
+          <Shimmer width={48} height={48} borderRadius={radius._8} />
+          <View style={styles.residentInfo}>
+            <View style={styles.residentNameRow}>
+              <Shimmer width={120} height={16} borderRadius={radius._8} />
+              <Shimmer width={60} height={20} borderRadius={radius._4} />
+            </View>
+            <Shimmer width={150} height={14} borderRadius={radius._8} style={{ marginTop: spacingY._5 }} />
+            <Shimmer width={130} height={14} borderRadius={radius._8} style={{ marginTop: spacingY._5 }} />
           </View>
         </View>
-      </ScreenWrapper>
-    );
-  }
+        <Shimmer width={20} height={20} borderRadius={radius._4} />
+      </View>
+    ));
+  };
 
-  if (error) {
+  if (error && !residents.length && !loading) {
     return (
       <ScreenWrapper>
         <View style={[styles.container, { backgroundColor: colors.screenBackground }]}>
@@ -120,12 +129,12 @@ export default function ListOfResidentsScreen() {
           ]}
           showsVerticalScrollIndicator={false}
         >
-          {residents.length === 0 ? (
-            <View style={styles.emptyContainer}>
-              <Typo size={16} color={colors.subtitleText}>
-                {t('noResidents') || 'No residents found'}
-              </Typo>
+          {loading && residents.length === 0 ? (
+            <View style={styles.residentsList}>
+              {renderShimmerItems()}
             </View>
+          ) : residents.length === 0 ? (
+            <EmptyState message={t('noResidents') || 'No residents found'} />
           ) : (
             <View style={styles.residentsList}>
               {residents.map((resident) => (
@@ -175,6 +184,28 @@ const styles = StyleSheet.create({
   },
   residentsList: {
     gap: spacingY._12,
+  },
+  residentItemShimmer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: spacingX._16,
+    borderRadius: radius._12,
+  },
+  residentItemLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+    gap: spacingX._12,
+  },
+  residentInfo: {
+    flex: 1,
+  },
+  residentNameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacingX._8,
+    marginBottom: spacingY._5,
   },
 });
 

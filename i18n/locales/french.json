@@ -127,6 +127,7 @@
   "logoutConfirmation": "Êtes-vous sûr de vouloir vous déconnecter ?",
   "cancel": "Annuler",
   "done": "Terminé",
+  "select": "Sélectionner",
   "selectLanguage": "Sélectionner la langue",
   "error": "Erreur",
   "failedToLogout": "Échec de la déconnexion. Veuillez réessayer.",

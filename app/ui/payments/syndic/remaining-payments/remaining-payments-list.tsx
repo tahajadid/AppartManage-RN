@@ -2,6 +2,7 @@ import ChangePaymentStatusModal from '@/app/ui/payments/syndic/bills/changePayme
 import AppHeader from '@/components/AppHeader';
 import EmptyState from '@/components/common/EmptyState';
 import InfoModal from '@/components/common/InfoModal';
+import Shimmer from '@/components/common/Shimmer';
 import ScreenWrapper from '@/components/ScreenWrapper';
 import Typo from '@/components/Typo';
 import { radius, spacingX, spacingY } from '@/constants/theme';
@@ -15,7 +16,6 @@ import { Swap } from 'phosphor-react-native';
 import React, { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-  ActivityIndicator,
   Platform,
   ScrollView,
   StyleSheet,
@@ -142,18 +142,27 @@ export default function RemainingPaymentsListScreen() {
     }
   };
 
-  if (loading) {
-    return (
-      <ScreenWrapper>
-        <View style={[styles.container, { backgroundColor: colors.screenBackground }]}>
-          <AppHeader title={t('remainingPayments') || 'Remaining Payments'} />
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color={colors.primary} />
+  // Render shimmer loading state
+  const renderShimmerItems = () => {
+    return Array.from({ length: 3 }).map((_, index) => (
+      <View key={`shimmer-${index}`} style={[styles.paymentCard, { backgroundColor: colors.neutral800 }]}>
+        <View style={styles.paymentContent}>
+          <View style={styles.paymentHeader}>
+            <View style={styles.paymentInfo}>
+              <Shimmer width={120} height={18} borderRadius={radius._8} />
+              <Shimmer width={100} height={14} borderRadius={radius._8} style={{ marginTop: spacingY._5 }} />
+            </View>
+            <Shimmer width={60} height={24} borderRadius={radius._8} />
+          </View>
+          <View>
+            <Shimmer width={100} height={18} borderRadius={radius._8} />
+            <Shimmer width={80} height={12} borderRadius={radius._8} style={{ marginTop: spacingY._5 }} />
           </View>
         </View>
-      </ScreenWrapper>
-    );
-  }
+        <Shimmer width="100%" height={40} borderRadius={radius._8} style={{ marginTop: spacingY._12 }} />
+      </View>
+    ));
+  };
 
   return (
     <ScreenWrapper>
@@ -240,7 +249,11 @@ export default function RemainingPaymentsListScreen() {
             </TouchableOpacity>
           </View>
 
-          {(() => {
+          {loading && payments.length === 0 ? (
+            <View style={styles.paymentsList}>
+              {renderShimmerItems()}
+            </View>
+          ) : (() => {
             const filteredPayments = getFilteredPayments();
             
             if (filteredPayments.length === 0) {
@@ -416,6 +429,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     minWidth: 100,
     alignItems: 'center',
+  },
+  paymentsList: {
+    gap: spacingY._12,
   },
 });
 

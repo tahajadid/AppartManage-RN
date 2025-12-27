@@ -1,4 +1,5 @@
 import ApartmentInfo from '@/components/apartment/ApartmentInfo';
+import Shimmer from '@/components/common/Shimmer';
 import ScreenWrapper from '@/components/ScreenWrapper';
 import Typo from '@/components/Typo';
 import { radius, spacingX, spacingY } from '@/constants/theme';
@@ -12,7 +13,6 @@ import { Calendar, HouseLineIcon, Users, WarningCircle } from 'phosphor-react-na
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-  ActivityIndicator,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
@@ -81,28 +81,13 @@ export default function ApartmentListResident() {
   };
 
 
-  if (loading) {
+  if (error && !apartmentName && !loading) {
     return (
       <ScreenWrapper>
         <View style={[styles.container, { backgroundColor: colors.screenBackground }]}>
-        <Typo size={28} color={colors.text} style={styles.title} fontWeight="700">
+          <Typo size={28} color={colors.text} style={styles.title} fontWeight="700">
             {t('tabApartment')}
-            </Typo>
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color={colors.primary} />
-          </View>
-        </View>
-      </ScreenWrapper>
-    );
-  }
-
-  if (error) {
-    return (
-      <ScreenWrapper>
-        <View style={[styles.container, { backgroundColor: colors.screenBackground }]}>
-        <Typo size={28} color={colors.text} style={styles.title} fontWeight="700">
-            {t('tabApartment')}
-            </Typo>
+          </Typo>
           <View style={styles.errorContainer}>
             <Typo size={16} color={colors.redClose}>
               {error}
@@ -132,9 +117,13 @@ export default function ApartmentListResident() {
         {/* Apartment Information Header */}
         <View style={{flexDirection: 'row', alignItems: 'center', gap: spacingX._12}}>
           <HouseLineIcon size={24} color={colors.primary} style={{marginBottom: scale(13)}} weight="regular" />
-          <Typo size={24} color={colors.primary} style={styles.apartmentName} fontWeight="700">
+          {loading && !apartmentName ? (
+            <Shimmer width={200} height={24} borderRadius={radius._8} style={{ marginBottom: scale(13) }} />
+          ) : (
+            <Typo size={24} color={colors.primary} style={styles.apartmentName} fontWeight="700">
               {apartmentName || t('tabApartment')}
-          </Typo>
+            </Typo>
+          )}
         </View>
         
           <View style={styles.sectionHeader}>
@@ -144,13 +133,14 @@ export default function ApartmentListResident() {
           </View>
           
           {/* Apartment Information */}
-          {apartmentId && syndicName && (
+          {apartmentId && (
             <ApartmentInfo
               syndicName={syndicName}
               residentsCount={residents.length}
               apartmentId={apartmentId}
               joinCode={joinCode}
               showEditButton={false}
+              loading={loading}
             />
           )}
 

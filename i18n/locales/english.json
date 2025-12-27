@@ -127,6 +127,7 @@
   "logoutConfirmation": "Are you sure you want to logout?",
   "cancel": "Cancel",
   "done": "Done",
+  "select": "Select",
   "selectLanguage": "Select Language",
   "error": "Error",
   "failedToLogout": "Failed to logout. Please try again.",

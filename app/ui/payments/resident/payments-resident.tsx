@@ -1,6 +1,7 @@
 import RequestPaymentModal from '@/app/ui/payments/resident/RequestPaymentModal';
 import EmptyState from '@/components/common/EmptyState';
 import InfoModal from '@/components/common/InfoModal';
+import Shimmer from '@/components/common/Shimmer';
 import ScreenWrapper from '@/components/ScreenWrapper';
 import Typo from '@/components/Typo';
 import { radius, spacingX, spacingY } from '@/constants/theme';
@@ -364,16 +365,54 @@ export default function PaymentsResident() {
     }
   };
 
-  if (loading) {
+  // Render shimmer loading state
+  const renderShimmerItems = () => {
+    return Array.from({ length: 3 }).map((_, index) => (
+      <View key={`shimmer-${index}`} style={[styles.billCard, { backgroundColor: colors.neutral800 }]}>
+        <View style={styles.billContent}>
+          <View style={styles.billHeader}>
+            <View style={styles.billInfo}>
+              <Shimmer width={120} height={18} borderRadius={radius._8} />
+            </View>
+            <Shimmer width={60} height={24} borderRadius={radius._8} />
+          </View>
+          <View>
+            <Shimmer width={100} height={18} borderRadius={radius._8} />
+          </View>
+        </View>
+      </View>
+    ));
+  };
+
+  if (loading && paymentItems.length === 0) {
     return (
       <ScreenWrapper>
         <View style={[styles.container, { backgroundColor: colors.screenBackground }]}>
           <Typo size={28} color={colors.text} style={styles.title} fontWeight="700">
             {t('tabPayments')}
           </Typo>
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color={colors.primary} />
-          </View>
+          <ScrollView
+            style={styles.scrollView}
+            contentContainerStyle={[
+              styles.scrollContent,
+              { paddingBottom: insets.bottom + spacingY._20 },
+              { direction: isRTL ? 'rtl' : 'ltr' },
+            ]}
+            showsVerticalScrollIndicator={false}
+          >
+            <View style={styles.filterContainer}>
+              <Shimmer width={60} height={32} borderRadius={radius._8} />
+              <Shimmer width={80} height={32} borderRadius={radius._8} />
+              <Shimmer width={80} height={32} borderRadius={radius._8} />
+              <Shimmer width={60} height={32} borderRadius={radius._8} />
+            </View>
+            <View style={styles.monthSection}>
+              <View style={styles.monthHeader}>
+                <Shimmer width={150} height={18} borderRadius={radius._8} />
+              </View>
+              {renderShimmerItems()}
+            </View>
+          </ScrollView>
         </View>
       </ScreenWrapper>
     );

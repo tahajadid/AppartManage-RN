@@ -1,6 +1,7 @@
 import AppHeader from '@/components/AppHeader';
 import EmptyState from '@/components/common/EmptyState';
 import InfoModal from '@/components/common/InfoModal';
+import Shimmer from '@/components/common/Shimmer';
 import ChangeIssueStatusModal from '@/components/issues/ChangeIssueStatusModal';
 import ScreenWrapper from '@/components/ScreenWrapper';
 import Typo from '@/components/Typo';
@@ -178,20 +179,34 @@ export default function IssuesListScreen() {
     }
   };
 
-  if (loading) {
-    return (
-      <ScreenWrapper>
-        <View style={[styles.container, { backgroundColor: colors.screenBackground }]}>
-          <AppHeader title={t('apartmentIssues') || 'Apartment Issues'} />
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color={colors.primary} />
+  // Render shimmer loading state
+  const renderShimmerItems = () => {
+    return Array.from({ length: 3 }).map((_, index) => (
+      <View key={`shimmer-${index}`} style={[styles.issueCard, { backgroundColor: colors.neutral800 }]}>
+        <View style={styles.issueContent}>
+          <View style={styles.issueHeader}>
+            <View style={styles.issueInfo}>
+              <View style={styles.issueTypeRow}>
+                <Shimmer width={40} height={40} borderRadius={radius._8} />
+                <Shimmer width={100} height={18} borderRadius={radius._8} />
+              </View>
+            </View>
+            <Shimmer width={60} height={24} borderRadius={radius._8} />
+          </View>
+          <View style={styles.issueDetails}>
+            <Shimmer width={150} height={14} borderRadius={radius._8} style={{ marginBottom: spacingY._8 }} />
+            <Shimmer width="100%" height={60} borderRadius={radius._8} style={{ marginBottom: spacingY._8 }} />
+            <Shimmer width={100} height={12} borderRadius={radius._8} />
           </View>
         </View>
-      </ScreenWrapper>
-    );
-  }
+        {isSyndic && (
+          <Shimmer width="100%" height={40} borderRadius={radius._8} style={{ marginTop: spacingY._12 }} />
+        )}
+      </View>
+    ));
+  };
 
-  if (error) {
+  if (error && !issues.length && !loading) {
     return (
       <ScreenWrapper>
         <View style={[styles.container, { backgroundColor: colors.screenBackground }]}>
@@ -220,7 +235,11 @@ export default function IssuesListScreen() {
           ]}
           showsVerticalScrollIndicator={false}
         >
-          {issues.length === 0 ? (
+          {loading && issues.length === 0 ? (
+            <View style={styles.issuesList}>
+              {renderShimmerItems()}
+            </View>
+          ) : issues.length === 0 ? (
             <EmptyState message={t('noIssuesFound') || 'No issues found'} />
           ) : (
             <View style={styles.issuesList}>

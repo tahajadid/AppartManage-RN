@@ -1,5 +1,6 @@
 import AppHeader from '@/components/AppHeader';
 import EmptyState from '@/components/common/EmptyState';
+import Shimmer from '@/components/common/Shimmer';
 import ScreenWrapper from '@/components/ScreenWrapper';
 import Typo from '@/components/Typo';
 import { radius, spacingX, spacingY } from '@/constants/theme';
@@ -186,20 +187,30 @@ export default function PaymentsExpensesScreen() {
     } as any);
   };
 
-  if (loading) {
-    return (
-      <ScreenWrapper>
-        <View style={[styles.container, { backgroundColor: colors.screenBackground }]}>
-          <AppHeader title={t('expenses')} />
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color={colors.primary} />
+  // Render shimmer loading state
+  const renderShimmerItems = () => {
+    return Array.from({ length: 3 }).map((_, index) => (
+      <TouchableOpacity
+        key={`shimmer-${index}`}
+        style={[styles.expenseCard, { backgroundColor: colors.neutral800 }]}
+        disabled
+      >
+        <View style={styles.expenseHeader}>
+          <Shimmer width={48} height={48} borderRadius={radius._8} />
+          <View style={styles.expenseInfo}>
+            <Shimmer width={120} height={18} borderRadius={radius._8} />
+            <Shimmer width={200} height={14} borderRadius={radius._8} style={{ marginTop: spacingY._5 }} />
           </View>
         </View>
-      </ScreenWrapper>
-    );
-  }
+        <View>
+          <Shimmer width={100} height={18} borderRadius={radius._8} />
+          <Shimmer width={80} height={12} borderRadius={radius._8} style={{ marginTop: spacingY._5 }} />
+        </View>
+      </TouchableOpacity>
+    ));
+  };
 
-  if (error) {
+  if (error && !expenses.length && !loading) {
     return (
       <ScreenWrapper>
         <View style={[styles.container, { backgroundColor: colors.screenBackground }]}>
@@ -228,7 +239,14 @@ export default function PaymentsExpensesScreen() {
           ]}
           showsVerticalScrollIndicator={false}
         >
-          {expenses.length === 0 ? (
+          {loading && expenses.length === 0 ? (
+            <View style={styles.monthSection}>
+              <View style={styles.monthHeader}>
+                <Shimmer width={150} height={18} borderRadius={radius._8} />
+              </View>
+              {renderShimmerItems()}
+            </View>
+          ) : expenses.length === 0 ? (
             <EmptyState message={t('noExpenses') || 'No expenses found'} />
           ) : (
             (() => {
@@ -381,4 +399,5 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
 });
+
 
