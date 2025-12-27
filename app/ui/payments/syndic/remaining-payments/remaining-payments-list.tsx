@@ -16,7 +16,6 @@ import { Swap } from 'phosphor-react-native';
 import React, { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-  ActivityIndicator,
   Platform,
   ScrollView,
   StyleSheet,

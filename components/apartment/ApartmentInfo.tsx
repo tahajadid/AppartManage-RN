@@ -1,3 +1,4 @@
+import Shimmer from '@/components/common/Shimmer';
 import Typo from '@/components/Typo';
 import { radius, spacingX, spacingY } from '@/constants/theme';
 import useThemeColors from '@/contexts/useThemeColors';
@@ -19,9 +20,10 @@ interface ApartmentInfoProps {
   apartmentId: string;
   joinCode: string;
   showEditButton?: boolean;
+  loading?: boolean;
 }
 
-export default function ApartmentInfo({ syndicName, residentsCount, apartmentId, joinCode, showEditButton = true }: ApartmentInfoProps) {
+export default function ApartmentInfo({ syndicName, residentsCount, apartmentId, joinCode, showEditButton = true, loading = false }: ApartmentInfoProps) {
   const colors = useThemeColors();
   const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
@@ -58,9 +60,13 @@ export default function ApartmentInfo({ syndicName, residentsCount, apartmentId,
             <Typo size={14} color={colors.subtitleText} fontWeight="400">
               {t('syndic')}
             </Typo>
-            <Typo size={16} color={colors.titleText} fontWeight="600" style={styles.value}>
-              {syndicName}
-            </Typo>
+            {loading ? (
+              <Shimmer width={120} height={16} borderRadius={radius._8} style={styles.value} />
+            ) : (
+              <Typo size={16} color={colors.titleText} fontWeight="600" style={styles.value}>
+                {syndicName}
+              </Typo>
+            )}
           </View>
         </View>
 
@@ -72,9 +78,13 @@ export default function ApartmentInfo({ syndicName, residentsCount, apartmentId,
             <Typo size={14} color={colors.subtitleText} fontWeight="400">
               {t('residents')}
             </Typo>
-            <Typo size={16} color={colors.titleText} fontWeight="600" style={styles.value}>
-              {residentsCount} {residentsCount === 1 ? t('resident') : t('residents')}
-            </Typo>
+            {loading ? (
+              <Shimmer width={100} height={16} borderRadius={radius._8} style={styles.value} />
+            ) : (
+              <Typo size={16} color={colors.titleText} fontWeight="600" style={styles.value}>
+                {residentsCount} {residentsCount === 1 ? t('resident') : t('residents')}
+              </Typo>
+            )}
           </View>
         </View>
 

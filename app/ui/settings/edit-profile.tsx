@@ -1,8 +1,8 @@
 import AppHeader from '@/components/AppHeader';
+import Shimmer from '@/components/common/Shimmer';
 import Input from '@/components/Input';
 import PrimaryButton from '@/components/PrimaryButton';
 import ScreenWrapper from '@/components/ScreenWrapper';
-import Shimmer from '@/components/common/Shimmer';
 import Typo from '@/components/Typo';
 import { radius, spacingX, spacingY } from '@/constants/theme';
 import { useAuth } from '@/contexts/authContext';
