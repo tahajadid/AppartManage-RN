@@ -3,6 +3,7 @@ import DatePicker from '@/components/common/DatePicker';
 import InfoModal from '@/components/common/InfoModal';
 import TimePicker from '@/components/common/TimePicker';
 import Input from '@/components/Input';
+import MeetingTypeSelector, { MeetingType } from '@/components/meetings/MeetingTypeSelector';
 import PrimaryButton from '@/components/PrimaryButton';
 import ScreenWrapper from '@/components/ScreenWrapper';
 import Typo from '@/components/Typo';
@@ -35,6 +36,7 @@ export default function AddMeetingScreen() {
 
   const [reason, setReason] = useState<string>('');
   const [place, setPlace] = useState<string>('');
+  const [selectedType, setSelectedType] = useState<MeetingType | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [selectedTime, setSelectedTime] = useState<string>('12:00');
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
@@ -55,6 +57,11 @@ export default function AddMeetingScreen() {
 
   const handleSubmit = async () => {
     // Validation
+    if (!selectedType) {
+      setError(t('meetingTypeRequired') || 'Please select a meeting type');
+      return;
+    }
+
     if (!reason.trim()) {
       setError(t('meetingReasonRequired') || 'Please enter a reason for the meeting');
       return;
@@ -80,7 +87,8 @@ export default function AddMeetingScreen() {
         reason.trim(),
         place.trim(),
         dateStr,
-        selectedTime
+        selectedTime,
+        selectedType
       );
 
       if (result.success) {
@@ -115,6 +123,17 @@ export default function AddMeetingScreen() {
             showsVerticalScrollIndicator={false}
             keyboardShouldPersistTaps="handled"
           >
+            {/* Meeting Type Selector */}
+            <View style={styles.section}>
+              <MeetingTypeSelector
+                selectedType={selectedType}
+                onTypeSelect={(type) => {
+                  setSelectedType(type);
+                  setError(null);
+                }}
+              />
+            </View>
+
             {/* Reason Input */}
             <View style={styles.section}>
               <Typo size={16} color={colors.titleText} fontWeight="600" style={styles.label}>

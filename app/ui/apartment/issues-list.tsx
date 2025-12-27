@@ -10,22 +10,22 @@ import useThemeColors from '@/contexts/useThemeColors';
 import { getApartmentIssues, Issue } from '@/services/issueService';
 import { router, useFocusEffect } from 'expo-router';
 import {
-    ArrowRight,
-    Broom,
-    Elevator,
-    Plug,
-    Shield,
-    Thermometer,
-    WarningCircle,
-    Wrench
+  ArrowRight,
+  Broom,
+  Elevator,
+  Plug,
+  Shield,
+  Thermometer,
+  WarningCircle,
+  Wrench
 } from 'phosphor-react-native';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-    ScrollView,
-    StyleSheet,
-    TouchableOpacity,
-    View
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -84,7 +84,7 @@ export default function IssuesListScreen() {
   };
 
   const getIssueTypeIcon = (type: Issue['type']) => {
-    const iconProps = { size: 24, weight: 'regular' as const };
+    const iconProps = { size: 22, weight: 'regular' as const };
     switch (type) {
       case 'plumbing':
         return <Wrench {...iconProps} color={colors.primary} />;
@@ -231,29 +231,35 @@ export default function IssuesListScreen() {
                       </View>
 
                       <View style={styles.issueDetails}>
-                        <Typo size={14} color={colors.subtitleText} style={styles.reportedBy}>
+                        <Typo size={14} color={colors.neutral400} style={styles.reportedBy}>
                           {t('reportedBy') || 'Reported by'}: {issue.nameOfReported}
                         </Typo>
                         
-                        <Typo size={14} color={colors.text} 
-                        style={{ color: colors.text, lineHeight: 20, backgroundColor: colors.neutral850,
-                         borderRadius: radius._4, padding: spacingX._8}}>
+                        <Typo size={16} color={colors.text} fontWeight="600"  >
                           {issue.description}
                         </Typo>
+                  
+
+                        <View style={{flexDirection: 'row', justifyContent: 'space-between',
+                           marginTop: spacingY._12, alignItems: 'center'}}>
+                          <Typo size={14} color={colors.primary} fontWeight="700" style={styles.dateText}>
+                            {formatDate(issue.createdAt)}
+                          </Typo>
+
+                          {/* See Details Indicator */}
+                          <View style={styles.seeDetailsContainer}>
+                            <Typo size={14} color={colors.primary} fontWeight="700">
+                              {t('seeDetails') || 'See details'}
+                            </Typo>
+                            <ArrowRight size={18} color={colors.primary} weight="bold" />
+                          </View>
+                        </View>
+
                         
-                        <Typo size={12} color={colors.primaryBigTitle} style={styles.dateText}>
-                          {formatDate(issue.createdAt)}
-                        </Typo>
                       </View>
                     </View>
                     
-                    {/* See Details Indicator */}
-                    <View style={styles.seeDetailsContainer}>
-                      <Typo size={14} color={colors.primary} fontWeight="600">
-                        {t('seeDetails') || 'See details'}
-                      </Typo>
-                      <ArrowRight size={16} color={colors.primary} weight="bold" />
-                    </View>
+
                   </TouchableOpacity>
                 );
               })}
@@ -320,8 +326,8 @@ const styles = StyleSheet.create({
     gap: spacingX._8,
   },
   iconContainer: {
-    width: 32,
-    height: 32,
+    width: 34,
+    height: 34,
     borderRadius: radius._8,
     justifyContent: 'center',
     alignItems: 'center',
@@ -354,8 +360,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-end',
     gap: spacingX._5,
-    marginTop: spacingY._12,
-    paddingTop: spacingY._12,
     borderTopWidth: 1,
     borderTopColor: 'rgba(255, 255, 255, 0.1)',
   },
