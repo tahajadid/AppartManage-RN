@@ -13,7 +13,6 @@ import { Calendar, Clock, MapPin } from 'phosphor-react-native';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-  ActivityIndicator,
   ScrollView,
   StyleSheet,
   View
@@ -175,6 +174,10 @@ export default function MeetingsListScreen() {
                       </View>
                     </View>
 
+
+                    {/* Separator */}
+                    <View style={[styles.separator, { backgroundColor: colors.primary + '20' }]} />
+
                     <View style={styles.meetingDetails}>
                       <View style={styles.detailRow}>
                         <View style={styles.detailIconContainer}>
@@ -285,5 +288,9 @@ const styles = StyleSheet.create({
   detailText: {
     flex: 1,
   },
+  separator: {
+    height: spacingY._1,
+    marginBottom: spacingY._16,
+  }
 });
 

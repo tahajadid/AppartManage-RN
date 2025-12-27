@@ -1,29 +1,27 @@
 import AppHeader from '@/components/AppHeader';
 import EmptyState from '@/components/common/EmptyState';
-import InfoModal from '@/components/common/InfoModal';
 import Shimmer from '@/components/common/Shimmer';
-import ChangeIssueStatusModal from '@/components/issues/ChangeIssueStatusModal';
 import ScreenWrapper from '@/components/ScreenWrapper';
 import Typo from '@/components/Typo';
 import { radius, spacingX, spacingY } from '@/constants/theme';
 import { useOnboarding } from '@/contexts/onboardingContext';
 import { useRTL } from '@/contexts/RTLContext';
 import useThemeColors from '@/contexts/useThemeColors';
-import { getApartmentIssues, Issue, updateIssueStatus } from '@/services/issueService';
-import { useFocusEffect } from 'expo-router';
+import { getApartmentIssues, Issue } from '@/services/issueService';
+import { router, useFocusEffect } from 'expo-router';
 import {
+    ArrowRight,
     Broom,
     Elevator,
     Plug,
-    Shield, Swap, Thermometer,
+    Shield,
+    Thermometer,
     WarningCircle,
     Wrench
 } from 'phosphor-react-native';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-    ActivityIndicator,
-    Image as RNImage,
     ScrollView,
     StyleSheet,
     TouchableOpacity,
@@ -41,13 +39,6 @@ export default function IssuesListScreen() {
   const [issues, setIssues] = useState<Issue[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedIssue, setSelectedIssue] = useState<Issue | null>(null);
-  const [modalVisible, setModalVisible] = useState<boolean>(false);
-  const [updatingStatus, setUpdatingStatus] = useState<boolean>(false);
-  const [errorModalVisible, setErrorModalVisible] = useState<boolean>(false);
-  const [errorModalMessage, setErrorModalMessage] = useState<string>('');
-
-  const isSyndic = role === 'syndic' || role === 'syndic_resident';
 
   useEffect(() => {
     if (apartmentId) {
@@ -143,40 +134,10 @@ export default function IssuesListScreen() {
   };
 
   const handleIssuePress = (issue: Issue) => {
-    if (isSyndic) {
-      setSelectedIssue(issue);
-      setModalVisible(true);
-    }
-  };
-
-  const handleStatusChange = async (newStatus: 'open' | 'closed') => {
-    if (!apartmentId || !selectedIssue) return;
-
-    setUpdatingStatus(true);
-
-    try {
-      const result = await updateIssueStatus(
-        apartmentId,
-        selectedIssue.id,
-        newStatus
-      );
-
-      if (result.success) {
-        setModalVisible(false);
-        setSelectedIssue(null);
-        // Reload issues to show updated status
-        await loadIssues();
-      } else {
-        setErrorModalMessage(result.error || 'Failed to update status');
-        setErrorModalVisible(true);
-      }
-    } catch (err: any) {
-      console.log('Error updating status:', err);
-      setErrorModalMessage(t('errorOccurred') || 'An error occurred, please try again');
-      setErrorModalVisible(true);
-    } finally {
-      setUpdatingStatus(false);
-    }
+    router.push({
+      pathname: '/ui/apartment/issue-details',
+      params: { issueId: issue.id },
+    } as any);
   };
 
   // Render shimmer loading state
@@ -199,9 +160,6 @@ export default function IssuesListScreen() {
             <Shimmer width={100} height={12} borderRadius={radius._8} />
           </View>
         </View>
-        {isSyndic && (
-          <Shimmer width="100%" height={40} borderRadius={radius._8} style={{ marginTop: spacingY._12 }} />
-        )}
       </View>
     ));
   };
@@ -247,8 +205,10 @@ export default function IssuesListScreen() {
                 const statusColor = getStatusColor(issue.status);
 
                 return (
-                  <View 
-                    key={issue.id} 
+                  <TouchableOpacity
+                    key={issue.id}
+                    onPress={() => handleIssuePress(issue)}
+                    activeOpacity={0.7}
                     style={[styles.issueCard, { backgroundColor: colors.neutral800 }]}
                   >
                     <View style={[styles.issueContent, { backgroundColor: colors.neutral800 }]}>
@@ -281,64 +241,25 @@ export default function IssuesListScreen() {
                           {issue.description}
                         </Typo>
                         
-                        {issue.images && issue.images.length > 0 && (
-                          <View style={styles.imagesContainer}>
-                            {issue.images.slice(0, 2).map((imageUri, index) => (
-                              <RNImage
-                                key={index}
-                                source={{ uri: imageUri }}
-                                style={styles.issueImage}
-                              />
-                            ))}
-                          </View>
-                        )}
-                        
                         <Typo size={12} color={colors.primaryBigTitle} style={styles.dateText}>
                           {formatDate(issue.createdAt)}
                         </Typo>
                       </View>
                     </View>
-
-                    {isSyndic && (
-                      <TouchableOpacity
-                        onPress={() => handleIssuePress(issue)}
-                        style={[styles.changeStatusButton, { backgroundColor: colors.neutral400 }]}
-                        activeOpacity={0.7}
-                      >
-                        <Swap size={16} color={colors.white} weight="regular" />
-                        <Typo size={14} color={colors.white} fontWeight="600" style={styles.changeStatusText}>
-                          {t('changeState') || 'Change State'}
-                        </Typo>
-                      </TouchableOpacity>
-                    )}
-                  </View>
+                    
+                    {/* See Details Indicator */}
+                    <View style={styles.seeDetailsContainer}>
+                      <Typo size={14} color={colors.primary} fontWeight="600">
+                        {t('seeDetails') || 'See details'}
+                      </Typo>
+                      <ArrowRight size={16} color={colors.primary} weight="bold" />
+                    </View>
+                  </TouchableOpacity>
                 );
               })}
             </View>
           )}
         </ScrollView>
-
-        {/* Change Issue Status Modal */}
-        <ChangeIssueStatusModal
-          visible={modalVisible}
-          issue={selectedIssue}
-          updatingStatus={updatingStatus}
-          onClose={() => {
-            setModalVisible(false);
-            setSelectedIssue(null);
-          }}
-          onStatusChange={handleStatusChange}
-        />
-
-        {/* Error Modal */}
-        <InfoModal
-          visible={errorModalVisible}
-          type="error"
-          title={t('error') || 'Error'}
-          message={errorModalMessage}
-          onClose={() => setErrorModalVisible(false)}
-          showCancel={false}
-        />
       </View>
     </ScreenWrapper>
   );
@@ -428,18 +349,15 @@ const styles = StyleSheet.create({
   dateText: {
     marginTop: spacingY._5,
   },
-  changeStatusButton: {
+  seeDetailsContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: spacingY._8,
-    margin: spacingY._8,
-    paddingHorizontal: spacingX._16,
-    borderRadius: radius._10,
-    gap: spacingX._8,
-  },
-  changeStatusText: {
-    marginLeft: spacingX._5,
+    justifyContent: 'flex-end',
+    gap: spacingX._5,
+    marginTop: spacingY._12,
+    paddingTop: spacingY._12,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(255, 255, 255, 0.1)',
   },
 });
 

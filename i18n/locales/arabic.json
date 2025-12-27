@@ -298,7 +298,15 @@
   "thankYouForPayment": "شكراً لك على دفعتك هذا الشهر",
   "paymentHistory": "سجل المدفوعات",
   "seeAll": "عرض الكل",
-  "noPayments": "لم يتم العثور على مدفوعات"
+  "noPayments": "لم يتم العثور على مدفوعات",
+  "errorUploadingImages": "فشل تحميل الصور. يرجى المحاولة مرة أخرى.",
+  "issueDetails": "تفاصيل المشكلة",
+  "closeIssue": "إغلاق المشكلة",
+  "issueClosed": "تم إغلاق المشكلة بنجاح",
+  "reportedDate": "تاريخ الإبلاغ",
+  "loading": "جاري التحميل...",
+  "seeDetails": "عرض التفاصيل",
+  "imagesTitle": "الصور"
 }
 
 

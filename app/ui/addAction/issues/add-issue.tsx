@@ -11,6 +11,7 @@ import { useOnboarding } from '@/contexts/onboardingContext';
 import { useRTL } from '@/contexts/RTLContext';
 import useThemeColors from '@/contexts/useThemeColors';
 import { createIssue, IssueType } from '@/services/issueService';
+import { uploadImagesToCloudinary } from '@/services/cloudinaryService';
 import * as ImagePicker from 'expo-image-picker';
 import { router } from 'expo-router';
 import { Camera, X } from 'phosphor-react-native';
@@ -229,13 +230,25 @@ export default function AddIssueScreen() {
     setError(null);
 
     try {
-      // For now, images array will be empty - image upload will be implemented later
+      // Upload images to Cloudinary first (if any)
+      let imageUrls: string[] = [];
+      if (images.length > 0) {
+        const uploadResult = await uploadImagesToCloudinary(images);
+        if (!uploadResult.success) {
+          setError(uploadResult.error || t('errorUploadingImages') || 'Failed to upload images');
+          setLoading(false);
+          return;
+        }
+        imageUrls = uploadResult.urls || [];
+      }
+
+      // Create issue with uploaded image URLs
       const result = await createIssue(
         apartmentId,
         selectedType,
         description.trim(),
         nameOfReported.trim(),
-        [] // Empty array for now - will be populated after image upload implementation
+        imageUrls
       );
 
       if (result.success) {

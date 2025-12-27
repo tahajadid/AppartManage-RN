@@ -299,7 +299,15 @@
   "thankYouForPayment": "Thank you for your payment this month",
   "paymentHistory": "Payment History",
   "seeAll": "See All",
-  "noPayments": "No payments found"
+  "noPayments": "No payments found",
+  "errorUploadingImages": "Failed to upload images. Please try again.",
+  "issueDetails": "Issue Details",
+  "closeIssue": "Close Issue",
+  "issueClosed": "Issue has been closed successfully",
+  "reportedDate": "Reported Date",
+  "loading": "Loading...",
+  "seeDetails": "See details",
+  "imagesTitle": "Images"
 }
 
 

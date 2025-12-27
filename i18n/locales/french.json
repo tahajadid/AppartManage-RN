@@ -299,6 +299,14 @@
   "thankYouForPayment": "Merci pour votre paiement ce mois-ci",
   "paymentHistory": "Historique des paiements",
   "seeAll": "Voir tout",
-  "noPayments": "Aucun paiement trouvé"
+  "noPayments": "Aucun paiement trouvé",
+  "errorUploadingImages": "Échec du téléchargement des images. Veuillez réessayer.",
+  "issueDetails": "Détails du problème",
+  "closeIssue": "Fermer le problème",
+  "issueClosed": "Le problème a été fermé avec succès",
+  "reportedDate": "Date de signalement",
+  "loading": "Chargement...",
+  "seeDetails": "Voir les détails",
+  "imagesTitle": "Images"
 }
 
