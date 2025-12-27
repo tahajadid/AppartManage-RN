@@ -1,8 +1,9 @@
+import PrimaryButton from '@/components/PrimaryButton';
 import Typo from '@/components/Typo';
 import { radius, spacingX, spacingY } from '@/constants/theme';
 import { useRTL } from '@/contexts/RTLContext';
 import useThemeColors from '@/contexts/useThemeColors';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
     Modal,
@@ -30,8 +31,18 @@ export default function TimePicker({
   const { isRTL } = useRTL();
   const { t } = useTranslation();
 
-  // Parse selected time
-  const [selectedHour, selectedMinute] = selectedTime.split(':').map(Number);
+  // Internal state for temporary selection
+  const [tempTime, setTempTime] = useState<string>(selectedTime);
+
+  // Update temp time when modal opens or selectedTime changes
+  useEffect(() => {
+    if (visible) {
+      setTempTime(selectedTime);
+    }
+  }, [visible, selectedTime]);
+
+  // Parse temp time
+  const [selectedHour, selectedMinute] = tempTime.split(':').map(Number);
   const currentHour = selectedHour || 12;
   const currentMinute = selectedMinute || 0;
 
@@ -42,12 +53,17 @@ export default function TimePicker({
 
   const handleHourChange = (hour: number) => {
     const newTime = `${String(hour).padStart(2, '0')}:${String(currentMinute).padStart(2, '0')}`;
-    onTimeChange(newTime);
+    setTempTime(newTime);
   };
 
   const handleMinuteChange = (minute: number) => {
     const newTime = `${String(currentHour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
-    onTimeChange(newTime);
+    setTempTime(newTime);
+  };
+
+  const handleSelect = () => {
+    onTimeChange(tempTime);
+    onClose();
   };
 
   return (
@@ -131,6 +147,19 @@ export default function TimePicker({
               </ScrollView>
             </View>
           </View>
+
+          {/* Select Button */}
+          <View style={styles.buttonContainer}>
+            <PrimaryButton
+              onPress={handleSelect}
+              backgroundColor={colors.primary}
+              style={styles.selectButton}
+            >
+              <Typo size={16} color={colors.white} fontWeight="600">
+                {t('select') || 'Select'}
+              </Typo>
+            </PrimaryButton>
+          </View>
         </View>
       </View>
     </Modal>
@@ -190,6 +219,15 @@ const styles = StyleSheet.create({
     borderRadius: radius._8,
     marginBottom: spacingY._5,
     alignItems: 'center',
+  },
+  buttonContainer: {
+    marginTop: spacingY._20,
+    paddingTop: spacingY._16,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(255, 255, 255, 0.1)',
+  },
+  selectButton: {
+    width: '100%',
   },
 });
 

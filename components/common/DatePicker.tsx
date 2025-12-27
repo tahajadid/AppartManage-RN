@@ -1,8 +1,9 @@
+import PrimaryButton from '@/components/PrimaryButton';
 import Typo from '@/components/Typo';
 import { radius, spacingX, spacingY } from '@/constants/theme';
 import { useRTL } from '@/contexts/RTLContext';
 import useThemeColors from '@/contexts/useThemeColors';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Modal,
@@ -30,9 +31,19 @@ export default function DatePicker({
   const { isRTL } = useRTL();
   const { t } = useTranslation();
 
-  const currentYear = selectedDate.getFullYear();
-  const currentMonth = selectedDate.getMonth();
-  const currentDay = selectedDate.getDate();
+  // Internal state for temporary selection
+  const [tempDate, setTempDate] = useState<Date>(selectedDate);
+
+  // Update temp date when modal opens or selectedDate changes
+  useEffect(() => {
+    if (visible) {
+      setTempDate(new Date(selectedDate));
+    }
+  }, [visible, selectedDate]);
+
+  const currentYear = tempDate.getFullYear();
+  const currentMonth = tempDate.getMonth();
+  const currentDay = tempDate.getDate();
 
   const getDaysInMonth = (date: Date): number => {
     return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
@@ -45,19 +56,24 @@ export default function DatePicker({
 
   const handleYearChange = (year: number) => {
     const newDate = new Date(year, currentMonth, currentDay);
-    onDateChange(newDate);
+    setTempDate(newDate);
   };
 
   const handleMonthChange = (month: number) => {
     const maxDay = getDaysInMonth(new Date(currentYear, month, 1));
     const newDay = Math.min(currentDay, maxDay);
     const newDate = new Date(currentYear, month, newDay);
-    onDateChange(newDate);
+    setTempDate(newDate);
   };
 
   const handleDayChange = (day: number) => {
     const newDate = new Date(currentYear, currentMonth, day);
-    onDateChange(newDate);
+    setTempDate(newDate);
+  };
+
+  const handleSelect = () => {
+    onDateChange(tempDate);
+    onClose();
   };
 
   const monthNames = [
@@ -186,6 +202,19 @@ export default function DatePicker({
               </ScrollView>
             </View>
           </View>
+
+          {/* Select Button */}
+          <View style={styles.buttonContainer}>
+            <PrimaryButton
+              onPress={handleSelect}
+              backgroundColor={colors.primary}
+              style={styles.selectButton}
+            >
+              <Typo size={16} color={colors.white} fontWeight="600">
+                {t('select') || 'Select'}
+              </Typo>
+            </PrimaryButton>
+          </View>
         </View>
       </View>
     </Modal>
@@ -245,6 +274,15 @@ const styles = StyleSheet.create({
     borderRadius: radius._8,
     marginBottom: spacingY._5,
     alignItems: 'center',
+  },
+  buttonContainer: {
+    marginTop: spacingY._20,
+    paddingTop: spacingY._16,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(255, 255, 255, 0.1)',
+  },
+  selectButton: {
+    width: '100%',
   },
 });
 

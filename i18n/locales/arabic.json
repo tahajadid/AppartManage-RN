@@ -126,6 +126,7 @@
   "logoutConfirmation": "هل أنت متأكد أنك تريد تسجيل الخروج؟",
   "cancel": "إلغاء",
   "done": "تم",
+  "select": "تحديد",
   "selectLanguage": "اختر اللغة",
   "error": "خطأ",
   "failedToLogout": "فشل تسجيل الخروج. يرجى المحاولة مرة أخرى.",
